@@ -1,10 +1,10 @@
 import ProfilePage from './pages/profile/ProfilePage';
-import Navbar from './components/layout/Navbar';
+import AddAppartement from './pages/publisher/AddApartmentPage';
 
 function App() {
   return (
     <>
-      <Navbar />
+      <AddAppartement/>
     </>
   )
 }
