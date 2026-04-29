@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Env files
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build folders
+dist/
+build/
+
+# Backend specific
+backend/node_modules/
+
+# Frontend specific
+frontend/node_modules/
+
+# Supabase
+.supabase/
