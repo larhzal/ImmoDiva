@@ -1,0 +1,34 @@
+/* Ensure the stats take up the full available width */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #f1f1f1; /* Light border as seen in image */
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes content to top and bottom */
+  min-height: 80px; /* Gives the card height to show the gap */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* Subtle shadow */
+}
+
+.statLabel {
+  font-size: 15px;
+  font-weight: 700;
+  text-align: left; /* Aligns text to the left */
+  margin: 0;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: right; /* Aligns number to the right */
+  color: #555 !important; /* The numbers in your image are dark grey/neutral */
+  margin: 0;
+}

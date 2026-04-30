@@ -1,0 +1,37 @@
+
+.tabBar {
+  display: flex;
+  gap: 12px; /* Adjusted spacing between buttons */
+  margin-bottom: 24px;
+}
+
+.tabBtn {
+  flex: 1; /* Makes all buttons equal width if desired, or remove for auto-width */
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none; /* No border in the image */
+  background: #f4f5f7; /* Light grey background for inactive */
+  color: #2c3e50; /* Dark blue/grey text */
+  font-size: 14px;
+  font-weight: 600; /* Semi-bold text */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabBtnActive {
+  background: #fcd69a; /* Soft orange background from image */
+  color: #2c3e50; /* Keeps the same text color */
+}
+
+/* Optional: Subtle hover effect for better UX */
+.tabBtn:hover:not(.tabBtnActive) {
+  background: #ebedf0;
+}
+
+.tabContent {
+  background: #fff;
+  border: 1px solid #e8eaed;
+  border-radius: 0 10px 10px 10px;
+  padding: 28px 32px;
+  margin-top: -1px;
+}

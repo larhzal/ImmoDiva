@@ -1,0 +1,55 @@
+/* Navy Top Bar */
+.top-bar {
+  background-color: #1a2f4e; /* Navy color matching your highlight link */
+  height: 40px; /* Adjust height as needed */
+  width: 100%;
+}
+
+/* Navbar Container Styles */
+.navbar {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 102px;
+  border-bottom: 1px solid #e8eaed;
+}
+
+/* Logo Section */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.logo-img {
+  height: 50px;
+  object-fit: contain;
+  margin: 20px;
+  padding: 20px;
+}
+
+/* Navigation Links Container */
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+/* Individual Link Styles */
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Highlighted Link Style (from NavbarLanding) */
+.nav-link-highlight {
+  color: #1a2f4e;
+  text-decoration: none;
+  font-size: 14px;
+  white-space: nowrap;
+  font-weight: 600;
+}
