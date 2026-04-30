@@ -1,4 +1,7 @@
 // components/ui/TabBar.jsx
+import "../../styles/layout/TabBar.css";
+
+
 export default function TabBar({ tabs, active, onChange }) {
   return (
     <div className="tabBar">

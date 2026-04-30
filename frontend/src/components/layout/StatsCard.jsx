@@ -1,4 +1,7 @@
 // components/ui/StatsCard.jsx
+
+import "../../styles/layout/StatsCard.css";
+
 export default function StatsCard({ label, value, color, className = "" }) {
   return (
     <div className={`statCard ${className}`}>
