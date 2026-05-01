@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Logo from '../../assets/images/Logo.png';
 import FormInput from '../../components/ui/FormInput';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const initialState = {
   username: '',
   password: '',
@@ -54,19 +56,43 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    // BUG CORRIGÉ : suppression de provider: 'supabase' (pas de backend encore)
     const payload = {
       username: formValues.username.trim(),
       password: formValues.password,
     };
 
-    console.log('Login payload', payload);
+    try {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    setTimeout(() => {
-      setLoading(false);
-      setSuccessMessage('Connexion simulée réussie.');
+      const data = await response.json();
+      if (!response.ok) {
+        setGeneralError(data.message || 'Échec de la connexion.');
+        setLoading(false);
+        return;
+      }
+
+      setSuccessMessage('Connexion réussie. Redirection...');
       setFormValues(initialState);
-    }, 900);
+
+      setTimeout(() => {
+        if (data.user?.role === 'Publisher') {
+          window.location.href = '/listings';
+        } else {
+          window.location.href = '/';
+        }
+      }, 800);
+    } catch (err) {
+      setGeneralError('Impossible de contacter le serveur.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

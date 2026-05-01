@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Logo from '../../assets/images/Logo.png';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const roles = [
   {
-    value: 'locataire',
+    value: 'Client',
     title: 'Trouver un appartement',
     description: 'Postulez aux annonces et trouvez le logement qui vous convient.',
     image:
       'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=60',
   },
   {
-    value: 'publicateur',
+    value: 'Publisher',
     title: 'Mettre mon appartement en location',
-    description: 'Publiez votre bien et recevez des demandes de location facilement.',
+    description: 'Publiez votre bien et recevez des demandes facilement.',
     image:
       'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=60',
   },
@@ -22,6 +24,7 @@ export default function RolePage() {
   const [registrationData, setRegistrationData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const stored = sessionStorage.getItem('registrationData');
@@ -30,34 +33,52 @@ export default function RolePage() {
     }
   }, []);
 
-  const chooseRole = (value) => {
+  const chooseRole = async (value) => {
     if (!registrationData) {
       window.location.href = '/register';
       return;
     }
 
-    // BUG CORRIGÉ : suppression de provider: 'supabase' (pas de backend encore)
     const payload = {
       ...registrationData,
-      role: value,
+      role: value, // 🔥 DOIT être Client ou Publisher
     };
 
-    console.log('Register payload (final):', payload);
     setLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
 
-    setTimeout(() => {
-      setLoading(false);
-      setSuccessMessage('Votre compte a été créé avec succès. Vous allez être redirigé.');
+    try {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMessage(data.message || "Erreur d'inscription");
+        return;
+      }
+
+      setSuccessMessage("Compte créé avec succès !");
       sessionStorage.removeItem('registrationData');
+
       setTimeout(() => {
-        // Redirection selon le rôle choisi
-        if (value === 'locataire') {
+        // 🔥 FIX IMPORTANT
+        if (value === 'Client') {
           window.location.href = '/';
         } else {
           window.location.href = '/listings';
         }
-      }, 1200);
-    }, 900);
+      }, 1000);
+
+    } catch (err) {
+      setErrorMessage("Erreur serveur");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -74,6 +95,11 @@ export default function RolePage() {
           </div>
 
           <div className="px-8 py-10">
+            {errorMessage && (
+              <div className="mb-6 rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
+                {errorMessage}
+              </div>
+            )}
             {successMessage && (
               <div className="mb-6 rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-800">
                 {successMessage}
