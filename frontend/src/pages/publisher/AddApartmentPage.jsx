@@ -3,7 +3,7 @@ import "../../styles/publisher/addAppartement.css";
 
 function AddAppartement() {
     const [titre, setTitre] = useState("");
-    const [quartier, setQuartier] = useState("");
+    const [ville, setVille] = useState("");
     const [description, setDescription] = useState("");
     const [adresse, setAdresse] = useState("");
     const [surface, setSurface] = useState("");
@@ -28,6 +28,9 @@ function AddAppartement() {
 
     const fileInputRef = useRef(null);
 
+    const [errors, setErrors] = useState({}); // Tracks which fields are missing
+    const [formError, setFormError] = useState(""); // Top-level message
+
     const handleProfil = (profil) => {
         setProfilLocataire((prev) =>
             prev.includes(profil) ? prev.filter((p) => p !== profil) : [...prev, profil]
@@ -47,6 +50,55 @@ function AddAppartement() {
         setPhotos((prev) => prev.filter((_, i) => i !== index));
     };
 
+    const handleSubmit = async () => {
+        try {
+
+            // ***********************************************************************************
+            // ***********************************************************************************
+            const formData = new FormData();
+
+            formData.append("titre", titre);
+            formData.append("ville", ville);
+            formData.append("description", description);
+            formData.append("adresse", adresse);
+            formData.append("surface", surface);
+            formData.append("nbChambres", nbChambres);
+            formData.append("etage", etage);
+            formData.append("nbSallesBain", nbSallesBain);
+            formData.append("ascenseur", ascenseur);
+            formData.append("parking", parking);
+            formData.append("meuble", meuble);
+            formData.append("piscine", piscine);
+            formData.append("balcon", balcon);
+            formData.append("gardien", gardien);
+            formData.append("prixMensuel", prixMensuel);
+            formData.append("caution", caution);
+            formData.append("chargesIncluses", chargesIncluses);
+            formData.append("dureeMini", dureeMini);
+            formData.append("animaux", animaux);
+            formData.append("fumeurs", fumeurs);
+            formData.append("colocataires", colocataires);
+            formData.append("profilLocataire", JSON.stringify(profilLocataire));
+            formData.append("owner_id", "1");
+
+            // 👉 images (IMPORTANT)
+            photos.forEach((photo) => {
+                formData.append("photos", photo.file);
+            });
+
+            const response = await fetch("http://localhost:5000/api/appartements", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <>
             <div className="add-appartement">
@@ -62,8 +114,8 @@ function AddAppartement() {
                             <input type="text" value={titre} onChange={(e) => setTitre(e.target.value)} />
                         </div>
                         <div className="field">
-                            <label>Quartier <span className="required"> *</span> :</label>
-                            <input type="text" value={quartier} onChange={(e) => setQuartier(e.target.value)} />
+                            <label>Ville <span className="required"> *</span> :</label>
+                            <input type="text" value={ville} onChange={(e) => setVille(e.target.value)} />
                         </div>
                         <div className="field">
                             <label>Description <span className="required"> *</span> :</label>
@@ -191,7 +243,6 @@ function AddAppartement() {
                         <input
                             type="file"
                             accept="image/jpeg,image/png"
-                            className="file-input"
                             multiple
                             ref={fileInputRef}
                             onChange={handlePhotos}
@@ -219,7 +270,7 @@ function AddAppartement() {
                 </section>
 
                 {/* ── Submit ── */}
-                <div className="submit-row">
+                <div className="submit-row" type="button" onClick={handleSubmit}>
                     <button type="button">Mettre mon Appartement en Location</button>
                 </div>
             </div>
