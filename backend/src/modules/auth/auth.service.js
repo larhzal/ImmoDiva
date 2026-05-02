@@ -169,3 +169,86 @@ exports.loginUser = async (payload) => {
     session: loginData.session,
   };
 };
+// ─────────────────────────────────────────────────────────────────────────────
+// DEMANDE DE RÉINITIALISATION — Tâche 6
+// Supabase envoie lui-même l'email avec un lien sécurisé vers /reset-password
+// On répond toujours le même message (sécurité : ne pas révéler si l'email existe)
+// ─────────────────────────────────────────────────────────────────────────────
+exports.requestPasswordReset = async ({ email }) => {
+  if (!email?.trim()) {
+    const error = new Error("L'adresse email est requise.");
+    error.status = 400;
+    throw error;
+  }
+ 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    const error = new Error("Format d'email invalide.");
+    error.status = 400;
+    throw error;
+  }
+ 
+  // Supabase envoie l'email uniquement si le compte existe
+  // redirectTo : page frontend qui récupère le token dans l'URL
+  const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+    email.trim().toLowerCase(),
+    { redirectTo: `${process.env.FRONTEND_URL}/reset-password` }
+  );
+ 
+  if (resetError) {
+    const error = new Error("Impossible d'envoyer l'email de réinitialisation.");
+    error.details = resetError.message;
+    error.status  = 500;
+    throw error;
+  }
+ 
+  // Toujours le même message pour ne pas révéler si l'email existe
+  return {
+    message: "Si cet email est associé à un compte, un lien de réinitialisation a été envoyé.",
+  };
+};
+ 
+// ─────────────────────────────────────────────────────────────────────────────
+// MISE À JOUR DU MOT DE PASSE — Tâche 7
+// L'utilisateur clique sur le lien email → Supabase redirige vers
+// /reset-password#access_token=xxx — le frontend extrait ce token et l'envoie ici
+// ─────────────────────────────────────────────────────────────────────────────
+exports.updatePassword = async ({ accessToken, newPassword }) => {
+  if (!accessToken) {
+    const error = new Error("Token de réinitialisation manquant.");
+    error.status = 400;
+    throw error;
+  }
+ 
+  if (!newPassword || newPassword.length < 6) {
+    const error = new Error("Le mot de passe doit contenir au moins 6 caractères.");
+    error.status = 400;
+    throw error;
+  }
+ 
+  // Décoder le token pour identifier l'utilisateur
+  const { data: userData, error: userError } =
+    await supabase.auth.getUser(accessToken);
+ 
+  if (userError || !userData?.user?.id) {
+    const error = new Error("Lien de réinitialisation invalide ou expiré.");
+    error.status = 401;
+    throw error;
+  }
+ 
+  // Mettre à jour le mot de passe dans Supabase Auth
+  const { error: updateError } = await supabase.auth.admin.updateUserById(
+    userData.user.id,
+    { password: newPassword }
+  );
+ 
+  if (updateError) {
+    const error = new Error("Impossible de mettre à jour le mot de passe.");
+    error.details = updateError.message;
+    error.status  = 500;
+    throw error;
+  }
+ 
+  return { message: "Mot de passe mis à jour avec succès." };
+};
+ 
