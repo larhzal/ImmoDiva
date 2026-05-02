@@ -155,7 +155,7 @@ export default function LoginPage() {
             {/* AJOUT : lien "Mot de passe oublié ?" — requis dans les specs (NB du PDF) */}
             <div className="mt-4 text-center text-sm">
               <a
-                href="/reset-password"
+                href="/forgot-password"
                 className="font-medium text-orange-500 hover:text-orange-600"
               >
                 Mot de passe oublié ?
