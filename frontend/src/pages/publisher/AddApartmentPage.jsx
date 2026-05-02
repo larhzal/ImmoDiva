@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import "../../styles/publisher/addAppartement.css";
+import { validateAppartementForm } from "../../utils/validators";
 
 function AddAppartement() {
     const [titre, setTitre] = useState("");
@@ -30,6 +31,7 @@ function AddAppartement() {
 
     const [errors, setErrors] = useState({}); // Tracks which fields are missing
     const [formError, setFormError] = useState(""); // Top-level message
+    const [touched, setTouched] = useState({});
 
     const handleProfil = (profil) => {
         setProfilLocataire((prev) =>
@@ -51,6 +53,49 @@ function AddAppartement() {
     };
 
     const handleSubmit = async () => {
+        const fields = {
+            titre,
+            ville,
+            description,
+            adresse,
+            surface,
+            nbChambres,
+            etage,
+            nbSallesBain,
+            ascenseur,
+            parking,
+            meuble,
+            piscine,
+            balcon,
+            gardien,
+            prixMensuel,
+            caution,
+            chargesIncluses,
+            dureeMini,
+            animaux,
+            fumeurs,
+            colocataires,
+            profilLocataire,
+            photos
+        };
+
+        const { isValid, errors } = validateAppartementForm(fields);
+
+        if (!isValid) {
+            setErrors(errors);
+
+            const touchedFields = {};
+            Object.keys(fields).forEach(field => {
+                touchedFields[field] = true;
+            });
+            setTouched(touchedFields);
+
+            setFormError("Tous les champs obligatoires doivent être remplis");
+            return;
+        }
+
+        setFormError("");
+
         try {
 
             // ***********************************************************************************
@@ -100,7 +145,22 @@ function AddAppartement() {
     };
 
     return (
+
         <>
+            {formError && (
+                <div style={{
+                    backgroundColor: "#f44336",
+                    color: "white",
+                    padding: "10px",
+                    margin: "10px",
+                    marginRight: "100px",
+                    marginLeft: "100px",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                }}>
+                    {formError}
+                </div>
+            )}
             <div className="add-appartement">
                 <h1>Ajouter une Appartement</h1>
 
@@ -111,68 +171,267 @@ function AddAppartement() {
                     <div className="two-cols">
                         <div className="field">
                             <label>Titre <span className="required"> *</span> : </label>
-                            <input type="text" value={titre} onChange={(e) => setTitre(e.target.value)} />
+                            <input type="text" value={titre} onChange={(e) => {
+                                setTitre(e.target.value);
+                                if (errors.titre) {
+                                    setErrors(prev => ({ ...prev, titre: "" }));
+                                }
+                            }} />
+                            {touched.titre && errors.titre && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.titre}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Ville <span className="required"> *</span> :</label>
-                            <input type="text" value={ville} onChange={(e) => setVille(e.target.value)} />
+                            <input type="text" value={ville} onChange={(e) => {
+                                setVille(e.target.value);
+                                if (errors.ville) {
+                                    setErrors(prev => ({ ...prev, ville: "" }));
+                                }
+                            }} />
+                            {touched.ville && errors.ville && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.ville}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Description <span className="required"> *</span> :</label>
-                            <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                            <textarea value={description} onChange={(e) => {
+                                setDescription(e.target.value);
+                                if (errors.description) {
+                                    setErrors(prev => ({ ...prev, description: "" }));
+                                }
+                            }} />
+                            {touched.description && errors.description && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.description}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Adresse <span className="required"> *</span> :</label>
-                            <textarea value={adresse} onChange={(e) => setAdresse(e.target.value)} />
+                            <textarea value={adresse} onChange={(e) => {
+                                setAdresse(e.target.value);
+                                if (errors.adresse) {
+                                    setErrors(prev => ({ ...prev, adresse: "" }));
+                                }
+                            }} />
+                            {touched.adresse && errors.adresse && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.adresse}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Surface en m² <span className="required"> *</span> :</label>
-                            <input type="number" value={surface} onChange={(e) => setSurface(e.target.value)} />
+                            <input type="number" value={surface} onChange={(e) => {
+                                setSurface(e.target.value);
+                                if (errors.surface) {
+                                    setErrors(prev => ({ ...prev, surface: "" }));
+                                }
+                            }} />
+                            {touched.surface && errors.surface && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.surface}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Nombre de chambres <span className="required"> *</span> :</label>
-                            <input type="number" value={nbChambres} onChange={(e) => setNbChambres(e.target.value)} />
+                            <input type="number" value={nbChambres} onChange={(e) => {
+                                setNbChambres(e.target.value);
+                                if (errors.nbChambres) {
+                                    setErrors(prev => ({ ...prev, nbChambres: "" }));
+                                }
+                            }} />
+                            {touched.nbChambres && errors.nbChambres && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.nbChambres}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Étage <span className="required"> *</span> :</label>
-                            <input type="number" value={etage} onChange={(e) => setEtage(e.target.value)} />
+                            <input type="number" value={etage} onChange={(e) => {
+                                setEtage(e.target.value);
+                                if (errors.etage) {
+                                    setErrors(prev => ({ ...prev, etage: "" }));
+                                }
+                            }} />
+                            {touched.etage && errors.etage && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.etage}
+                                </div>
+                            )}
                         </div>
                         <div className="field">
                             <label>Nombre de salles de bain <span className="required"> *</span> :</label>
-                            <input type="number" value={nbSallesBain} onChange={(e) => setNbSallesBain(e.target.value)} />
+                            <input type="number" value={nbSallesBain} onChange={(e) => {
+                                setNbSallesBain(e.target.value);
+                                if (errors.nbSallesBain) {
+                                    setErrors(prev => ({ ...prev, nbSallesBain: "" }));
+                                }
+                            }}
+                                style={{
+                                    borderColor: touched.nbSallesBain && errors.nbSallesBain ? "red" : ""
+                                }} />
+                            {touched.nbSallesBain && errors.nbSallesBain && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.nbSallesBain}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="two-cols radios">
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }}>
                             <label>Présence d'ascenseur <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="ascenseur" value="oui" checked={ascenseur === "oui"} onChange={() => setAscenseur("oui")} /> Oui</label>
-                            <label><input type="radio" name="ascenseur" value="non" checked={ascenseur === "non"} onChange={() => setAscenseur("non")} /> Non</label>
+                            <label><input type="radio" name="ascenseur" value="true" checked={ascenseur === "true"} onChange={() => {
+                                setAscenseur("true");
+
+                                if (errors.ascenseur) {
+                                    setErrors(prev => ({ ...prev, ascenseur: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="ascenseur" value="false" checked={ascenseur === "false"} onChange={() => {
+                                setAscenseur("false");
+
+                                if (errors.ascenseur) {
+                                    setErrors(prev => ({ ...prev, ascenseur: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.ascenseur && errors.ascenseur && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.ascenseur}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }}>
                             <label>Parking <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="parking" value="oui" checked={parking === "oui"} onChange={() => setParking("oui")} /> Oui</label>
-                            <label><input type="radio" name="parking" value="non" checked={parking === "non"} onChange={() => setParking("non")} /> Non</label>
+                            <label><input type="radio" name="parking" value="true" checked={parking === "true"}
+                                onChange={() => {
+                                    setParking("true");
+
+                                    if (errors.parking) {
+                                        setErrors(prev => ({ ...prev, parking: "" }));
+                                    }
+                                }}
+                            /> Oui</label>
+                            <label><input type="radio" name="parking" value="false" checked={parking === "false"} onChange={() => {
+                                setParking("false");
+
+                                if (errors.parking) {
+                                    setErrors(prev => ({ ...prev, parking: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.parking && errors.parking && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.parking}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Meublé <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="meuble" value="oui" checked={meuble === "oui"} onChange={() => setMeuble("oui")} /> Oui</label>
-                            <label><input type="radio" name="meuble" value="non" checked={meuble === "non"} onChange={() => setMeuble("non")} /> Non</label>
+                            <label><input type="radio" name="meuble" value="true" checked={meuble === "true"} onChange={() => {
+                                setMeuble("true");
+
+                                if (errors.meuble) {
+                                    setErrors(prev => ({ ...prev, meuble: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="meuble" value="false" checked={meuble === "false"} onChange={() => {
+                                setMeuble("false");
+
+                                if (errors.meuble) {
+                                    setErrors(prev => ({ ...prev, meuble: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.meuble && errors.meuble && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.meuble}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Piscine <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="piscine" value="oui" checked={piscine === "oui"} onChange={() => setPiscine("oui")} /> Oui</label>
-                            <label><input type="radio" name="piscine" value="non" checked={piscine === "non"} onChange={() => setPiscine("non")} /> Non</label>
+                            <label><input type="radio" name="piscine" value="true" checked={piscine === "true"} onChange={() => {
+                                setPiscine("true");
+
+                                if (errors.piscine) {
+                                    setErrors(prev => ({ ...prev, piscine: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="piscine" value="false" checked={piscine === "false"} onChange={() => {
+                                setPiscine("false");
+
+                                if (errors.piscine) {
+                                    setErrors(prev => ({ ...prev, piscine: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.piscine && errors.piscine && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.piscine}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Balcon/ Terasse <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="balcon" value="oui" checked={balcon === "oui"} onChange={() => setBalcon("oui")} /> Oui</label>
-                            <label><input type="radio" name="balcon" value="non" checked={balcon === "non"} onChange={() => setBalcon("non")} /> Non</label>
+                            <label><input type="radio" name="balcon" value="true" checked={balcon === "true"} onChange={() => {
+                                setBalcon("true");
+
+                                if (errors.balcon) {
+                                    setErrors(prev => ({ ...prev, balcon: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="balcon" value="false" checked={balcon === "false"} onChange={() => {
+                                setBalcon("false");
+
+                                if (errors.balcon) {
+                                    setErrors(prev => ({ ...prev, balcon: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.balcon && errors.balcon && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.balcon}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Gardien/ Concierge <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="gardien" value="oui" checked={gardien === "oui"} onChange={() => setGardien("oui")} /> Oui</label>
-                            <label><input type="radio" name="gardien" value="non" checked={gardien === "non"} onChange={() => setGardien("non")} /> Non</label>
+                            <label><input type="radio" name="gardien" value="true" checked={gardien === "true"} onChange={() => {
+                                setGardien("true");
+
+                                if (errors.gardien) {
+                                    setErrors(prev => ({ ...prev, gardien: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="gardien" value="false" checked={gardien === "false"} onChange={() => {
+                                setGardien("false");
+
+                                if (errors.gardien) {
+                                    setErrors(prev => ({ ...prev, gardien: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.gardien && errors.gardien && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.gardien}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -184,54 +443,184 @@ function AddAppartement() {
                     <div className="two-cols">
                         <div className="field">
                             <label>Prix mensuel en MAD <span className="required"> *</span> :</label>
-                            <input type="number" value={prixMensuel} onChange={(e) => setPrixMensuel(e.target.value)} />
+                            <input type="number" value={prixMensuel} onChange={(e) => {
+                                setPrixMensuel(e.target.value);
+                                if (errors.prixMensuel) {
+                                    setErrors(prev => ({ ...prev, prixMensuel: "" }));
+                                }
+                            }} />
+                            {touched.prixMensuel && errors.prixMensuel && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.prixMensuel}
+                                </div>
+                            )}
                         </div>
-                        <div className="field">
-                            <label>Caution demandée <span className="required"> *</span> :</label>
-                            <input type="number" value={caution} onChange={(e) => setCaution(e.target.value)} />
-                        </div>
+
                         <div className="field">
                             <label>Durée minimum de location <span className="required"> *</span> :</label>
-                            <input type="text" value={dureeMini} onChange={(e) => setDureeMini(e.target.value)} placeholder="ex: 6 mois" />
+                            <input type="text" value={dureeMini} onChange={(e) => {
+                                setDureeMini(e.target.value);
+                                if (errors.dureeMini) {
+                                    setErrors(prev => ({ ...prev, dureeMini: "" }));
+                                }
+                            }} placeholder="ex: 6 mois" />
+                            {touched.dureeMini && errors.dureeMini && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.dureeMini}
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="two-cols radios">
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
+                            <label>Caution demandée <span className="required"> *</span> :</label>
+                            <label><input type="radio" name="caution" value="true" checked={caution === "true"} onChange={() => {
+                                setCaution("true");
+
+                                if (errors.cautioin) {
+                                    setErrors(prev => ({ ...prev, caution: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="caution" value="false" checked={caution === "false"} onChange={() => {
+                                setCaution("false");
+
+                                if (errors.cautioin) {
+                                    setErrors(prev => ({ ...prev, caution: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.cautioin && errors.cautioin && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.cautioin}
+                                </div>
+                            )}
+                        </div>
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Charges incluses <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="charges" value="oui" checked={chargesIncluses === "oui"} onChange={() => setChargesIncluses("oui")} /> Oui</label>
-                            <label><input type="radio" name="charges" value="non" checked={chargesIncluses === "non"} onChange={() => setChargesIncluses("non")} /> Non</label>
+                            <label><input type="radio" name="charges" value="true" checked={chargesIncluses === "true"} onChange={() => {
+                                setChargesIncluses("true");
+                                if (errors.chargesIncluses) {
+                                    setErrors(prev => ({ ...prev, chargesIncluses: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="charges" value="false" checked={chargesIncluses === "false"} onChange={() => {
+                                setChargesIncluses("false");
+
+                                if (errors.chargesIncluses) {
+                                    setErrors(prev => ({ ...prev, chargesIncluses: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.chargesIncluses && errors.chargesIncluses && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.chargesIncluses}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Fumeurs acceptés <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="fumeurs" value="oui" checked={fumeurs === "oui"} onChange={() => setFumeurs("oui")} /> Oui</label>
-                            <label><input type="radio" name="fumeurs" value="non" checked={fumeurs === "non"} onChange={() => setFumeurs("non")} /> Non</label>
+                            <label><input type="radio" name="fumeurs" value="true" checked={fumeurs === "true"} onChange={() => {
+                                setFumeurs("true");
+
+                                if (errors.fumeurs) {
+                                    setErrors(prev => ({ ...prev, fumeurs: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="fumeurs" value="false" checked={fumeurs === "false"} onChange={() => {
+                                setFumeurs("false");
+
+                                if (errors.fumeurs) {
+                                    setErrors(prev => ({ ...prev, fumeurs: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.fumeurs && errors.fumeurs && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.fumeurs}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Animaux acceptés <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="animaux" value="oui" checked={animaux === "oui"} onChange={() => setAnimaux("oui")} /> Oui</label>
-                            <label><input type="radio" name="animaux" value="non" checked={animaux === "non"} onChange={() => setAnimaux("non")} /> Non</label>
+                            <label><input type="radio" name="animaux" value="true" checked={animaux === "true"} onChange={() => {
+                                setAnimaux("true");
+
+                                if (errors.animaux) {
+                                    setErrors(prev => ({ ...prev, animaux: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="animaux" value="false" checked={animaux === "false"} onChange={() => {
+                                setAnimaux("false");
+
+                                if (errors.animaux) {
+                                    setErrors(prev => ({ ...prev, animaux: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.animaux && errors.animaux && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.animaux}
+                                </div>
+                            )}
                         </div>
-                        <div className="radio-field">
+                        <div className="radio-field" style={{
+                            borderBottom: touched.parking && errors.parking ? "1px solid red" : ""
+                        }} >
                             <label>Colocataires acceptés <span className="required"> *</span> :</label>
-                            <label><input type="radio" name="colocataires" value="oui" checked={colocataires === "oui"} onChange={() => setColocataires("oui")} /> Oui</label>
-                            <label><input type="radio" name="colocataires" value="non" checked={colocataires === "non"} onChange={() => setColocataires("non")} /> Non</label>
+                            <label><input type="radio" name="colocataires" value="true" checked={colocataires === "true"} onChange={() => {
+                                setColocataires("true");
+
+                                if (errors.colocataires) {
+                                    setErrors(prev => ({ ...prev, colocataires: "" }));
+                                }
+                            }} /> Oui</label>
+                            <label><input type="radio" name="colocataires" value="false" checked={colocataires === "false"} onChange={() => {
+                                setColocataires("false");
+
+                                if (errors.colocataires) {
+                                    setErrors(prev => ({ ...prev, colocataires: "" }));
+                                }
+                            }} /> Non</label>
+                            {touched.colocataires && errors.colocataires && (
+                                <div style={{ color: "red", fontSize: "12px" }}>
+                                    {errors.colocataires}
+                                </div>
+                            )}
                         </div>
                     </div>
 
-                    <div className="radio-field">
+                    <div className="radio-field" style={{
+                        borderBottom: touched.profilLocataire && errors.profilLocataire ? "1px solid red" : ""
+                    }} >
                         <label>Profil locataire souhaité <span className="required"> *</span> :</label>
                         {["Famille", "Couple", "Célibataire", "Étudiant"].map((p) => (
                             <label key={p}>
                                 <input
                                     type="checkbox"
                                     checked={profilLocataire.includes(p)}
-                                    onChange={() => handleProfil(p)}
+                                    onChange={() => {
+                                        handleProfil(p);
+
+                                        // remove error when user selects something
+                                        if (errors.profilLocataire) {
+                                            setErrors(prev => ({ ...prev, profilLocataire: "" }));
+                                        }
+                                    }}
                                 />
                                 {" "}{p}
                             </label>
                         ))}
                     </div>
+                    {touched.profilLocataire && errors.profilLocataire && (
+                        <div style={{ color: "red", fontSize: "12px" }}>
+                            {errors.profilLocataire}
+                        </div>
+                    )}
                 </section>
 
                 {/* ── Galerie du bien ── */}
@@ -248,6 +637,11 @@ function AddAppartement() {
                             onChange={handlePhotos}
                         />
                     </div>
+                    {touched.photos && errors.photos && (
+                        <div style={{ color: "red", fontSize: "12px" }}>
+                            {errors.photos}
+                        </div>
+                    )}
                     <p className="hint">Ajoutez entre 3 et 15 photos (JPEG, PNG · max 5 Mo chacune)</p>
 
                     <button

@@ -88,8 +88,11 @@ const createAppartement = async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server error" });
+        console.error("FULL ERROR:", err);
+        res.status(500).json({
+            error: err.message,
+            details: err
+        });
     }
 };
 
