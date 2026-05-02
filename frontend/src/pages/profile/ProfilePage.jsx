@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Navbar from "../../components/layout/Navbar";
+import Avatar from "../../assets/icons/Dashboard.png"
 import StatCard from "../../components/layout/StatsCard";
 import TabBar from "../../components/layout/TabBar";
-import Avatar from "../../assets/icons/Dashboard.png"
 import "../../styles/profile/profile.css";
 
 const TABS = ["Mes Annonces", "Les Demandes", "Mes Clients", "Mon Profile"];
