@@ -76,6 +76,13 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+            // ── Sauvegarde dans localStorage ─────────────────────────────────────
+      // On stocke l'utilisateur et le token pour les utiliser partout
+      // (Navbar, pages protegees, logout...)
+      localStorage.setItem('immodiva_user',  JSON.stringify(data.user));
+      localStorage.setItem('immodiva_token', data.session?.access_token || '');
+      // ─────────────────────────────────────────────────────────────────────
+ 
 
       setSuccessMessage('Connexion réussie. Redirection...');
       setFormValues(initialState);
