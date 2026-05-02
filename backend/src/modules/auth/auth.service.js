@@ -170,6 +170,43 @@ exports.loginUser = async (payload) => {
   };
 };
 // ─────────────────────────────────────────────────────────────────────────────
+// LOGOUT — Tache deconnexion
+// Le frontend envoie le access_token dans le header Authorization
+// On invalide la session cote Supabase Auth
+// ─────────────────────────────────────────────────────────────────────────────
+exports.logoutUser = async ({ accessToken }) => {
+  if (!accessToken) {
+    const error = new Error("Token manquant.");
+    error.status = 401;
+    throw error;
+  }
+ 
+  // Verifier que le token est valide
+  const { data: userData, error: userError } =
+    await supabase.auth.getUser(accessToken);
+ 
+  if (userError || !userData?.user) {
+    const error = new Error("Session invalide ou deja expiree.");
+    error.status = 401;
+    throw error;
+  }
+ 
+  // Invalider TOUTES les sessions de cet utilisateur (global signout)
+  const { error: signOutError } = await supabase.auth.admin.signOut(
+    userData.user.id,
+    "global"
+  );
+ 
+  if (signOutError) {
+    const error = new Error("Impossible de deconnecter l'utilisateur.");
+    error.details = signOutError.message;
+    error.status  = 500;
+    throw error;
+  }
+ 
+  return { message: "Deconnexion reussie." };
+};
+// ─────────────────────────────────────────────────────────────────────────────
 // DEMANDE DE RÉINITIALISATION — Tâche 6
 // Supabase envoie lui-même l'email avec un lien sécurisé vers /reset-password
 // On répond toujours le même message (sécurité : ne pas révéler si l'email existe)
