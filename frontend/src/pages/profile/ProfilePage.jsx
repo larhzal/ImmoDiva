@@ -1,99 +1,114 @@
 import { useState, useEffect } from "react";
+import validators, { validateForm } from "../../utils/validators";
 import Navbar from "../../components/layout/Navbar";
-import Avatar from "../../assets/icons/Dashboard.png"
+import Avatar from "../../assets/icons/Dashboard.png";
 import StatCard from "../../components/layout/StatsCard";
 import TabBar from "../../components/layout/TabBar";
-import Loader from "../../components/ui/loader"; 
+import Loader from "../../components/ui/loader";
 import "../../styles/profile/profile.css";
+
+// ── Constants ─────────────────────────────────────────────────
+const API = "http://localhost:5000/api/auth";
 
 const TABS = ["Mes Annonces", "Les Demandes", "Mes Clients", "Mon Profile"];
 
-const stats = [
+const STATS = [
   { label: "Mes Annonces", value: 15, color: "#0F2744" },
-  { label: "Approuvée", value: 10, color: "#1E9E6B" },
-  { label: "En Attente", value: 5, color: "#E87722" },
+  { label: "Approuvée",    value: 10, color: "#1E9E6B" },
+  { label: "En Attente",   value: 5,  color: "#E87722" },
 ];
 
+const authHeaders = (extra = {}) => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+  ...extra,
+});
 
-export default function ProfilePage() {
-  const [message, setMessage] = useState({ type: "", text: "" });
-  const [activeTab, setActiveTab] = useState("Mon Profile");
+// ── Shared sub-components ─────────────────────────────────────
+function Field({ label, name, value, onChange, type = "text", error }) {
+  return (
+    <div className="profile-field">
+      <label className="field-label">{label}</label>
+      <input
+        className={`field-input${error ? " field-input--error" : ""}`}
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+      />
+      {error && <span className="field-error">{error}</span>}
+    </div>
+  );
+}
+
+function StatusBanner({ type, text }) {
+  if (!text) return null;
+
+  const isError = type === "error";
+  const icon = isError ? (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10 6v5M10 13.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ) : (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6.5 10.5l2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
 
   return (
-    <div className="page">
-      <Navbar />
+    <div className={`status-banner status-banner--${type}`}>
+      {icon}
+      <span>{text}</span>
+    </div>
+  );
+}
 
-    <main className="main">
-        <div className="pageHeader"> 
-            {/* Top Part: Avatar + Greeting */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <img src={Avatar} alt="Immo DIVA" className="avatar" />
-            <div> 
-                <h1 className="pageTitle">Mon Espace</h1> 
-                <p className="pageSubtitle">Bienvenue, Lahlou Ali</p> 
-            </div>
-            </div>
-            
-            {/* Bottom Part: The Row of Cards */}
-            <div className="statsRow">
-            {stats.map((s) => (
-                <StatCard key={s.label} {...s} />
-            ))}
-            </div>
-        </div>
-
-        <TabBar 
-            tabs={TABS} 
-            active={activeTab} 
-            onChange={setActiveTab} 
-        />
-
-        {/* Content */}
-        <div className="tabContent">
-          {activeTab === "Mon Profile" ? (
-            <ProfileForm />
-          ) : (
-            <PlaceholderTab name={activeTab} />
-          )}
-        </div>
-      </main>
+function PlaceholderTab({ name }) {
+  return (
+    <div className="placeholder">
+      <p>Contenu de « {name} » à venir.</p>
     </div>
   );
 }
 
 // ── Profile Form ──────────────────────────────────────────────
-// -- Inside ProfileForm --
 function ProfileForm() {
-  const [info, setInfo] = useState({ nom: "", email: "", prenom: "", tel: "", age: "", nationalite: "" });
+  const [info, setInfo] = useState({
+    nom: "",
+    prenom: "",
+    age: "",
+    email: "",
+    tel: "",
+    nationalite: "",
+  });
   const [pass, setPass] = useState({ current: "", newPass: "", confirm: "" });
-  
-  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState({ type: "", text: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
+  // ── Fetch user on mount ──
   useEffect(() => {
     const fetchUserData = async () => {
-      setIsLoading(true); // Utilise le loader que nous avons configuré
+      setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/auth/me", {
+        const res = await fetch(`${API}/me`, {
           method: "GET",
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}` // Le token du login
-          }
+          headers: authHeaders(),
         });
-        const data = await response.json();
-        if (response.ok) {
-          // Met à jour l'état 'info' avec les données de Supabase
+        const data = await res.json();
+        if (res.ok) {
           setInfo({
             nom: data.user.last_name,
             prenom: data.user.first_name,
             username: data.user.username,
-            email: data.user.email, // Récupéré via getUserById dans le service
+            email: data.user.email,
             tel: data.user.phone_number || "",
-            nationalite: data.user.nationalite || ""
+            nationalite: data.user.nationalite || "",
           });
         }
-      } catch (error) {
-        console.error("Erreur de chargement du profil", error);
+      } catch (err) {
+        console.error("Erreur de chargement du profil", err);
       } finally {
         setIsLoading(false);
       }
@@ -102,174 +117,176 @@ function ProfileForm() {
     fetchUserData();
   }, []);
 
-  // Handle input changes for Personal Info
-  const handleInfoChange = (e) =>
-    setInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  // ── Handlers ──
+  const handleInfoChange = (e) => {
+    const { name, value } = e.target;
+    setInfo((prev) => ({ ...prev, [name]: value }));
+    const error = validators[name]?.(value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
 
-  // Handle input changes for Password
-  const handlePassChange = (e) =>
-    setPass((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const handlePassChange = (e) => {
+    const { name, value } = e.target;
+    setPass((prev) => ({ ...prev, [name]: value }));
+    const error = validators[name]?.(value);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
 
-  // --- Logic for Personal Information Update ---
   const handleUpdateInfo = async () => {
+    const formErrors = validateForm(info);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
     setIsLoading(true);
     setMessage({ type: "", text: "" });
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/update-profile", {
+      const res = await fetch(`${API}/update-profile`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify(info),
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage({ type: "success", text: "Informations personnelles mises à jour !" });
-      } else {
-        setMessage({ type: "error", text: data.message || "Erreur lors de la mise à jour." });
-      }
-    } catch (error) {
+      const data = await res.json();
+      setMessage({
+        type: res.ok ? "success" : "error",
+        text: res.ok
+          ? "Informations personnelles mises à jour !"
+          : data.message || "Erreur lors de la mise à jour.",
+      });
+    } catch {
       setMessage({ type: "error", text: "Erreur de connexion au serveur." });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // --- Logic for Password Update (Existing) ---
   const handleUpdatePassword = async () => {
-    if (pass.newPass !== pass.confirm) {
-      setMessage({ type: "error", text: "Les nouveaux mots de passe ne correspondent pas." });
-      return;
-    }
+  // Format validation (empty / too short / no uppercase / no digit)
+  const formErrors = validateForm(pass);
+  if (Object.keys(formErrors).length > 0) {
+    setErrors(formErrors);
+    return;
+  }
+ 
+  // Match check (runs only when both fields are individually valid)
+  if (pass.newPass !== pass.confirm) {
+    setErrors((prev) => ({
+      ...prev,
+      confirm: "Les mots de passe ne correspondent pas.",
+    }));
+    return;
+  }
+
     setIsLoading(true);
+    setMessage({ type: "", text: "" });
+
     try {
-      const response = await fetch("http://localhost:5000/api/auth/reset-password", {
+      const res = await fetch(`${API}/reset-password`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify({ 
-          currentPassword: pass.current,  // ← add this
-          password: pass.newPass 
-        }),
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ currentPassword: pass.current, password: pass.newPass }),
       });
-      if (response.ok) {
+
+      if (res.ok) {
         setMessage({ type: "success", text: "Mot de passe mis à jour !" });
         setPass({ current: "", newPass: "", confirm: "" });
       } else {
-        const data = await response.json();
+        const data = await res.json();
         setMessage({ type: "error", text: data.message || "Une erreur est survenue." });
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: "error", text: "Impossible de contacter le serveur." });
     } finally {
       setIsLoading(false);
     }
   };
 
+  // ── Render ──
   return (
     <div>
-      {message.text && (
-      <p style={{
-          color: message.type === "error" ? "#d93025" : "#1e7e34",
-          fontWeight: "500",
-          marginTop: "12px",
-          textAlign: "center"
-      }}>
-          {message.text}
-      </p>
-      )}
-      {/* ── Informations Personnelles Section ── */}
-    <section className="section">
+      {isLoading && <Loader />}
+      <StatusBanner type={message.type} text={message.text} />
+
+      {/* ── Informations Personnelles ── */}
+      <section className="section">
         <h3 className="sectionTitle">Informations Personnelles</h3>
         <div className="divider" />
 
         <div className="infoGrid">
-            {/* Row 1 */}
-            <Field label="Nom :" name="nom" value={info.nom} onChange={handleInfoChange} />
-            <Field label="Email :" name="email" value={info.email} onChange={handleInfoChange} type="email" />
-            
-            {/* Row 2 */}
-            <Field label="Prénom :" name="prenom" value={info.prenom} onChange={handleInfoChange} />
-            <Field label="Numéro de Téléphone :" name="tel" value={info.tel} onChange={handleInfoChange} />
-
-            {/* Row 3 */}
-            <Field label="Âge :" name="age" value={info.age} onChange={handleInfoChange} />
-            <Field label="Nationalité :" name="nationalite" value={info.nationalite} onChange={handleInfoChange} />
+          <Field label="Nom :"          name="nom"         value={info.nom}         onChange={handleInfoChange} error={errors.nom} />
+          <Field label="Email :"        name="email"       value={info.email}       onChange={handleInfoChange} type="email" error={errors.email} />
+          <Field label="Prénom :"       name="prenom"      value={info.prenom}      onChange={handleInfoChange} error={errors.prenom} />
+          <Field label="Tél :"          name="tel"         value={info.tel}         onChange={handleInfoChange} error={errors.tel} />
+          <Field label="Âge :"          name="age"         value={info.age}         onChange={handleInfoChange} error={errors.age} />
+          <Field label="Nationalité :"  name="nationalite" value={info.nationalite} onChange={handleInfoChange} error={errors.nationalite} />
         </div>
 
         <div className="actionsRight">
-            <button 
-                className="btnModifier" 
-                onClick={handleUpdateInfo}
-                disabled={isLoading}
-                >
+          <button className="btnModifier" onClick={handleUpdateInfo} disabled={isLoading}>
             {isLoading ? "Chargement..." : "Modifier"}
-            </button>
-      </div>
-    </section>
+          </button>
+        </div>
+      </section>
 
       <div className="divider" />
 
-      {/* ── Password Section ── */}
+      {/* ── Modifier le mot de passe ── */}
       <section className="section">
         <h3 className="sectionTitle">Modifier votre mot de passe</h3>
-        
 
         <div className="passGrid">
-          <Field label="Mot de passe actuel :" name="current" value={pass.current} onChange={handlePassChange} type="password" />
-          <Field label="Nouveau mot de passe :" name="newPass" value={pass.newPass} onChange={handlePassChange} type="password" />
-          <Field label="Confirmer le mot de passe:" name="confirm" value={pass.confirm} onChange={handlePassChange} type="password" />
+          <Field label="Mot de passe actuel :"               name="current" value={pass.current} onChange={handlePassChange} type="password" error={errors.current}/>
+          <Field label="Nouveau mot de passe :"              name="newPass" value={pass.newPass} onChange={handlePassChange} type="password" error={errors.newPass}/>
+          <Field label="Confirmer le nouveau mot de passe :" name="confirm" value={pass.confirm} onChange={handlePassChange} type="password" error={errors.confirm}/>
         </div>
 
         <div className="actionsRight">
-          <button 
-            className="btnPrimary" 
-            onClick={handleUpdatePassword}
-            disabled={isLoading}
-            >
+          <button className="btnPrimary" onClick={handleUpdatePassword} disabled={isLoading}>
             {isLoading ? "Chargement..." : "Modifier le mot de passe"}
           </button>
         </div>
-              {message.text && (
-                <p style={{ 
-                  color: message.type === "error" ? "#d93025" : "#1e7e34", 
-                  marginBottom: "10px",
-                  fontWeight: "500" 
-                }}>
-                  {message.text}
-                </p>
-              )}
       </section>
     </div>
   );
 }
 
-// ── Field ─────────────────────────────────────────────────────
-function Field({ label, name, value, onChange, type = "text" }) {
-  return (
-    <div className="field">
-      <label className="fieldLabel">{label}</label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-      />
-    </div>
-  );
-}
+// ── Page shell ────────────────────────────────────────────────
+export default function ProfilePage() {
+  const [activeTab, setActiveTab] = useState("Mon Profile");
 
-// ── Placeholder ───────────────────────────────────────────────
-function PlaceholderTab({ name }) {
   return (
-    <div className="placeholder">
-      <p>Contenu de « {name} » à venir.</p>
+    <div className="page">
+      <Navbar />
+
+      <main className="main">
+        <div className="pageHeader">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <img src={Avatar} alt="Immo DIVA" className="avatar" />
+            <div>
+              <h1 className="pageTitle">Mon Espace</h1>
+              <p className="pageSubtitle">Bienvenue, Lahlou Ali</p>
+            </div>
+          </div>
+
+          <div className="statsRow">
+            {STATS.map((s) => (
+              <StatCard key={s.label} {...s} />
+            ))}
+          </div>
+        </div>
+
+        <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
+
+        <div className="tabContent">
+          {activeTab === "Mon Profile" ? (
+            <ProfileForm />
+          ) : (
+            <PlaceholderTab name={activeTab} />
+          )}
+        </div>
+      </main>
     </div>
   );
 }

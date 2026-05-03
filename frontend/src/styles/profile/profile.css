@@ -172,3 +172,60 @@ input {
   cursor: pointer;
   transition: background 0.15s;
 }
+
+/* ── Info Grid ───────────────────────────────────────────────── */
+/* The grid must align rows to the TOP so error text doesn't     */
+/* overflow into the neighboring column                          */
+
+.info-grid,
+.infoGrid {
+  align-items: start; /* was likely "center" — this is the root cause */
+}
+
+/* ── Profile Field ───────────────────────────────────────────── */
+.profile-field {
+  display: grid;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ── Field Error ─────────────────────────────────────────────── */
+.field-error {
+  display: block;
+  color: #A32D2D;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 2px;
+  width: 100%;
+}
+
+/* ── Error Input State ───────────────────────────────────────── */
+.field-input--error {
+  border-color: #F09595 !important;
+  background-color: #FFF8F8;
+}
+
+/* ── Status Banner ───────────────────────────────────────────── */
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 12px 0;
+  border: 0.5px solid transparent;
+}
+
+.status-banner--error {
+  background: #FCEBEB;
+  color: #A32D2D;
+  border-color: #F09595;
+}
+
+.status-banner--success {
+  background: #EAF3DE;
+  color: #3B6D11;
+  border-color: #97C459;
+}
