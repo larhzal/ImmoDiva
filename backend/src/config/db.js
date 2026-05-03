@@ -1,8 +1,11 @@
 const { createClient } = require("@supabase/supabase-js");
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY; // or service_role for backend only
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// For admin operations (password update, etc.)
+const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-module.exports = supabase;
+// For auth operations (signInWithPassword, etc.)
+const supabaseAuth = createClient(supabaseUrl, process.env.SUPABASE_ANON_KEY);
+
+module.exports = { supabaseAdmin, supabaseAuth };

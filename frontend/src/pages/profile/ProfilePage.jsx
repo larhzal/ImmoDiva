@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/layout/Navbar";
 import Avatar from "../../assets/icons/Dashboard.png"
 import StatCard from "../../components/layout/StatsCard";
 import TabBar from "../../components/layout/TabBar";
+import Loader from "../../components/ui/loader"; 
 import "../../styles/profile/profile.css";
 
 const TABS = ["Mes Annonces", "Les Demandes", "Mes Clients", "Mon Profile"];
@@ -13,7 +14,9 @@ const stats = [
   { label: "En Attente", value: 5, color: "#E87722" },
 ];
 
+
 export default function ProfilePage() {
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [activeTab, setActiveTab] = useState("Mon Profile");
 
   return (
@@ -61,11 +64,43 @@ export default function ProfilePage() {
 // ── Profile Form ──────────────────────────────────────────────
 // -- Inside ProfileForm --
 function ProfileForm() {
-  const [info, setInfo] = useState({ nom: "", email: "", prenom: "", tel: "" });
+  const [info, setInfo] = useState({ nom: "", email: "", prenom: "", tel: "", age: "", nationalite: "" });
   const [pass, setPass] = useState({ current: "", newPass: "", confirm: "" });
   
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      setIsLoading(true); // Utilise le loader que nous avons configuré
+      try {
+        const response = await fetch("http://localhost:5000/api/auth/me", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}` // Le token du login
+          }
+        });
+        const data = await response.json();
+        if (response.ok) {
+          // Met à jour l'état 'info' avec les données de Supabase
+          setInfo({
+            nom: data.user.last_name,
+            prenom: data.user.first_name,
+            username: data.user.username,
+            email: data.user.email, // Récupéré via getUserById dans le service
+            tel: data.user.phone_number || "",
+            nationalite: data.user.nationalite || ""
+          });
+        }
+      } catch (error) {
+        console.error("Erreur de chargement du profil", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   // Handle input changes for Personal Info
   const handleInfoChange = (e) =>
@@ -77,7 +112,7 @@ function ProfileForm() {
 
   // --- Logic for Personal Information Update ---
   const handleUpdateInfo = async () => {
-    setLoading(true);
+    setIsLoading(true);
     setMessage({ type: "", text: "" });
 
     try {
@@ -100,7 +135,7 @@ function ProfileForm() {
     } catch (error) {
       setMessage({ type: "error", text: "Erreur de connexion au serveur." });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -110,7 +145,7 @@ function ProfileForm() {
       setMessage({ type: "error", text: "Les nouveaux mots de passe ne correspondent pas." });
       return;
     }
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await fetch("http://localhost:5000/api/auth/reset-password", {
         method: "POST",
@@ -118,7 +153,10 @@ function ProfileForm() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         },
-        body: JSON.stringify({ password: pass.newPass }),
+        body: JSON.stringify({ 
+          currentPassword: pass.current,  // ← add this
+          password: pass.newPass 
+        }),
       });
       if (response.ok) {
         setMessage({ type: "success", text: "Mot de passe mis à jour !" });
@@ -130,12 +168,22 @@ function ProfileForm() {
     } catch (error) {
       setMessage({ type: "error", text: "Impossible de contacter le serveur." });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div>
+      {message.text && (
+      <p style={{
+          color: message.type === "error" ? "#d93025" : "#1e7e34",
+          fontWeight: "500",
+          marginTop: "12px",
+          textAlign: "center"
+      }}>
+          {message.text}
+      </p>
+      )}
       {/* ── Informations Personnelles Section ── */}
     <section className="section">
         <h3 className="sectionTitle">Informations Personnelles</h3>
@@ -149,15 +197,19 @@ function ProfileForm() {
             {/* Row 2 */}
             <Field label="Prénom :" name="prenom" value={info.prenom} onChange={handleInfoChange} />
             <Field label="Numéro de Téléphone :" name="tel" value={info.tel} onChange={handleInfoChange} />
+
+            {/* Row 3 */}
+            <Field label="Âge :" name="age" value={info.age} onChange={handleInfoChange} />
+            <Field label="Nationalité :" name="nationalite" value={info.nationalite} onChange={handleInfoChange} />
         </div>
 
         <div className="actionsRight">
             <button 
                 className="btnModifier" 
                 onClick={handleUpdateInfo}
-                disabled={loading}
+                disabled={isLoading}
                 >
-            {loading ? "Chargement..." : "Modifier"}
+            {isLoading ? "Chargement..." : "Modifier"}
             </button>
       </div>
     </section>
@@ -179,9 +231,9 @@ function ProfileForm() {
           <button 
             className="btnPrimary" 
             onClick={handleUpdatePassword}
-            disabled={loading}
+            disabled={isLoading}
             >
-            {loading ? "Chargement..." : "Modifier le mot de passe"}
+            {isLoading ? "Chargement..." : "Modifier le mot de passe"}
           </button>
         </div>
               {message.text && (
