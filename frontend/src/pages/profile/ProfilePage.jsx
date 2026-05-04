@@ -24,7 +24,7 @@ const authHeaders = (extra = {}) => ({
 });
 
 // ── Shared sub-components ─────────────────────────────────────
-function Field({ label, name, value, onChange, type = "text", error }) {
+function Field({ label, name, value, onChange, type = "text", error, ...rest }) {
   return (
     <div className="profile-field">
       <label className="field-label">{label}</label>
@@ -34,6 +34,7 @@ function Field({ label, name, value, onChange, type = "text", error }) {
         name={name}
         value={value}
         onChange={onChange}
+        {...rest}
       />
       {error && <span className="field-error">{error}</span>}
     </div>
@@ -218,7 +219,7 @@ function ProfileForm({ onUserLoaded })  {
           <Field label="Email :"        name="email"       value={info.email}       onChange={handleInfoChange} type="email" error={errors.email} />
           <Field label="Prénom :"       name="prenom"      value={info.prenom}      onChange={handleInfoChange} error={errors.prenom} />
           <Field label="Tél :"          name="tel"         value={info.tel}         onChange={handleInfoChange} error={errors.tel} />
-          <Field label="Âge :"          name="age"         value={info.age}         onChange={handleInfoChange} error={errors.age} />
+          <Field label="Âge :"          name="age"         value={info.age}         onChange={handleInfoChange} error={errors.age} min="18" type="number"/>
           <Field label="Nationalité :"  name="nationalite" value={info.nationalite} onChange={handleInfoChange} error={errors.nationalite} />
         </div>
 
