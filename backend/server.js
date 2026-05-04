@@ -11,6 +11,7 @@ app.use(express.json());
 const userRoutes = require("./src/modules/users/users.routes.js");
 const rentalRoutes = require('./src/modules/rentals/rentals.routes.js');
 
+
 app.use("/api/users", userRoutes);
 app.use("/api/rentals", rentalRoutes);
 
