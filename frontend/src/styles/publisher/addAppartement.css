@@ -81,6 +81,23 @@
   background: #fff;
 }
 
+.field select {
+  flex: 1;
+  background: #f3f3f3;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  margin-left: 10px;
+}
+
+.input-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 /* Radio / checkbox rows */
 .radios {
   margin-top: 8px;
@@ -210,9 +227,49 @@
   text-align: center;
 }
 
-
 .required {
   color: red;
+}
+
+.toast-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #22c55e;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  z-index: 9999;
+
+  /* animation */
+  animation: slideIn 0.4s ease-out forwards, slideOut 0.4s ease-in 2.6s forwards;
+}
+
+/* from right → center */
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* exit animation */
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 650px) {

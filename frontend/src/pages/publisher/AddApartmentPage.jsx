@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import "../../styles/publisher/addAppartement.css";
 import { validateAppartementForm } from "../../utils/validators";
+import Navbar from "../../components/layout/Navbar";
 
 function AddAppartement() {
     const [titre, setTitre] = useState("");
@@ -21,6 +22,7 @@ function AddAppartement() {
     const [caution, setCaution] = useState("");
     const [chargesIncluses, setChargesIncluses] = useState("");
     const [dureeMini, setDureeMini] = useState("");
+    const [dureeUnit, setDureeUnit] = useState("");
     const [animaux, setAnimaux] = useState("");
     const [fumeurs, setFumeurs] = useState("");
     const [colocataires, setColocataires] = useState("");
@@ -29,9 +31,11 @@ function AddAppartement() {
 
     const fileInputRef = useRef(null);
 
-    const [errors, setErrors] = useState({}); // Tracks which fields are missing
-    const [formError, setFormError] = useState(""); // Top-level message
+    const [errors, setErrors] = useState({});
+    const [formError, setFormError] = useState("");
     const [touched, setTouched] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleProfil = (profil) => {
         setProfilLocataire((prev) =>
@@ -72,6 +76,7 @@ function AddAppartement() {
             caution,
             chargesIncluses,
             dureeMini,
+            dureeUnit,
             animaux,
             fumeurs,
             colocataires,
@@ -98,8 +103,7 @@ function AddAppartement() {
 
         try {
 
-            // ***********************************************************************************
-            // ***********************************************************************************
+            setLoading(true);
             const formData = new FormData();
 
             formData.append("titre", titre);
@@ -120,13 +124,14 @@ function AddAppartement() {
             formData.append("caution", caution);
             formData.append("chargesIncluses", chargesIncluses);
             formData.append("dureeMini", dureeMini);
+            formData.append("dureeUnit", dureeUnit);
             formData.append("animaux", animaux);
             formData.append("fumeurs", fumeurs);
             formData.append("colocataires", colocataires);
             formData.append("profilLocataire", JSON.stringify(profilLocataire));
-            formData.append("owner_id", "1");
+            formData.append("owner_id", "550e8400-e29b-41d4-a716-446655440000");
 
-            // 👉 images (IMPORTANT)
+
             photos.forEach((photo) => {
                 formData.append("photos", photo.file);
             });
@@ -139,14 +144,52 @@ function AddAppartement() {
             const data = await response.json();
             console.log(data);
 
+            if (response.ok) {
+                setSuccessMessage("Appartement créé avec succès");
+
+
+                setTitre("");
+                setVille("");
+                setDescription("");
+                setAdresse("");
+                setSurface("");
+                setNbChambres("");
+                setEtage("");
+                setNbSallesBain("");
+                setAscenseur("");
+                setParking("");
+                setMeuble("");
+                setPiscine("");
+                setBalcon("");
+                setGardien("");
+                setPrixMensuel("");
+                setCaution("");
+                setChargesIncluses("");
+                setDureeMini("");
+                setAnimaux("");
+                setFumeurs("");
+                setColocataires("");
+                setProfilLocataire([]);
+                setPhotos([]);
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
+                setTimeout(() => {
+                    setSuccessMessage("");
+                }, 5000);
+            }
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
+    
     return (
-
+        
         <>
+        <Navbar/>
             {formError && (
                 <div style={{
                     backgroundColor: "#f44336",
@@ -159,6 +202,12 @@ function AddAppartement() {
                     textAlign: "center",
                 }}>
                     {formError}
+                </div>
+            )}
+
+            {successMessage && (
+                <div className="toast-success">
+                    {successMessage}
                 </div>
             )}
             <div className="add-appartement">
@@ -443,32 +492,55 @@ function AddAppartement() {
                     <div className="two-cols">
                         <div className="field">
                             <label>Prix mensuel en MAD <span className="required"> *</span> :</label>
-                            <input type="number" value={prixMensuel} onChange={(e) => {
-                                setPrixMensuel(e.target.value);
-                                if (errors.prixMensuel) {
-                                    setErrors(prev => ({ ...prev, prixMensuel: "" }));
-                                }
-                            }} />
-                            {touched.prixMensuel && errors.prixMensuel && (
-                                <div style={{ color: "red", fontSize: "12px" }}>
-                                    {errors.prixMensuel}
-                                </div>
-                            )}
+                            <div className="input-wraper">
+                                <input type="number" value={prixMensuel} onChange={(e) => {
+                                    setPrixMensuel(e.target.value);
+                                    if (errors.prixMensuel) {
+                                        setErrors(prev => ({ ...prev, prixMensuel: "" }));
+                                    }
+                                }} />
+                                {touched.prixMensuel && errors.prixMensuel && (
+                                    <div style={{ color: "red", fontSize: "12px" }}>
+                                        {errors.prixMensuel}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="field">
                             <label>Durée minimum de location <span className="required"> *</span> :</label>
-                            <input type="text" value={dureeMini} onChange={(e) => {
-                                setDureeMini(e.target.value);
-                                if (errors.dureeMini) {
-                                    setErrors(prev => ({ ...prev, dureeMini: "" }));
-                                }
-                            }} placeholder="ex: 6 mois" />
-                            {touched.dureeMini && errors.dureeMini && (
-                                <div style={{ color: "red", fontSize: "12px" }}>
-                                    {errors.dureeMini}
-                                </div>
-                            )}
+                            <div className="input-wraper">
+                                <input
+                                    type="number"
+                                    value={dureeMini}
+                                    onChange={(e) => {
+                                        setDureeMini(e.target.value);
+                                        if (errors.dureeMini) {
+                                            setErrors(prev => ({ ...prev, dureeMini: "" }));
+                                        }
+                                    }}
+                                    min="1"
+                                />
+                                <select
+                                    required
+                                    value={dureeUnit}
+                                    onChange={(e) => {
+                                        setDureeUnit(e.target.value);
+                                        if (errors.dureeUnit) {
+                                            setErrors(prev => ({ ...prev, dureeUnit: "" }));
+                                        }
+                                    }}
+                                >
+                                    <option value="">Choisir</option>
+                                    <option value="jours">Jours</option>
+                                    <option value="mois">Mois</option>
+                                </select>
+                                {touched.dureeMini && errors.dureeMini && (
+                                    <div style={{ color: "red", fontSize: "12px" }}>
+                                        {errors.dureeMini}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
 
@@ -606,7 +678,7 @@ function AddAppartement() {
                                     onChange={() => {
                                         handleProfil(p);
 
-                                        // remove error when user selects something
+
                                         if (errors.profilLocataire) {
                                             setErrors(prev => ({ ...prev, profilLocataire: "" }));
                                         }
@@ -615,12 +687,12 @@ function AddAppartement() {
                                 {" "}{p}
                             </label>
                         ))}
+                        {touched.profilLocataire && errors.profilLocataire && (
+                            <div style={{ color: "red", fontSize: "12px" }}>
+                                {errors.profilLocataire}
+                            </div>
+                        )}
                     </div>
-                    {touched.profilLocataire && errors.profilLocataire && (
-                        <div style={{ color: "red", fontSize: "12px" }}>
-                            {errors.profilLocataire}
-                        </div>
-                    )}
                 </section>
 
                 {/* ── Galerie du bien ── */}
@@ -635,6 +707,7 @@ function AddAppartement() {
                             multiple
                             ref={fileInputRef}
                             onChange={handlePhotos}
+                            style={{ display: "none" }}
                         />
                     </div>
                     {touched.photos && errors.photos && (
@@ -664,8 +737,10 @@ function AddAppartement() {
                 </section>
 
                 {/* ── Submit ── */}
-                <div className="submit-row" type="button" onClick={handleSubmit}>
-                    <button type="button">Mettre mon Appartement en Location</button>
+                <div className="submit-row">
+                    <button type="button" onClick={handleSubmit} disabled={loading}>
+                        {loading ? "Création en cours..." : "Mettre mon Appartement en Location"}
+                    </button>
                 </div>
             </div>
         </>

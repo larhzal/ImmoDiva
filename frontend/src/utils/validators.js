@@ -5,6 +5,7 @@ export const validateAppartementForm = (fields) => {
     let isValid = true;
 
     Object.keys(fields).forEach(field => {
+         if (field === "dureeMini" || field === "dureeUnit") return;
         const value = fields[field];
 
         if (Array.isArray(value)) {
@@ -18,5 +19,16 @@ export const validateAppartementForm = (fields) => {
         }
     });
 
+    if (!fields.dureeMini || fields.dureeMini.toString().trim() === "") {
+        newErrors.dureeMini = "Durée obligatoire";
+        isValid = false;
+    }
+
+    if (!fields.dureeUnit || fields.dureeUnit.trim() === "") {
+        newErrors.dureeUnit = "Unité obligatoire";
+        isValid = false;
+    }
+
+    console.log(fields);
     return { isValid, errors: newErrors };
 };
