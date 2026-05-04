@@ -2,12 +2,14 @@ import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import "../../styles/ui/rentalRequest.css"
 import { createDemandeLocation } from "../../services/rentalService"
+//ligne 6 a commente pour tester
 import { useAuth } from "../../hooks/useAuth"
 
 export default function RentalRequestPage() {
 
   const { apartmentId } = useParams()
   const navigate = useNavigate()
+  // ligne 13 a commente 
   const { user } = useAuth()
 
   const [formData, setFormData] = useState({
@@ -15,7 +17,7 @@ export default function RentalRequestPage() {
     nom: "",
     age: "",
     nationalite: "",
-    email: user?.email || "",
+    email: "", //user?.email || "",
     statut: "",
     profil: "",
     nb_personnes: "",

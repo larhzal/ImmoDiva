@@ -3,6 +3,7 @@ const rentalsService = require('./rentals.service');
 // Envoyer une demande de location par le locataire
 exports.creerDemande = async (req, res) => {
   try {
+    //pour tester decommenter la ligne 7 et commenter la ligne 8
     // const clientId = req.body.client_id || "8342fbeb-60e4-42fd-8e8a-6c61ea56ac92"
     const clientId = req.user.id ;
     
