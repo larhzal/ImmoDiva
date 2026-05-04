@@ -276,7 +276,7 @@ function AddAppartement() {
                         </div>
                         <div className="field">
                             <label>Surface en m² <span className="required"> *</span> :</label>
-                            <input type="number" value={surface} onChange={(e) => {
+                            <input type="number" value={surface} min="0" onChange={(e) => {
                                 setSurface(e.target.value);
                                 if (errors.surface) {
                                     setErrors(prev => ({ ...prev, surface: "" }));
@@ -290,7 +290,7 @@ function AddAppartement() {
                         </div>
                         <div className="field">
                             <label>Nombre de chambres <span className="required"> *</span> :</label>
-                            <input type="number" value={nbChambres} onChange={(e) => {
+                            <input type="number" value={nbChambres} min="0" onChange={(e) => {
                                 setNbChambres(e.target.value);
                                 if (errors.nbChambres) {
                                     setErrors(prev => ({ ...prev, nbChambres: "" }));
@@ -304,7 +304,7 @@ function AddAppartement() {
                         </div>
                         <div className="field">
                             <label>Étage <span className="required"> *</span> :</label>
-                            <input type="number" value={etage} onChange={(e) => {
+                            <input type="number" value={etage} min="-1" onChange={(e) => {
                                 setEtage(e.target.value);
                                 if (errors.etage) {
                                     setErrors(prev => ({ ...prev, etage: "" }));
@@ -318,7 +318,7 @@ function AddAppartement() {
                         </div>
                         <div className="field">
                             <label>Nombre de salles de bain <span className="required"> *</span> :</label>
-                            <input type="number" value={nbSallesBain} onChange={(e) => {
+                            <input type="number" value={nbSallesBain} min="0" onChange={(e) => {
                                 setNbSallesBain(e.target.value);
                                 if (errors.nbSallesBain) {
                                     setErrors(prev => ({ ...prev, nbSallesBain: "" }));
@@ -493,7 +493,7 @@ function AddAppartement() {
                         <div className="field">
                             <label>Prix mensuel en MAD <span className="required"> *</span> :</label>
                             <div className="input-wraper">
-                                <input type="number" value={prixMensuel} onChange={(e) => {
+                                <input type="number" value={prixMensuel} min="0" onChange={(e) => {
                                     setPrixMensuel(e.target.value);
                                     if (errors.prixMensuel) {
                                         setErrors(prev => ({ ...prev, prixMensuel: "" }));
