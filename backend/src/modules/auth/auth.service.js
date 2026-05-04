@@ -1,6 +1,7 @@
 const { supabaseAdmin, supabaseAuth } = require("../../config/db");
 
 exports.getProfile = async (userId) => {
+  // Step 1: Get profile from User table
   const { data: profile, error } = await supabaseAdmin
     .from("User")
     .select("id, first_name, last_name, username, role, phone_number, status, nationality, age")
@@ -8,7 +9,15 @@ exports.getProfile = async (userId) => {
     .single();
 
   if (error) throw { status: 500, message: "Erreur lors de la récupération du profil." };
-  return profile;
+
+  // Step 2: Get email from Supabase Auth
+  const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
+  if (authError) throw { status: 500, message: "Erreur lors de la récupération de l'email." };
+
+  return {
+    ...profile,
+    email: authUser.user.email,
+  };
 };
 
 exports.updateProfile = async (userId, data) => {
@@ -25,7 +34,29 @@ exports.updateProfile = async (userId, data) => {
     .select()
     .single();
 
-  if (error) throw { status: 500, message: "Erreur lors de la mise à jour du profil." };
+  if (error) {
+    if (error.code === "23505") {
+      if (error.details.includes("phone_number")) {
+        throw { status: 409, message: "Ce numéro de téléphone est déjà utilisé par un autre compte." };
+      }
+      if (error.details.includes("email")) {
+        throw { status: 409, message: "Cette adresse email est déjà utilisée par un autre compte." };
+      }
+      throw { status: 409, message: "Cette valeur est déjà utilisée par un autre compte." };
+    }
+    throw { status: 500, message: "Erreur lors de la mise à jour du profil." };
+  }
+
+  if (data.email) {
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
+    // console.log("Admin check - first user:", data?.users?.[0]?.email, "error:", error);
+    const { data: authUser, error: emailError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      email: data.email,
+    });
+    console.log("Email update - authUser:", authUser, "error:", emailError);
+    if (emailError) throw { status: 500, message: "Erreur lors de la mise à jour de l'email." };
+  }
+
   return updated;
 };
 

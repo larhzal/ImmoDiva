@@ -73,7 +73,7 @@ function PlaceholderTab({ name }) {
 }
 
 // ── Profile Form ──────────────────────────────────────────────
-function ProfileForm() {
+function ProfileForm({ onUserLoaded })  {
   const [info, setInfo] = useState({
     nom: "",
     prenom: "",
@@ -88,24 +88,24 @@ function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   // ── Fetch user on mount ──
-  useEffect(() => {
+ useEffect(() => {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`${API}/me`, {
-          method: "GET",
-          headers: authHeaders(),
-        });
+        const res = await fetch(`${API}/me`, { headers: authHeaders() });
         const data = await res.json();
         if (res.ok) {
-          setInfo({
+          const userData = {
             nom: data.user.last_name,
             prenom: data.user.first_name,
             username: data.user.username,
             email: data.user.email,
             tel: data.user.phone_number || "",
-            nationalite: data.user.nationalite || "",
-          });
+            nationalite: data.user.nationality || "",
+            age: data.user.age || "",
+          };
+          setInfo(userData);
+          onUserLoaded?.({ prenom: userData.prenom, nom: userData.nom }); // ← notify parent
         }
       } catch (err) {
         console.error("Erreur de chargement du profil", err);
@@ -113,7 +113,6 @@ function ProfileForm() {
         setIsLoading(false);
       }
     };
-
     fetchUserData();
   }, []);
 
@@ -255,6 +254,7 @@ function ProfileForm() {
 // ── Page shell ────────────────────────────────────────────────
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("Mon Profile");
+   const [user, setUser] = useState({ prenom: "", nom: "" });
 
   return (
     <div className="page">
@@ -266,7 +266,10 @@ export default function ProfilePage() {
             <img src={Avatar} alt="Immo DIVA" className="avatar" />
             <div>
               <h1 className="pageTitle">Mon Espace</h1>
-              <p className="pageSubtitle">Bienvenue, Lahlou Ali</p>
+              <p className="pageSubtitle">
+                Bienvenue, {user.prenom} {user.nom}
+
+              </p>
             </div>
           </div>
 
@@ -281,7 +284,7 @@ export default function ProfilePage() {
 
         <div className="tabContent">
           {activeTab === "Mon Profile" ? (
-            <ProfileForm />
+            <ProfileForm onUserLoaded={setUser} />
           ) : (
             <PlaceholderTab name={activeTab} />
           )}

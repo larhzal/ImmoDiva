@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 // Use this temporarily instead of the real protect middleware
 // const protectDev = (req, res, next) => {
 //   req.user = { id: "ac989030-6794-455f-9b91-1a0e42248439", role: "publisher" }; // hardcode a real user ID from your DB
+//   // req.user = { id: "a3228979-6fd7-4f1a-a6d6-869e9f1b5829", role: "client" }; // hardcode a real user ID from your DB
 //   next();
 // };
 
