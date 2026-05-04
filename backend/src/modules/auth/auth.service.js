@@ -227,11 +227,13 @@ exports.requestPasswordReset = async ({ email }) => {
  
   // Supabase envoie l'email uniquement si le compte existe
   // redirectTo : page frontend qui récupère le token dans l'URL
+  const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/+$/, '');
+
   const { error: resetError } = await supabase.auth.resetPasswordForEmail(
     email.trim().toLowerCase(),
-    { redirectTo: `${process.env.FRONTEND_URL}/reset-password` }
+    { redirectTo: `${frontendUrl}/reset-password` }
   );
- 
+
   if (resetError) {
     const error = new Error("Impossible d'envoyer l'email de réinitialisation.");
     error.details = resetError.message;
@@ -263,22 +265,21 @@ exports.updatePassword = async ({ accessToken, newPassword }) => {
     throw error;
   }
  
-  // Décoder le token pour identifier l'utilisateur
-  const { data: userData, error: userError } =
-    await supabase.auth.getUser(accessToken);
- 
+  // Vérifier que le token est valide et obtenir l'utilisateur
+  const { data: userData, error: userError } = await supabase.auth.getUser(accessToken);
+
   if (userError || !userData?.user?.id) {
     const error = new Error("Lien de réinitialisation invalide ou expiré.");
     error.status = 401;
     throw error;
   }
- 
-  // Mettre à jour le mot de passe dans Supabase Auth
-  const { error: updateError } = await supabase.auth.admin.updateUserById(
-    userData.user.id,
-    { password: newPassword }
+
+  // Mettre à jour le mot de passe via le token de récupération
+  const { error: updateError } = await supabase.auth.updateUser(
+    { password: newPassword },
+    { accessToken }
   );
- 
+
   if (updateError) {
     const error = new Error("Impossible de mettre à jour le mot de passe.");
     error.details = updateError.message;
