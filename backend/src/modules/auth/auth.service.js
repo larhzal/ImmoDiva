@@ -1,4 +1,12 @@
-const supabase = require("../../config/db");
+const fs         = require('fs');
+const path       = require('path');
+const crypto     = require('crypto');
+const nodemailer = require('nodemailer');
+const supabase   = require("../../config/db");
+
+const logoPath   = path.join(__dirname, '../../../../frontend/src/assets/images/Logo.png');
+const logoBase64 = fs.readFileSync(logoPath).toString('base64');
+const logoSrc    = `data:image/png;base64,${logoBase64}`;
 
 // Mapping des rôles
 const roleMappings = {
@@ -206,10 +214,22 @@ exports.logoutUser = async ({ accessToken }) => {
  
   return { message: "Deconnexion reussie." };
 };
+
+// ─── Nodemailer transporter ───────────────────────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host:   'live.smtp.mailtrap.io',  
+  port:   587,
+  auth: {
+    user: 'api',                    
+    pass: process.env.MAILTRAP_LIVE_TOKEN, 
+  },
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // DEMANDE DE RÉINITIALISATION — Tâche 6
-// Supabase envoie lui-même l'email avec un lien sécurisé vers /reset-password
-// On répond toujours le même message (sécurité : ne pas révéler si l'email existe)
+// 1. Génère un token crypto sécurisé
+// 2. Stocke token + expiry dans la table password_resets
+// 3. Envoie le lien par email via Nodemailer
 // ─────────────────────────────────────────────────────────────────────────────
 exports.requestPasswordReset = async ({ email }) => {
   if (!email?.trim()) {
@@ -217,38 +237,85 @@ exports.requestPasswordReset = async ({ email }) => {
     error.status = 400;
     throw error;
   }
- 
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     const error = new Error("Format d'email invalide.");
     error.status = 400;
     throw error;
   }
- 
-  // Supabase envoie l'email uniquement si le compte existe
-  // redirectTo : page frontend qui récupère le token dans l'URL
-  const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-    email.trim().toLowerCase(),
-    { redirectTo: `${process.env.FRONTEND_URL}/reset-password` }
-  );
- 
-  if (resetError) {
-    const error = new Error("Impossible d'envoyer l'email de réinitialisation.");
-    error.details = resetError.message;
-    error.status  = 500;
-    throw error;
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Vérifier si l'email existe dans Supabase Auth
+  // (on ne révèle pas si l'email existe ou non — réponse toujours identique)
+  const { data: users, error: listError } =
+    await supabase.auth.admin.listUsers();
+
+  const userExists = !listError &&
+    users?.users?.some(u => u.email === normalizedEmail);
+
+  if (userExists) {
+    // Générer un token aléatoire sécurisé (32 octets = 64 hex chars)
+    const token     = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // +1 heure
+
+    // Supprimer les anciens tokens pour cet email (éviter doublons)
+    await supabase
+      .from('password_resets')
+      .delete()
+      .eq('email', normalizedEmail);
+
+    // Insérer le nouveau token
+    const { error: insertError } = await supabase
+      .from('password_resets')
+      .insert([{ email: normalizedEmail, token, expires_at: expiresAt }]);
+
+    if (insertError) {
+      const error = new Error("Erreur lors de la création du token.");
+      error.status = 500;
+      throw error;
+    }
+
+    // Construire le lien de réinitialisation
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+    // Envoyer l'email
+    await transporter.sendMail({
+      from: '"ImmoDIVA" <noreply@demomailtrap.co>',
+      to:      normalizedEmail,
+      subject: 'Réinitialisation de votre mot de passe',
+      html: `
+       <div style="font-family:sans-serif;max-width:480px;margin:auto">
+            <img src="${logoSrc}" alt="ImmoDIVA" style="margin-bottom:40px;display:block;height:64px;width:auto;margin-left: 80px;margin-top: 120px;" />
+          <h2 style="margin-left:50px;">Réinitialisation de mot de passe</h2>
+          <p>Vous avez demandé à réinitialiser votre mot de passe ImmoDIVA.</p>
+          <p>Cliquez sur le bouton ci-dessous. Ce lien est valable <strong>1 heure</strong>.</p>
+          <a href="${resetLink}"
+             style="display:inline-block;margin:16px 0;padding:12px 24px;
+                    background:#f97316;color:#fff;border-radius:24px;
+                    text-decoration:none;font-weight:600;margin-left:80px;">
+            Réinitialiser mon mot de passe
+          </a>
+          <p style="color:#888;font-size:12px;margin-left:70px;">
+            Si vous n'avez pas fait cette demande, ignorez cet email.
+          </p>
+        </div>
+      `,
+    });
   }
- 
-  // Toujours le même message pour ne pas révéler si l'email existe
+
+  // Toujours le même message (sécurité)
   return {
     message: "Si cet email est associé à un compte, un lien de réinitialisation a été envoyé.",
   };
 };
- 
+
 // ─────────────────────────────────────────────────────────────────────────────
 // MISE À JOUR DU MOT DE PASSE — Tâche 7
-// L'utilisateur clique sur le lien email → Supabase redirige vers
-// /reset-password#access_token=xxx — le frontend extrait ce token et l'envoie ici
+// 1. Vérifie le token dans password_resets (existence + expiry)
+// 2. Met à jour le mot de passe via Supabase admin
+// 3. Supprime le token utilisé
 // ─────────────────────────────────────────────────────────────────────────────
 exports.updatePassword = async ({ accessToken, newPassword }) => {
   if (!accessToken) {
@@ -256,36 +323,62 @@ exports.updatePassword = async ({ accessToken, newPassword }) => {
     error.status = 400;
     throw error;
   }
- 
+
   if (!newPassword || newPassword.length < 6) {
     const error = new Error("Le mot de passe doit contenir au moins 6 caractères.");
     error.status = 400;
     throw error;
   }
- 
-  // Décoder le token pour identifier l'utilisateur
-  const { data: userData, error: userError } =
-    await supabase.auth.getUser(accessToken);
- 
-  if (userError || !userData?.user?.id) {
+
+  // Récupérer le token depuis la table
+  const { data: resetRecord, error: fetchError } = await supabase
+    .from('password_resets')
+    .select('*')
+    .eq('token', accessToken)
+    .maybeSingle();
+
+  if (fetchError || !resetRecord) {
     const error = new Error("Lien de réinitialisation invalide ou expiré.");
     error.status = 401;
     throw error;
   }
- 
-  // Mettre à jour le mot de passe dans Supabase Auth
+
+  // Vérifier l'expiry
+  if (new Date() > new Date(resetRecord.expires_at)) {
+    await supabase.from('password_resets').delete().eq('token', accessToken);
+    const error = new Error("Lien de réinitialisation expiré. Veuillez refaire une demande.");
+    error.status = 401;
+    throw error;
+  }
+
+  // Trouver l'utilisateur par email dans Supabase Auth
+  const { data: users, error: listError } =
+    await supabase.auth.admin.listUsers();
+
+  const authUser = !listError &&
+    users?.users?.find(u => u.email === resetRecord.email);
+
+  if (!authUser) {
+    const error = new Error("Utilisateur introuvable.");
+    error.status = 404;
+    throw error;
+  }
+
+  // Mettre à jour le mot de passe
   const { error: updateError } = await supabase.auth.admin.updateUserById(
-    userData.user.id,
+    authUser.id,
     { password: newPassword }
   );
- 
+
   if (updateError) {
     const error = new Error("Impossible de mettre à jour le mot de passe.");
     error.details = updateError.message;
     error.status  = 500;
     throw error;
   }
- 
+
+  // Supprimer le token — usage unique
+  await supabase.from('password_resets').delete().eq('token', accessToken);
+
   return { message: "Mot de passe mis à jour avec succès." };
 };
- 
