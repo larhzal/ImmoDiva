@@ -155,7 +155,17 @@ export default function RentalRequestPage() {
     };
 
   return (
+    
     <div className="rental-request-form">
+      
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loading-card">
+            <div className="spinner"></div>
+            <p>Envoi de votre demande en cours...</p>
+          </div>
+        </div>
+      )}
       {success && (
       <div className="success-overlay">
         <div className="success-card">
@@ -170,7 +180,7 @@ export default function RentalRequestPage() {
     )}
       <h1>Envoyer la demande de location</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={{ pointerEvents: loading ? "none" : "auto", opacity: loading ? 0.6 : 1 }}>
         {/* personal infoss */}
         <h2>Votre Identité et Contact</h2>
 
