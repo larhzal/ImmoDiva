@@ -1,3 +1,7 @@
+* {
+  transition: all 0.2s ease;
+}
+
 /* Container principal */
 .rental-request-form {
   max-width: 1100px;
@@ -201,4 +205,66 @@
   .clearfix {
     justify-content: center;
   }
+}
+
+
+/* Smooth inputs */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #fff;
+  border: 1px solid #f7bf75;
+  box-shadow: 0 0 0 3px rgba(247,191,117,0.2);
+}
+
+/* Animation entrée page */
+.rental-request-form {
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bouton moderne */
+.submit-button {
+  transition: all 0.25s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* Animation success */
+.success-icon {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Card style */
+.rental-request-form {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
