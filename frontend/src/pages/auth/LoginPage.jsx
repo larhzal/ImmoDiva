@@ -170,7 +170,7 @@ export default function LoginPage() {
             </div>
             <div className="my-3 text-center text-sm text-slate-500 font-regular">
               Pas encore de compte ?{' '}
-              <a href="/role" className="font-regular text-orange-600 hover:text-orange-700">
+              <a href="/role" className="font-semibold text-orange-600 hover:text-orange-700">
                 Créer un compte
               </a>
             </div>
