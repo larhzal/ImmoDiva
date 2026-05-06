@@ -1,0 +1,167 @@
+/* =========================================
+   SECTION HERO (TITRE ET SOUS-TITRE)
+   ========================================= */
+   .hero-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 0 20px;
+}
+
+.hero-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #111827; /* Bleu/Gris très foncé */
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.hero-subtitle {
+    color: #6b7280;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+/* =========================================
+   BARRE DE RECHERCHE
+   ========================================= */
+.search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    background-color: #f9fafb; /* Gris très clair comme la maquette */
+    padding: 25px 35px;
+    border-radius: 12px;
+    max-width: 1000px;
+    margin: 0 auto 50px auto;
+}
+
+.search-field {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex: 1; /* Permet aux champs de prendre l'espace disponible */
+    min-width: 200px;
+}
+
+.search-field label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.search-field select {
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 0.95rem;
+    color: #374151;
+    outline: none;
+    cursor: pointer;
+}
+
+.search-field select:focus {
+    border-color: #f59e0b;
+}
+
+.search-btn {
+    background-color: #f59e0b; /* Orange de la maquette */
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px; /* Aligné avec la hauteur des select */
+    transition: background-color 0.2s ease;
+}
+
+.search-btn:hover {
+    background-color: #d97706; /* Orange un peu plus foncé au survol */
+}
+/* Le conteneur qui englobe toutes les cartes */
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto 50px auto;
+}
+
+/* La carte individuelle */
+.listing-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Ombre subtile */
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* L'image dans la carte */
+.listing-card-image {
+    width: 100%;
+    height: 200px; /* Hauteur fixe pour l'alignement */
+    object-fit: cover; /* Recadre sans déformer */
+}
+
+/* Le conteneur du texte sous l'image */
+.listing-card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: left; /* Aligné à gauche comme la maquette */
+}
+
+/* Titre de l'annonce */
+.listing-card-title {
+    margin: 0 0 8px 0;
+    color: #111827; /* Gris très foncé */
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* Prix de l'annonce (en jaune/orange comme la maquette) */
+.listing-card-price {
+    font-weight: bold;
+    color: #f59e0b;
+    font-size: 1.2rem;
+    margin: 0 0 15px 0;
+}
+
+/* Conteneur pour l'icône + texte */
+.listing-card-info {
+    display: flex;
+    align-items: center; /* Alignement vertical parfait */
+    gap: 12px; /* Espace entre icône et texte */
+    margin: 5px 0;
+}
+
+/* 🚨 STYLE DES NOUVELLES ICÔNES LUCIDE */
+.listing-card-icon {
+    width: 1.3rem; /* Taille de l'icône */
+    height: 1.3rem;
+    color: #9ca3af; /* Gris clair subtil, comme la maquette */
+}
+
+/* Texte à côté de l'icône */
+.listing-card-text {
+    color: #6b7280; /* Gris moyen pour le texte */
+    font-size: 1rem;
+}

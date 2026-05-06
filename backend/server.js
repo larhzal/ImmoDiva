@@ -15,7 +15,7 @@ app.get('/api/annonces', async (req, res) => {
 
         const { data, error } = await supabase
             .from('Apartment')
-            .select('*');
+            .select('*,Pictures(*)');
 
         if (error) throw error;
         
