@@ -1,15 +1,20 @@
-require("dotenv").config();
+const cors = require("cors");
+
 const express = require("express");
+require("dotenv").config();
 
 const app = express();
 app.use(express.json());
 
-// Routes
-const userRoutes = require("./src/modules/users/users.routes");
-app.use("/api/users", userRoutes);
+app.use(cors());
+app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
+// IMPORT ROUTE
+const pendingApartmentsRoutes = require("./src/modules/apartments/pendingApartments.routes");
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+// USE ROUTE
+app.use("/apartments/pending", pendingApartmentsRoutes);
+
+app.listen(5000, () => {
+  console.log("Server running on http://localhost:5000");
 });
