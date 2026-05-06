@@ -135,3 +135,50 @@ console.log("OWNER EMAIL =>", ownerEmail);
     });
   }
 };
+
+exports.getDemandesRecues = async (req, res) => {
+  try {
+    // const publisher = req.user.id
+    const publisherTest = "588c391f-5013-4d15-8e22-48349f725f55"
+    const demandes = await rentalsService.getDemandesRecues(publisherTest)
+    res.status(200).json(demandes)
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur serveur",
+      error: err.message
+    })
+  }
+}
+
+
+
+//fonction pour accepter la demande de location vient du client 
+exports.accepterDemande = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const demande = await rentalsService.repondreDemande(id, "accepted");
+
+    res.status(200).json({
+      message: "Demande acceptée avec succès",
+      demande,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+// fonction pour refuser la demande
+exports.refuserDemande = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const demande = await rentalsService.repondreDemande(id, "refused");
+
+    res.status(200).json({
+      message: "Demande refusée avec succès",
+      demande,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};

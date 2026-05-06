@@ -40,3 +40,48 @@ exports.getOwnerEmailByApartmentId = async (apartmentId) => {
 
   return data.user.email;
 };
+
+// recuperer les demandes 
+//fonction pour recuperer les denmandes recues
+exports.getDemandesRecues = async (publisherId) => {
+  const { data, error } = await supabase
+    .from('sent_request')
+    .select(`
+      id,
+      created_at,
+      response,
+      statut,
+      profil,
+      date_emmenagement,
+      duree_location,
+      presentation,
+      motivation,
+      User (
+        first_name,
+        last_name
+      ),
+      Apartment!inner (
+        id,
+        title,
+        owner_id
+      )
+    `)
+    .eq('Apartment.owner_id', publisherId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
+  return data || []
+}
+//repondre a le demande de location d'un client
+exports.repondreDemande = async (id, response) => {
+  const { data, error } = await supabase
+    .from('sent_request')
+    .update({ response })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
