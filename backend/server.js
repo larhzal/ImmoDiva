@@ -12,17 +12,78 @@ app.use("/api/users", userRoutes);
 
 app.get('/api/annonces', async (req, res) => {
     try {
+        const { city, priceRange, rooms } = req.query;
 
-        const { data, error } = await supabase
+        let query = supabase
             .from('Apartment')
             .select('*,Pictures(*)');
 
+        // Filtre par ville
+        if (city) {
+            query = query.eq('city', city);
+        }
+
+        // Filtre par prix
+        if (priceRange) {
+            switch (priceRange) {
+                case 'below3000':
+                    query = query.lt('monthly_price', 3000);
+                    break;
+                case '3000-6000':
+                    query = query.gte('monthly_price', 3000).lte('monthly_price', 6000);
+                    break;
+                case 'above6000':
+                    query = query.gt('monthly_price', 6000);
+                    break;
+            }
+        }
+
+        // Filtre par nombre de chambres
+        if (rooms) {
+            switch (rooms) {
+                case '1':
+                    query = query.eq('number_rooms', 1);
+                    break;
+                case '2':
+                    query = query.eq('number_rooms', 2);
+                    break;
+                case '3plus':
+                    query = query.gte('number_rooms', 3);
+                    break;
+            }
+        }
+
+        const { data, error } = await query;
+
         if (error) throw error;
-        
+
         res.json(data);
     } catch (err) {
         console.error("Erreur backend:", err.message);
         res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/annonces/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { data, error } = await supabase
+            .from('Apartment')
+            .select('*,Pictures(*)')
+            .eq('id', id)
+            .single();
+
+        if (error) throw error;
+
+        if (!data) {
+            return res.status(404).json({ error: 'Appartement non trouvé' });
+        }
+
+        res.json(data);
+    } catch (err) {
+        console.error('Erreur backend:', err.message || err);
+        res.status(500).json({ error: err.message || 'Une erreur est survenue.' });
     }
 });
 
