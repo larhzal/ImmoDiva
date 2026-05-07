@@ -1,0 +1,77 @@
+.tableContainer {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 120px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.tableHeaderCell {
+  color: #999;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 120px;
+  padding: 18px 24px;
+  align-items: center;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.viewLink {
+  cursor: pointer;
+  font-weight: 700;
+  color: #0F2744;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btnPagination {
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background-color: #f7bf75;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* etat desactive */
+.btnDisabled {
+  background-color: #F2F2F2;
+  color: #A0A0A0;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 1; 
+}
+
+/* bouton page actuelle */
+.btnCurrent {
+  background-color: #f0b76d;
+  color: white;
+}
+.btnDisabled:hover {
+  background-color: #F2F2F2;
+}
+
+.tabContent {
+  margin-top: 20px;
+}

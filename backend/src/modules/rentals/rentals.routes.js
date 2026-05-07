@@ -7,9 +7,12 @@ const authMiddleware = require('../../middleware/auth.middleware');
 // Envoyer une demande de location
 // pour tester decommenter la ligne 9 et commenter les ligne 11,12,13 et 14
 router.post('/', rentalsController.creerDemande);
-router.patch('/:id/accept', rentalsController.accepterDemande);
-router.patch('/:id/refuse', rentalsController.refuserDemande);
+router.patch('/:id/accept', rentalsController.accept_request);
+router.patch('/:id/refuse', rentalsController.reject_request);
 router.get('/received', rentalsController.getDemandesRecues);
+router.get('/:id', rentalsController.getDemandeById)
+
+// router.get('/:id', authMiddleware, rentalsController.getDemandeById)
 // router.get(
 //   '/received',
 //   authMiddleware,

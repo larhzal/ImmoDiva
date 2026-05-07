@@ -1,4 +1,5 @@
 // components/ui/StatsCard.jsx
+
 export default function StatsCard({ label, value, color, className = "" }) {
   return (
     <div className={`statCard ${className}`}>

@@ -12,6 +12,10 @@ export const getDemandesRecues = async () => {
 
 }
 
+export const getDemandeById= async (requestId) =>{
+  const res = await axiosClient.get(`/rentals/${requestId}`)
+  return res.data
+}
 
 // mise à jour du statut (accepté ou refusé)
 export const updateRequestStatus = async (requestId, statut) => {

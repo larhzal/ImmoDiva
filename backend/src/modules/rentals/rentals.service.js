@@ -63,6 +63,7 @@ exports.getDemandesRecues = async (publisherId) => {
       Apartment!inner (
         id,
         title,
+        address,
         owner_id
       )
     `)
@@ -85,3 +86,47 @@ exports.repondreDemande = async (id, response) => {
   return data
 }
 
+exports.getDemandeById = async (id) => {
+  // on recupere tous d'abord les infos de la demande, de l'appartement comcerne et de client
+  const { data, error } = await supabase
+    .from("sent_request")
+    .select(`
+      *,
+      Apartment:apartment_id (
+        id,
+        title,
+        city,
+        address,
+        monthly_price,
+        Pictures:Pictures(file_path)
+      ),
+      User:client_id (
+        id,
+        first_name,
+        last_name,
+        age,
+        nationality
+      )
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  // on recupere l'email de client de auth.users a travers client_id
+  let email = null;
+
+  if (data?.client_id) {
+    const { data: user, error: userError } =
+      await supabase.auth.admin.getUserById(data.client_id);
+
+    if (!userError && user?.user) {
+      email = user.user.email;
+    }
+  }
+
+  return {
+    ...data,
+    email,
+  };
+};
