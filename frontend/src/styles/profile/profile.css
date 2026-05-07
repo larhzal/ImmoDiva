@@ -1,8 +1,9 @@
+/* ── Global Styles ── */
 .page {
   min-height: 100vh;
   background: #f7f8fa;
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #374151;
 }
 
 main {
@@ -11,94 +12,95 @@ main {
   padding: 40px 24px;
 }
 
+/* ── Header Section ── */
 .pageHeader {
   display: flex;
-  flex-direction: column; /* Stacked as per your image */
+  flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
-  margin-bottom: 28px;
-}
-
-.avatar {
-  width: 52px;
-  height: 52px;
-}
-
-/* Avatar Icon Styling to match the image exactly */
-.avatarGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-  width: 36px; /* Slightly smaller as per image */
-  height: 36px;
-}
-
-.avatarBlock {
-  border-radius: 5px;
-  background: #bdc3c7; /* Light grey for three of the blocks */
-}
-
-/* The first block (top-left) is black in your image */
-.avatarBlock.active {
-  background: #000000;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
 .pageTitle {
-  font-size: 20px;
-  font-weight: 600;
-  color: #666; /* Muted grey title in image */
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F2744;
   margin: 0;
 }
 
 .pageSubtitle {
   font-size: 14px;
-  color: #999;
-  margin: 0;
+  color: #6b7280;
+  margin: 4px 0 0;
 }
 
-.placeholder {
-  padding: 48px 0;
-  text-align: center;
+/* ── Avatar Styling ── */
+.avatar-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
+/* Using the gradient and flex centering from myApartments */
+.avatar-initials {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: linear-gradient(105deg, #E87722, #0F2744);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(15, 39, 68, 0.15);
+}
+
+/* ── Layout & Grid ── */
 .section {
-  margin-bottom: 8px;
+  background: #fff;
+  padding: 32px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .sectionTitle {
-  font-size: 15px;
-  color: #999;
-  font-weight: 400;
-  margin-bottom: 20px;
+  font-size: 14px;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 24px;
 }
 
-.divider {
-  height: 1px;
-  background: #ebebeb;
-  margin: 20px 0;
-}
-
-/* Ensure the grid doesn't collapse */
 .formGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 40px;
-  row-gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 32px;
+  row-gap: 24px;
+  align-items: start;
 }
 
-/* Password section usually needs full width for the inputs */
-.passGrid {
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+  .formGrid { grid-template-columns: 1fr; }
+}
+
+/* ── Form Elements ── */
+.field {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 8px;
 }
 
-/* Right-align the buttons */
-.actionsRight {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
 }
 
 /* Container for the form fields */
@@ -119,93 +121,55 @@ main {
   outline: none;
 }
 
-/* Modifier Button */
-.btnModifier {
-  background-color: #fcd395; /* Light orange color from image */
-  border: none;
-  border-radius: 12px;
-  padding: 12px 40px;
-  color: #333;
-  font-weight: 500;
-  cursor: pointer;
-  float: right;
-  margin-top: 20px;
+input:focus {
+  background: #fff;
+  border-color: #0F2744;
+  box-shadow: 0 0 0 3px rgba(15, 39, 68, 0.08);
 }
 
-.btnModifier:hover {
-  background-color: #fbbd61;
-}
-
-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #f0f2f5;
-  font-size: 14px;
-  color: #333;
-  outline: none;
-}
-
-/* Container for label + input */
-.field {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-}
-
-.fieldLabel {
-  font-size: 14px;
-  color: #444;
-  width: 150px; /* Fixed width for labels to align inputs */
-  flex-shrink: 0;
-}
-
-.btnPrimary {
-  padding: 10px 28px;
-  background: #f5a42268;
-  color: #000000;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-/* ── Info Grid ───────────────────────────────────────────────── */
-/* The grid must align rows to the TOP so error text doesn't     */
-/* overflow into the neighboring column                          */
-
-.info-grid,
-.infoGrid {
-  align-items: start; /* was likely "center" — this is the root cause */
-}
-
-/* ── Profile Field ───────────────────────────────────────────── */
-.profile-field {
-  display: grid;
-  flex-direction: column;
-  gap: 4px;
-}
-
-/* ── Field Error ─────────────────────────────────────────────── */
-.field-error {
-  display: block;
-  color: #A32D2D;
-  font-size: 12px;
-  line-height: 1.4;
-  margin-top: 2px;
-  width: 100%;
-}
-
-/* ── Error Input State ───────────────────────────────────────── */
+/* Error States */
 .field-input--error {
   border-color: #F09595 !important;
   background-color: #FFF8F8;
 }
 
-/* ── Status Banner ───────────────────────────────────────────── */
+.field-error {
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ── Buttons ── */
+.actionsRight {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btnPrimary {
+  margin-top: 4px;;
+  padding: 10px 28px;
+  background: #E87722; /* Primary Action Color */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.btnPrimary:hover {
+  background: #d16a1f;
+  transform: translateY(-1px);
+}
+
+.btnPrimary:active {
+  transform: translateY(0);
+}
+
+/* ── Status Banners ── */
 .status-banner {
   display: flex;
   align-items: center;
@@ -214,18 +178,18 @@ input {
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  margin: 12px 0;
-  border: 0.5px solid transparent;
-}
-
-.status-banner--error {
-  background: #FCEBEB;
-  color: #A32D2D;
-  border-color: #F09595;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
 }
 
 .status-banner--success {
-  background: #EAF3DE;
-  color: #3B6D11;
-  border-color: #97C459;
+  background: #e8f8f2;
+  color: #1E9E6B;
+  border-color: #b6e8d4;
+}
+
+.status-banner--error {
+  background: #fdecea;
+  color: #c0392b;
+  border-color: #f5c0bc;
 }

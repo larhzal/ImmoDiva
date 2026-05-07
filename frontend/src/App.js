@@ -1,6 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import ProfilePage from './pages/profile/ProfilePage';
 import ClientProfilePage from './pages/profile/ClientProfilePage';
+import MyApartmentsPage from './pages/publisher/MyApartmentsPage';
+import MyClientsPage from './pages/publisher/MyClientsPage';
+
+import UpdateAppartement from './pages/publisher/UpdateApartmentPage';
 
 function App() {
   return (
@@ -14,6 +18,15 @@ function App() {
 
         {/* Path for the Client/Tenant Profile */}
         <Route path="/client-profile" element={<ClientProfilePage />} />
+
+        {/* Path for the Publisher's Apartments */}
+        <Route path="/my-apartments" element={<MyApartmentsPage />} />
+
+        {/* Path for the Publisher's Apartments */}
+        <Route path="/apartments/edit/:id" element={<UpdateAppartement />} />
+
+        {/* Path for the Publisher's Clients */}
+        <Route path="/my-clients" element={<MyClientsPage />} />
       </Routes>
     </Router>
   );

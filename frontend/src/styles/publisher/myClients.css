@@ -1,0 +1,91 @@
+/* ── myClients.css ────────────────────────────────────────── */
+
+.clients-tab {
+  width: 100%;
+}
+
+/* Table wrapper */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+/* Table */
+.clients-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: #1a1a2e;
+}
+
+.clients-table thead tr {
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.clients-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9ca3af;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Row */
+.table-row {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s;
+}
+
+.table-row:hover {
+  background: #fafafa;
+}
+
+.clients-table td {
+  padding: 18px 16px;
+  vertical-align: middle;
+}
+
+/* Column widths */
+.col-client    { width: 25%; font-weight: 400; color: #1f2937; }
+.col-apartment { width: 45%; color: #4b5563; }
+.col-address   { width: 30%; color: #4b5563; }
+
+/* ── Pagination ───────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 36px;
+  padding-bottom: 16px;
+}
+
+.btnPage {
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: none;
+  background: #F0A500;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btnPage:hover:not(:disabled) {
+  background: #d4900a;
+  transform: translateY(-1px);
+}
+
+.btnPage:disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.btnPage--current {
+  background: #F0A500;
+  opacity: 1;
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { ClipboardList, CheckCircle, Clock, Eye, Pencil, Trash2, BedDouble, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import validators, { validateForm } from "../../utils/validators";
 import Navbar from "../../components/layout/Navbar";
 import Avatar from "../../assets/icons/Dashboard.png";
@@ -10,7 +11,12 @@ import "../../styles/profile/profile.css";
 // ── Constants ─────────────────────────────────────────────────
 const API = "http://localhost:5000/api/auth";
 
-const TABS = ["Mes Annonces", "Les Demandes", "Mes Clients", "Mon Profile"];
+const TABS = [
+    {label: "Mes Annonces", path: "/my-apartments"}, 
+    {label: "Les Demandes", path: "#"}, 
+    {label: "Mes Clients", path: "/my-clients"}, 
+    {label: "Mon Profile", path: "/publisher-profile"}
+];
 
 const STATS = [
   { label: "Mes Annonces", value: 15, color: "#0F2744" },
@@ -224,7 +230,7 @@ function ProfileForm({ onUserLoaded })  {
         </div>
 
         <div className="actionsRight">
-          <button className="btnModifier" onClick={handleUpdateInfo} disabled={isLoading}>
+          <button className="btnPrimary" onClick={handleUpdateInfo} disabled={isLoading}>
             {isLoading ? "Chargement..." : "Modifier"}
           </button>
         </div>
@@ -236,7 +242,7 @@ function ProfileForm({ onUserLoaded })  {
       <section className="section">
         <h3 className="sectionTitle">Modifier votre mot de passe</h3>
 
-        <div className="passGrid">
+        <div className="infoGrid">
           <Field label="Mot de passe actuel :"               name="current" value={pass.current} onChange={handlePassChange} type="password" error={errors.current}/>
           <Field label="Nouveau mot de passe :"              name="newPass" value={pass.newPass} onChange={handlePassChange} type="password" error={errors.newPass}/>
           <Field label="Confirmer le nouveau mot de passe :" name="confirm" value={pass.confirm} onChange={handlePassChange} type="password" error={errors.confirm}/>
@@ -255,7 +261,14 @@ function ProfileForm({ onUserLoaded })  {
 // ── Page shell ────────────────────────────────────────────────
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("Mon Profile");
-   const [user, setUser] = useState({ prenom: "", nom: "" });
+  const [user, setUser] = useState({ prenom: "", nom: "" });
+  const [stats, setStats] = useState({ total: 0, approved: 0, pending: 0 });
+  const initials = `${user.prenom?.[0] ?? ""}${user.nom?.[0] ?? ""}`.toUpperCase();
+      const STATS = [
+      { label: "Mes Annonces", value: stats.total,    color: "#0F2744", subtitle: "Total des annonces",     icon: ClipboardList },
+      { label: "Approuvée",    value: stats.approved, color: "#1E9E6B", subtitle: "Annonces en ligne",      icon: CheckCircle   },
+      { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock         },
+  ];
 
   return (
     <div className="page">
@@ -263,23 +276,22 @@ export default function ProfilePage() {
 
       <main className="main">
         <div className="pageHeader">
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <img src={Avatar} alt="Immo DIVA" className="avatar" />
-            <div>
-              <h1 className="pageTitle">Mon Espace</h1>
-              <p className="pageSubtitle">
-                Bienvenue, {user.prenom} {user.nom}
-
-              </p>
-            </div>
+          <div className="pageHeader__user">
+              <div className="avatar-initials">{initials}</div>
+              <div>
+                  <h1 className="pageTitle">Mon Espace</h1>
+                  <p className="pageSubtitle">
+                      Bienvenue, {user.prenom} {user.nom}
+                  </p>
+              </div>
           </div>
 
           <div className="statsRow">
-            {STATS.map((s) => (
-              <StatCard key={s.label} {...s} />
-            ))}
+              {STATS.map((s) => (
+                  <StatCard key={s.label} {...s} />
+              ))}
           </div>
-        </div>
+      </div>
 
         <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
 
