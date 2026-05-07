@@ -59,7 +59,7 @@ const ApartmentDetailPage = () => {
         }
     };
 
-    const handleFeedbackSubmitted = (newFeedback) => {
+    const handleFeedbackSubmitted = () => {
         setShowFeedbackForm(false);
         setFeedbackRefresh((prev) => prev + 1);
     };
@@ -78,8 +78,11 @@ const ApartmentDetailPage = () => {
         return (
             <div className="page-container">
                 <div className="error-container">
-                    <p className="error-message">Erreur : {error}</p>
-                    <button className="retry-btn" onClick={() => navigate('/listings')}>
+                    <p className="error-message">Oups 🙄, {error}</p>
+                    <button className="retry-btn" onClick={fetchApartmentDetails}>
+                        Réessayer
+                    </button>
+                    <button className="back-btn" onClick={() => navigate('/listings')}>
                         Retour aux annonces
                     </button>
                 </div>
@@ -92,7 +95,7 @@ const ApartmentDetailPage = () => {
             <div className="page-container">
                 <div className="error-container">
                     <p className="error-message">Appartement non trouvé</p>
-                    <button className="retry-btn" onClick={() => navigate('/listings')}>
+                    <button className="back-btn" onClick={() => navigate('/listings')}>
                         Retour aux annonces
                     </button>
                 </div>
