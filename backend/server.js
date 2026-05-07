@@ -8,7 +8,10 @@ app.use(express.json());
 const supabase = require('./src/config/db');
 // Routes
 const userRoutes = require("./src/modules/users/users.routes");
+const feedbackRoutes = require("./src/modules/feedback/feedback.routes");
+
 app.use("/api/users", userRoutes);
+app.use("/api/annonces", feedbackRoutes);
 
 app.get('/api/annonces', async (req, res) => {
     try {
