@@ -1,26 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import '../../styles/pages/listings.css'; 
+﻿import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../styles/pages/listings.css';
+
+const priceOptions = [
+    { value: '', label: 'Tous les prix' },
+    { value: 'below3000', label: 'Moins de 3000 MAD' },
+    { value: '3000-6000', label: '3000 - 6000 MAD' },
+    { value: 'above6000', label: 'Plus de 6000 MAD' },
+];
+
+const roomOptions = [
+    { value: '', label: 'Peu importe' },
+    { value: '1', label: '1 Chambre' },
+    { value: '2', label: '2 Chambres' },
+    { value: '3plus', label: '3+ Chambres' },
+];
+
+const cityOptions = [
+    { value: '', label: 'Toutes les villes' },
+    { value: 'Casablanca', label: 'Casablanca' },
+    { value: 'Rabat', label: 'Rabat' },
+    { value: 'Meknès', label: 'Meknès' },
+];
 
 const ListingsPage = () => {
+    const navigate = useNavigate();
     const [annonces, setAnnonces] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [city, setCity] = useState('');
+    const [priceRange, setPriceRange] = useState('');
+    const [rooms, setRooms] = useState('');
 
-    const fetchAnnonces = async () => {
+    const fetchAnnonces = async ({ city = '', priceRange = '', rooms = '' } = {}) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:5000/api/annonces');
-            
+            const params = new URLSearchParams();
+            if (city) params.append('city', city);
+            if (priceRange) params.append('priceRange', priceRange);
+            if (rooms) params.append('rooms', rooms);
+
+            const url = `http://localhost:5000/api/annonces${params.toString() ? `?${params.toString()}` : ''}`;
+            const response = await fetch(url);
+
             if (!response.ok) {
-                throw new Error("Erreur lors de la récupération des données.");
+                throw new Error('Erreur lors de la récupération des données.');
             }
-            
+
             const data = await response.json();
             setAnnonces(data);
         } catch (err) {
-            console.error("Erreur Fetch:", err);
-            setError("Désolé, impossible de charger les annonces pour le moment. Notre serveur fait peut-être une petite pause. Veuillez réessayer.");
+            console.error('Erreur Fetch:', err);
+            setError('Désolé, impossible de charger les annonces pour le moment. Notre serveur fait peut-être une petite pause. Veuillez réessayer.');
         } finally {
             setLoading(false);
         }
@@ -29,6 +61,17 @@ const ListingsPage = () => {
     useEffect(() => {
         fetchAnnonces();
     }, []);
+
+    const handleSearch = () => {
+        fetchAnnonces({ city, priceRange, rooms });
+    };
+
+    const handleReset = () => {
+        setCity('');
+        setPriceRange('');
+        setRooms('');
+        fetchAnnonces();
+    };
 
     return (
         <div className="page-container">
@@ -44,36 +87,53 @@ const ListingsPage = () => {
             {/* --- BARRE DE RECHERCHE --- */}
             <div className="search-bar">
                 <div className="search-field">
-                    <label>Ville/ Région</label>
-                    <select>
-                        <option>Toutes les villes</option>
-                        <option>Casablanca</option>
-                        <option>Rabat</option>
-                        <option>Marrakech</option>
+                    <label>Ville / Région</label>
+                    <select value={city} onChange={(e) => setCity(e.target.value)}>
+                        {cityOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="search-field">
                     <label>Prix</label>
-                    <select>
-                        <option>Tous les prix</option>
-                        <option>Moins de 3000 MAD</option>
-                        <option>3000 - 6000 MAD</option>
-                        <option>Plus de 6000 MAD</option>
+                    <select value={priceRange} onChange={(e) => setPriceRange(e.target.value)}>
+                        {priceOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="search-field">
                     <label>Nombre de chambres</label>
-                    <select>
-                        <option>Peu importe</option>
-                        <option>1 Chambre</option>
-                        <option>2 Chambres</option>
-                        <option>3+ Chambres</option>
+                    <select value={rooms} onChange={(e) => setRooms(e.target.value)}>
+                        {roomOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
-                <button className="search-btn">
-                    🔍 Rechercher
-                </button>
+                <div className="search-actions">
+                    <button className="search-btn" onClick={handleSearch}>
+                        🔍 Rechercher
+                    </button>
+                    <button className="reset-btn" onClick={handleReset}>
+                        Réinitialiser
+                    </button>
+                </div>
             </div>
+
+            {(city || priceRange || rooms) && (
+                <div className="active-filters">
+                    <strong>Filtres actifs :</strong>
+                    <span>{city ? ` Ville: ${city}` : ''}</span>
+                    <span>{priceRange ? ` Prix: ${priceOptions.find((p) => p.value === priceRange)?.label}` : ''}</span>
+                    <span>{rooms ? ` Chambres: ${roomOptions.find((r) => r.value === rooms)?.label}` : ''}</span>
+                </div>
+            )}
 
             {/* --- MESSAGES D'ÉTAT --- */}
             {loading && (
@@ -85,7 +145,7 @@ const ListingsPage = () => {
             {error && (
                 <div className="error-container">
                     <p className="error-message">Oups 🙄, {error}</p>
-                    <button className="retry-btn" onClick={fetchAnnonces}>
+                    <button className="retry-btn" onClick={() => fetchAnnonces({ city, priceRange, rooms })}>
                         Réessayer
                     </button>
                 </div>
@@ -95,13 +155,14 @@ const ListingsPage = () => {
             {!loading && !error && annonces.length > 0 && (
                 <div className="listings-grid">
                     {annonces.map((annonce) => {
-                        
-                        const imageAafficher = annonce.pictures && annonce.pictures.length > 0 
-                            ? annonce.pictures[0].url 
+                        const listingId = annonce.id || annonce.ID || annonce.apartment_id || annonce.apartmentId;
+                        const pictures = annonce.pictures || annonce.Pictures;
+                        const imageAafficher = pictures && pictures.length > 0 
+                            ? pictures[0].url 
                             : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
 
                         return (
-                            <div key={annonce.id} className="listing-card">
+                            <div key={listingId || annonce.title || annonce.city || Math.random()} className="listing-card">
                                 
                                 <img 
                                     src={imageAafficher} 
@@ -142,6 +203,17 @@ const ListingsPage = () => {
                                         </span>
                                     </div>
                                 </div>
+                                
+                                {listingId ? (
+                                    <button 
+                                        className="detail-btn" 
+                                        onClick={() => navigate(`/apartment/${listingId}`)}
+                                    >
+                                        Voir les détails
+                                    </button>
+                                ) : (
+                                    <span className="detail-missing-id">Détail indisponible</span>
+                                )}
                                 
                             </div>
                         );
