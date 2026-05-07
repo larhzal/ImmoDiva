@@ -1,7 +1,16 @@
 /* =========================================
+   PAGE CONTAINER
+   ========================================= */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* =========================================
    SECTION HERO (TITRE ET SOUS-TITRE)
    ========================================= */
-   .hero-section {
+.hero-section {
     text-align: center;
     margin: 40px 0;
     padding: 0 20px;
@@ -29,12 +38,14 @@
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    gap: 20px;
-    background-color: #f9fafb; /* Gris très clair comme la maquette */
-    padding: 25px 35px;
-    border-radius: 12px;
+    gap: 18px;
+    background-color: rgba(255, 255, 255, 0.92);
+    padding: 28px 32px;
+    border-radius: 24px;
     max-width: 1000px;
     margin: 0 auto 50px auto;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .search-field {
@@ -106,14 +117,15 @@
 
 .main-image-container {
     position: relative;
-    border-radius: 12px;
+    border-radius: 24px;
     overflow: hidden;
     margin-bottom: 20px;
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
 }
 
 .main-image {
     width: 100%;
-    height: 400px;
+    height: 420px;
     object-fit: cover;
     display: block;
 }
@@ -167,7 +179,11 @@
 
 .detail-content {
     flex: 1;
-    padding: 20px 0;
+    padding: 28px 32px;
+    background: white;
+    border-radius: 24px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .detail-header-info {
@@ -208,10 +224,11 @@
 .info-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 15px;
-    background: #f9fafb;
-    border-radius: 8px;
+    gap: 14px;
+    padding: 18px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
 }
 
 .info-icon {
@@ -261,32 +278,35 @@
 }
 
 .feedback-btn, .contact-btn {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.16);
 }
 
 .feedback-btn {
-    background: #f59e0b;
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
     color: white;
     border: none;
 }
 
 .feedback-btn:hover {
-    background: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(245, 158, 11, 0.24);
 }
 
 .contact-btn {
     background: white;
-    color: #f59e0b;
-    border: 2px solid #f59e0b;
+    color: #334155;
+    border: 2px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
 }
 
 .contact-btn:hover {
-    background: #f59e0b;
-    color: white;
+    background: #f8fafc;
+    color: #111827;
 }
 
 .detail-header {
@@ -312,13 +332,14 @@
    FILTRES ACTIFS
    ========================================= */
 .active-filters {
-    background: #fef3c7;
+    background: linear-gradient(90deg, rgba(254, 240, 138, 0.2), rgba(254, 224, 138, 0.08));
     color: #92400e;
-    padding: 12px 20px;
-    border-radius: 8px;
+    padding: 16px 22px;
+    border-radius: 16px;
     margin: 0 auto 20px auto;
     max-width: 1000px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    border: 1px solid rgba(245, 158, 11, 0.18);
 }
 
 .active-filters strong {

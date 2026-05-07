@@ -5,26 +5,19 @@ class FeedbackController {
     async createFeedback(req, res) {
         try {
             const { apartmentId } = req.params;
-            const { userId } = req.body;
-            const { rating, title, comment } = req.body;
+            const { userId, content } = req.body;
 
             // Validation
-            if (!userId || !rating || !title || !comment) {
+            if (!content) {
                 return res.status(400).json({
-                    error: 'Tous les champs sont obligatoires (userId, rating, title, comment)'
-                });
-            }
-
-            if (rating < 1 || rating > 5) {
-                return res.status(400).json({
-                    error: 'La note doit être entre 1 et 5'
+                    error: 'Le contenu du feedback est obligatoire.'
                 });
             }
 
             const feedback = await feedbackService.createFeedback(
                 apartmentId,
                 userId,
-                { rating, title, comment }
+                content
             );
 
             res.status(201).json(feedback);
@@ -66,10 +59,14 @@ class FeedbackController {
     async getAverageRating(req, res) {
         try {
             const { apartmentId } = req.params;
-
-            const averageRating = await feedbackService.getAverageRating(apartmentId);
-
-            res.json({ apartmentId, averageRating, totalReviews: await this.getTotalReviews(apartmentId) });
+            const feedbacks = await feedbackService.getFeedbacksByApartment(apartmentId);
+            const ratings = feedbacks
+                .map((f) => Number(f.rating))
+                .filter((value) => !Number.isNaN(value));
+            const averageRating = ratings.length
+                ? (ratings.reduce((acc, value) => acc + value, 0) / ratings.length).toFixed(1)
+                : 0;
+            res.json({ apartmentId, averageRating, totalReviews: feedbacks.length });
         } catch (err) {
             console.error('Erreur récupération note moyenne:', err);
             res.status(500).json({ error: err.message });

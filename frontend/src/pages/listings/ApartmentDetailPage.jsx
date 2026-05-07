@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import FeedbackForm from '../../components/feedback/FeedbackForm';
 import FeedbackList from '../../components/feedback/FeedbackList';
 import '../../styles/pages/listings.css';
 
@@ -11,7 +10,6 @@ const ApartmentDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [showFeedbackForm, setShowFeedbackForm] = useState(false);
     const [feedbackRefresh, setFeedbackRefresh] = useState(0);
 
     const fetchApartmentDetails = useCallback(async () => {
@@ -60,7 +58,6 @@ const ApartmentDetailPage = () => {
     };
 
     const handleFeedbackSubmitted = () => {
-        setShowFeedbackForm(false);
         setFeedbackRefresh((prev) => prev + 1);
     };
 
@@ -211,7 +208,7 @@ const ApartmentDetailPage = () => {
                     <div className="action-buttons">
                         <button 
                             className="feedback-btn" 
-                            onClick={() => setShowFeedbackForm(!showFeedbackForm)}
+                            onClick={() => navigate(`/feedback/${id}`)}
                         >
                             Donner un feedback
                         </button>
@@ -221,16 +218,6 @@ const ApartmentDetailPage = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Feedback Form */}
-            {showFeedbackForm && (
-                <FeedbackForm 
-                    apartmentId={id}
-                    userId={1} // À remplacer par l'ID de l'utilisateur connecté
-                    userName="Utilisateur" // À remplacer par le nom de l'utilisateur connecté
-                    onFeedbackSubmitted={handleFeedbackSubmitted}
-                />
-            )}
 
             {/* Feedback List */}
             <FeedbackList key={feedbackRefresh} apartmentId={id} />

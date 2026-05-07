@@ -2,18 +2,14 @@ const supabase = require('../../config/db');
 
 class FeedbackService {
     // Créer un feedback
-    async createFeedback(apartmentId, userId, feedbackData) {
-        const { rating, title, comment } = feedbackData;
-
+    async createFeedback(apartmentId, userId, content) {
         const { data, error } = await supabase
             .from('Feedback')
             .insert([
                 {
                     apartment_id: apartmentId,
-                    user_id: userId,
-                    rating,
-                    title,
-                    comment,
+                    feedback_writer: userId || null,
+                    content,
                     created_at: new Date().toISOString(),
                 }
             ])
@@ -58,19 +54,23 @@ class FeedbackService {
         return true;
     }
 
-    // Calculer la note moyenne d'un appartement
+    // Calculer la note moyenne d'un appartement (supporte les feedbacks sans note)
     async getAverageRating(apartmentId) {
         const { data, error } = await supabase
             .from('Feedback')
-            .select('rating')
+            .select()
             .eq('apartment_id', apartmentId);
 
         if (error) throw error;
         
-        if (data.length === 0) return 0;
+        const ratings = data
+            .map((feedback) => Number(feedback.rating))
+            .filter((rating) => !Number.isNaN(rating));
+
+        if (ratings.length === 0) return 0;
         
-        const sum = data.reduce((acc, feedback) => acc + feedback.rating, 0);
-        return (sum / data.length).toFixed(1);
+        const sum = ratings.reduce((acc, rating) => acc + rating, 0);
+        return (sum / ratings.length).toFixed(1);
     }
 }
 

@@ -49,6 +49,8 @@ const FeedbackList = ({ apartmentId }) => {
             setTotalReviews(data.totalReviews || 0);
         } catch (err) {
             console.error(err);
+            setAverageRating(0);
+            setTotalReviews(0);
         }
     };
 
@@ -109,16 +111,20 @@ const FeedbackList = ({ apartmentId }) => {
                         <div key={feedback.id} className="feedback-card">
                             <div className="feedback-header">
                                 <div className="feedback-user-info">
-                                    <h4 className="feedback-title">{feedback.title}</h4>
+                                    <h4 className="feedback-title">
+                                        {feedback.title || 'Avis'}
+                                    </h4>
                                     <p className="feedback-author">
                                         {feedback.User?.name || 'Utilisateur anonyme'}
                                     </p>
                                 </div>
-                                <div className="feedback-rating">
-                                    {renderStars(feedback.rating)}
-                                </div>
+                                {feedback.rating !== undefined && (
+                                    <div className="feedback-rating">
+                                        {renderStars(feedback.rating)}
+                                    </div>
+                                )}
                             </div>
-                            <p className="feedback-comment">{feedback.comment}</p>
+                            <p className="feedback-comment">{feedback.content || feedback.comment}</p>
                             <p className="feedback-date">{formatDate(feedback.created_at)}</p>
                         </div>
                     ))}

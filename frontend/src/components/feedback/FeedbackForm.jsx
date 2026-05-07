@@ -16,11 +16,19 @@ const FeedbackForm = ({ apartmentId, userId, userName, onFeedbackSubmitted }) =>
         setError(null);
         setSuccess(false);
 
-        if (!rating || !title || !comment) {
-            setError('Tous les champs sont obligatoires');
+        if (!title || !comment) {
+            setError('Le titre et le commentaire sont obligatoires.');
             setLoading(false);
             return;
         }
+
+        const content = [
+            title,
+            comment,
+            rating ? `Note : ${rating}/5` : null,
+        ]
+            .filter(Boolean)
+            .join('\n\n');
 
         try {
             const response = await fetch(`http://localhost:5000/api/annonces/${apartmentId}/feedback`, {
@@ -29,18 +37,18 @@ const FeedbackForm = ({ apartmentId, userId, userName, onFeedbackSubmitted }) =>
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    userId,
-                    rating,
-                    title,
-                    comment,
+                    ...(userId ? { userId } : {}),
+                    content,
                 }),
             });
 
+            const responseBody = await response.json();
+
             if (!response.ok) {
-                throw new Error('Erreur lors de la soumission du feedback');
+                throw new Error(responseBody.error || 'Erreur lors de la soumission du feedback');
             }
 
-            const data = await response.json();
+            const data = responseBody;
             setSuccess(true);
             setRating(0);
             setTitle('');
