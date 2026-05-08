@@ -19,14 +19,12 @@ const ApartmentDetailPage = () => {
             const response = await fetch(`http://localhost:5000/api/annonces/${id}`);
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Appartement non trouvé');
-                }
+                if (response.status === 404) throw new Error('Appartement non trouvé');
                 throw new Error('Erreur lors de la récupération des détails');
             }
 
             const data = await response.json();
-            setApartment(data);
+            setApartment(data); // ✅ ton backend retourne directement l'objet, pas { data: ... }
         } catch (err) {
             console.error('Erreur Fetch:', err);
             setError(err.message || 'Erreur lors du chargement des détails');
@@ -36,9 +34,7 @@ const ApartmentDetailPage = () => {
     }, [id]);
 
     useEffect(() => {
-        if (id) {
-            fetchApartmentDetails();
-        }
+        if (id) fetchApartmentDetails();
     }, [id, fetchApartmentDetails]);
 
     const handlePrevImage = () => {
@@ -76,12 +72,8 @@ const ApartmentDetailPage = () => {
             <div className="page-container">
                 <div className="error-container">
                     <p className="error-message">Oups 🙄, {error}</p>
-                    <button className="retry-btn" onClick={fetchApartmentDetails}>
-                        Réessayer
-                    </button>
-                    <button className="back-btn" onClick={() => navigate('/listings')}>
-                        Retour aux annonces
-                    </button>
+                    <button className="retry-btn" onClick={fetchApartmentDetails}>Réessayer</button>
+                    <button className="back-btn" onClick={() => navigate('/listings')}>Retour aux annonces</button>
                 </div>
             </div>
         );
@@ -92,28 +84,34 @@ const ApartmentDetailPage = () => {
             <div className="page-container">
                 <div className="error-container">
                     <p className="error-message">Appartement non trouvé</p>
-                    <button className="back-btn" onClick={() => navigate('/listings')}>
-                        Retour aux annonces
-                    </button>
+                    <button className="back-btn" onClick={() => navigate('/listings')}>Retour aux annonces</button>
                 </div>
             </div>
         );
     }
 
-    const pictures = apartment.Pictures || [];
-    const currentImage = pictures.length > 0 ? pictures[currentImageIndex].url :
-        'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
+    // ✅ ton backend retourne Pictures (majuscule) avec file_path direct depuis Supabase
+    // On construit l'URL publique ici côté frontend
+    const SUPABASE_URL = "https://fipyteeltzqzeifwdpca.supabase.co";
+    const pictures = (apartment.Pictures || []).map((pic) => ({
+        ...pic,
+        url: pic.file_path?.startsWith('http')
+            ? pic.file_path
+            : `${SUPABASE_URL}/storage/v1/object/public/appartements/${pic.file_path}`,
+    }));
+
+    const currentImage = pictures.length > 0 && pictures[currentImageIndex]?.url
+        ? pictures[currentImageIndex].url
+        : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
 
     return (
         <div className="page-container">
-            {/* Header avec bouton retour */}
             <div className="detail-header">
                 <button className="back-btn" onClick={() => navigate('/listings')}>
                     ← Retour aux annonces
                 </button>
             </div>
 
-            {/* Section principale */}
             <div className="apartment-detail">
                 {/* Galerie d'images */}
                 <div className="image-gallery">
@@ -125,12 +123,8 @@ const ApartmentDetailPage = () => {
                         />
                         {pictures.length > 1 && (
                             <>
-                                <button className="nav-btn prev-btn" onClick={handlePrevImage}>
-                                    ‹
-                                </button>
-                                <button className="nav-btn next-btn" onClick={handleNextImage}>
-                                    ›
-                                </button>
+                                <button className="nav-btn prev-btn" onClick={handlePrevImage}>‹</button>
+                                <button className="nav-btn next-btn" onClick={handleNextImage}>›</button>
                             </>
                         )}
                     </div>
@@ -149,7 +143,7 @@ const ApartmentDetailPage = () => {
                     )}
                 </div>
 
-                {/* Informations détaillées */}
+                {/* Informations */}
                 <div className="detail-content">
                     <div className="detail-header-info">
                         <h1 className="apartment-title">{apartment.title || 'Titre non disponible'}</h1>
@@ -204,12 +198,8 @@ const ApartmentDetailPage = () => {
                         )}
                     </div>
 
-                    {/* Actions */}
                     <div className="action-buttons">
-                        <button 
-                            className="feedback-btn" 
-                            onClick={() => navigate(`/feedback/${id}`)}
-                        >
+                        <button className="feedback-btn" onClick={() => navigate(`/feedback/${id}`)}>
                             Donner un feedback
                         </button>
                         <button className="contact-btn">
@@ -219,7 +209,6 @@ const ApartmentDetailPage = () => {
                 </div>
             </div>
 
-            {/* Feedback List */}
             <FeedbackList key={feedbackRefresh} apartmentId={id} />
         </div>
     );

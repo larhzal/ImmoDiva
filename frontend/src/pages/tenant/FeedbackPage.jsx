@@ -11,21 +11,21 @@ const FeedbackPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [submitted, setSubmitted] = useState(false);
+    const [eligible, setEligible] = useState(null); // null = en cours de vérification
+
+    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const userId = storedUser?.id || null;
+    const userName = storedUser?.name || 'Utilisateur';
 
     const fetchApartmentDetails = useCallback(async () => {
         setLoading(true);
         setError(null);
-
         try {
             const response = await fetch(`http://localhost:5000/api/annonces/${id}`);
-
             if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Appartement non trouvé');
-                }
+                if (response.status === 404) throw new Error('Appartement non trouvé');
                 throw new Error('Erreur lors de la récupération des détails');
             }
-
             const data = await response.json();
             setApartment(data);
         } catch (err) {
@@ -36,19 +36,32 @@ const FeedbackPage = () => {
         }
     }, [id]);
 
+    // ── Vérifier l'éligibilité du user connecté ──
+    const checkEligibility = useCallback(async () => {
+        if (!userId) {
+            setEligible(false);
+            return;
+        }
+        try {
+            const res = await fetch(
+                `http://localhost:5000/api/annonces/${id}/feedback/eligibility?userId=${userId}`
+            );
+            const data = await res.json();
+            setEligible(data.eligible);
+        } catch (err) {
+            console.error('Erreur vérification éligibilité:', err);
+            setEligible(false);
+        }
+    }, [id, userId]);
+
     useEffect(() => {
         if (id) {
             fetchApartmentDetails();
+            checkEligibility();
         }
-    }, [id, fetchApartmentDetails]);
+    }, [id, fetchApartmentDetails, checkEligibility]);
 
-    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
-    const userId = storedUser?.id || null;
-    const userName = storedUser?.name || 'Utilisateur';
-
-    const handleFeedbackSubmitted = () => {
-        setSubmitted(true);
-    };
+    const handleFeedbackSubmitted = () => setSubmitted(true);
 
     if (loading) {
         return (
@@ -65,13 +78,64 @@ const FeedbackPage = () => {
             <div className="page-container">
                 <div className="error-container">
                     <p className="error-message">Oups 🙄, {error}</p>
-                    <button className="back-btn" onClick={() => navigate(-1)}>
-                        Retour
-                    </button>
+                    <button className="back-btn" onClick={() => navigate(-1)}>Retour</button>
                 </div>
             </div>
         );
     }
+
+    // ── Message selon le cas ──
+    const renderFeedbackSection = () => {
+        // Pas connecté
+        if (!userId) {
+            return (
+                <div className="error-container">
+                    <p className="error-message">🔒 Vous devez être connecté pour laisser un feedback.</p>
+                    <button className="submit-btn" onClick={() => navigate('/login')}>
+                        Se connecter
+                    </button>
+                </div>
+            );
+        }
+
+        // Vérification en cours
+        if (eligible === null) {
+            return <p>Vérification de votre éligibilité...</p>;
+        }
+
+        // Pas éligible
+        if (!eligible) {
+            return (
+                <div className="error-container">
+                    <p className="error-message">
+                        ⛔ Seul un locataire ayant loué cet appartement peut laisser un feedback.
+                    </p>
+                </div>
+            );
+        }
+
+        // Feedback déjà soumis
+        if (submitted) {
+            return (
+                <div className="success-container">
+                    <p>✅ Merci ! Votre feedback a bien été envoyé.</p>
+                    <button className="submit-btn" onClick={() => navigate(`/apartment/${id}`)}>
+                        Retour à l'appartement
+                    </button>
+                </div>
+            );
+        }
+
+        // Éligible → afficher le formulaire
+        return (
+            <FeedbackForm
+                apartmentId={id}
+                userId={userId}
+                userName={userName}
+                onFeedbackSubmitted={handleFeedbackSubmitted}
+            />
+        );
+    };
 
     return (
         <div className="page-container">
@@ -86,24 +150,24 @@ const FeedbackPage = () => {
                     <div className="detail-header-info">
                         <h1 className="apartment-title">Donner un feedback</h1>
                         <div className="price-tag">
-                            <span className="price">{apartment.monthly_price || 'Prix non précisé'} MAD</span>
+                            <span className="price">{apartment?.monthly_price || 'Prix non précisé'} MAD</span>
                         </div>
                     </div>
 
                     <div className="apartment-info-grid">
                         <div className="info-item">
                             <strong>Appartement :</strong>
-                            <span>{apartment.title || 'Titre non disponible'}</span>
+                            <span>{apartment?.title || 'Titre non disponible'}</span>
                         </div>
                         <div className="info-item">
                             <strong>Ville :</strong>
-                            <span>{apartment.city || 'Ville non précisée'}</span>
+                            <span>{apartment?.city || 'Ville non précisée'}</span>
                         </div>
                         <div className="info-item">
                             <strong>Chambres :</strong>
-                            <span>{apartment.number_rooms || 'N/A'}</span>
+                            <span>{apartment?.number_rooms || 'N/A'}</span>
                         </div>
-                        {apartment.description && (
+                        {apartment?.description && (
                             <div className="description-section">
                                 <h3>Description</h3>
                                 <p className="description">{apartment.description}</p>
@@ -113,21 +177,7 @@ const FeedbackPage = () => {
                 </div>
             </div>
 
-            {submitted ? (
-                <div className="success-container">
-                    <p>Merci ! Votre feedback a bien été envoyé.</p>
-                    <button className="submit-btn" onClick={() => navigate(`/apartment/${id}`)}>
-                        Retour à l'appartement
-                    </button>
-                </div>
-            ) : (
-                <FeedbackForm
-                    apartmentId={id}
-                    userId={userId}
-                    userName={userName}
-                    onFeedbackSubmitted={handleFeedbackSubmitted}
-                />
-            )}
+            {renderFeedbackSection()}
 
             <FeedbackList apartmentId={id} />
         </div>

@@ -156,9 +156,12 @@ const ListingsPage = () => {
                 <div className="listings-grid">
                     {annonces.map((annonce) => {
                         const listingId = annonce.id || annonce.ID || annonce.apartment_id || annonce.apartmentId;
-                        const pictures = annonce.pictures || annonce.Pictures;
-                        const imageAafficher = pictures && pictures.length > 0 
-                            ? pictures[0].url 
+                        const pictures = (annonce.pictures || annonce.Pictures || []).map((pic) => ({
+                            ...pic,
+                            url: pic.url || pic.file_path || pic.file_name || '',
+                        }));
+                        const imageAafficher = pictures.length > 0 && pictures[0].url
+                            ? pictures[0].url
                             : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
 
                         return (
