@@ -8,6 +8,7 @@ const {
     getAllAppartements,
     updateAppartement,
     getMyApartments,
+    getMyClients,
     deleteAppartement,
 } = require("./apartments.controller");
 
@@ -18,6 +19,8 @@ router.get("/", getAllAppartements);
 
 // ✅ /my BEFORE /:id — otherwise "my" is treated as an id
 router.get("/my", protectDev, getMyApartments);
+
+router.get("/clients/my", protectDev, getMyClients);
 
 // Delete an apartment (protect so only the owner can delete)
 router.delete("/:id", protectDev, deleteAppartement);

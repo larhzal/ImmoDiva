@@ -215,7 +215,7 @@ function UpdateAppartement() {
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 setTimeout(() => {
                     setSuccessMessage("");
-                    navigate(`/appartements/${id}`); // redirect to detail page after update
+                    navigate(`/annonces/${id}`); // redirect to detail page after update
                 }, 2000);
             } else {
                 setFormError(data.message || "Une erreur est survenue lors de la mise à jour.");

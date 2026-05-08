@@ -333,10 +333,6 @@ export default function MyApartmentsPage() {
         { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock         },
     ];
 
-    const TAB_BADGES = {
-        "Mes Annonces": stats.total || undefined,
-    };
-
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -386,7 +382,7 @@ export default function MyApartmentsPage() {
                     </div>
                 </div>
 
-                <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} badges={TAB_BADGES} />
+                <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab}/>
 
                 <div className="tabContent">{renderTab()}</div>
             </main>

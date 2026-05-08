@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ClipboardList, CheckCircle, Clock, Eye, Pencil, Trash2, BedDouble, MapPin, Search, SlidersHorizontal } from "lucide-react";
+import { ClipboardList, CheckCircle, Clock, Eye, Pencil, Trash2, BedDouble, MapPin, Search, SlidersHorizontal, MapPinHouse } from "lucide-react";
 import validators, { validateForm } from "../../utils/validators";
 import Navbar from "../../components/layout/Navbar";
 import Avatar from "../../assets/icons/Dashboard.png";
@@ -263,12 +263,44 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("Mon Profile");
   const [user, setUser] = useState({ prenom: "", nom: "" });
   const [stats, setStats] = useState({ total: 0, approved: 0, pending: 0 });
-  const initials = `${user.prenom?.[0] ?? ""}${user.nom?.[0] ?? ""}`.toUpperCase();
-      const STATS = [
-      { label: "Mes Annonces", value: stats.total,    color: "#0F2744", subtitle: "Total des annonces",     icon: ClipboardList },
-      { label: "Approuvée",    value: stats.approved, color: "#1E9E6B", subtitle: "Annonces en ligne",      icon: CheckCircle   },
-      { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock         },
+  const [isLoadingStats, setIsLoadingStats] = useState(false);
+
+  // ── Fetch Global Stats ──
+  // We use the apartments endpoint to get the count metadata for the header cards
+  useEffect(() => {
+    const fetchStats = async () => {
+      setIsLoadingStats(true);
+      try {
+        const res = await fetch("http://localhost:5000/api/appartements/my?page=1&limit=1", { 
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setStats({
+            total:    data.total    ?? 0,
+            approved: data.approved ?? 0,
+            pending:  data.pending  ?? 0,
+          });
+        }
+      } catch (err) {
+        console.error("Erreur chargement statistiques", err);
+      } finally {
+        setIsLoadingStats(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const STATS = [
+    { label: "Mes Annonces", value: stats.total,    color: "#0F2744", subtitle: "Total des annonces",     icon: ClipboardList },
+    { label: "Approuvée",    value: stats.approved, color: "#1E9E6B", subtitle: "Annonces en ligne",      icon: CheckCircle   },
+    { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock         },
   ];
+
+  const initials = `${user.prenom?.[0] ?? ""}${user.nom?.[0] ?? ""}`.toUpperCase();
 
   return (
     <div className="page">
@@ -285,15 +317,20 @@ export default function ProfilePage() {
                   </p>
               </div>
           </div>
-
+{/* 
           <div className="statsRow">
               {STATS.map((s) => (
                   <StatCard key={s.label} {...s} />
               ))}
-          </div>
+          </div> */}
       </div>
 
-        <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
+        {/* Added badges prop to TabBar to show the announcement count */}
+        <TabBar 
+            tabs={TABS} 
+            active={activeTab} 
+            onChange={setActiveTab}
+        />
 
         <div className="tabContent">
           {activeTab === "Mon Profile" ? (

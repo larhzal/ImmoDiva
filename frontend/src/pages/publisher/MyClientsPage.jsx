@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { MapPinHouse, CheckCircle, Clock, Users } from "lucide-react";
+import { MapPinHouse, CheckCircle, Clock, MapPin, Search, Users } from "lucide-react";
 import Navbar from "../../components/layout/Navbar";
 import StatCard from "../../components/layout/StatsCard";
 import TabBar from "../../components/layout/TabBar";
 import Loader from "../../components/ui/loader";
 import "../../styles/profile/profile.css";
-import "../../styles/publisher/myClients.css";
+import "../../styles/publisher/MyClients.css";
 
 // ── Constants ─────────────────────────────────────────────────
 const API = "http://localhost:5000/api";
@@ -39,23 +39,13 @@ function ClientsTab({ onClientsCount }) {
     const [isLoading, setIsLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
-    // Fallback mock data if API is empty
-    const MOCK = [
-        { id: 1, name: "Ayoub Sadouqy",    apartment: "Location appartement meublé moderne",     address: "Californie, Casablanca" },
-        { id: 2, name: "Abdessalam Wahid", apartment: "Duplex meublé Mahaj Riad",                address: "Hay Riad, Rabat" },
-        { id: 3, name: "Fatimzahra Niya",  apartment: "Location appartement de luxe",            address: "Guéliz, Marrakech" },
-        { id: 4, name: "Sara Alaoui",      apartment: "Location magnifique appartement moderne", address: "Californie, Casablanca" },
-        { id: 5, name: "Bilal Alami",      apartment: "Appartement à Meknes à louer pour 8 personnes", address: "Hamria, Meknès" },
-        { id: 6, name: "Tarik Saadani",    apartment: "Location appartement moderne",            address: "El Bassatine, Meknès" },
-        { id: 7, name: "Mohamed Kaabi",    apartment: "Location magnifique appartement de luxe", address: "Maarif, Casablanca" },
-    ];
+    const [search, setSearch] = useState("");
 
     const fetchClients = async (currentPage = 1) => {
         setIsLoading(true);
         try {
             const res = await fetch(
-                `${API}/clients/my?page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
+                `${API}/appartements/clients/my?page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
                 { headers: authHeaders() }
             );
             const data = await res.json();
@@ -63,7 +53,6 @@ function ClientsTab({ onClientsCount }) {
                 const clientList = data.clients || [];
                 setClients(clientList);
                 setTotalPages(data.totalPages || 1);
-                // Update parent with total count for the Tab Badge
                 onClientsCount?.(data.total || clientList.length);
             }
         } catch (err) {
@@ -77,52 +66,85 @@ function ClientsTab({ onClientsCount }) {
         fetchClients(page);
     }, [page]);
 
-    const displayData = clients.length > 0 ? clients : MOCK;
+    // Client-side filtering
+    const filtered = clients.filter((c) =>
+        c.name?.toLowerCase().includes(search.toLowerCase()) ||
+        c.apartment?.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-        <div className="clients-tab">
+        <div className="apartments-tab"> {/* Re-using class for consistent padding */}
             {isLoading && <Loader />}
 
+            {/* ── Search Bar ── */}
+            <div className="table-controls">
+                <div className="search-box">
+                    <Search size={16} className="search-icon" />
+                    <input
+                        type="text"
+                        placeholder="Rechercher un client ou un appartement..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+            </div>
+
             <div className="table-wrapper">
-                <table className="clients-table">
+                <table className="apartments-table"> {/* Re-using table styles */}
                     <thead>
                         <tr>
                             <th>CLIENT</th>
-                            <th>APPARTEMENT</th>
-                            <th>ADRESSE</th>
+                            <th>APPARTEMENT CONCERNÉ</th>
+                            <th>PROFIL</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {displayData.map((client) => (
+                        {filtered.map((client) => (
                             <tr key={client.id} className="table-row">
-                                <td className="col-client">
-                                    <span className="client-name">{client.name}</span>
+                                {/* Client Column with Avatar-style Initials */}
+                                <td className="col-title">
+                                    <div className="apt-thumb-wrap">
+                                        <div className="avatar-initials" style={{ width: '40px', height: '40px', fontSize: '14px' }}>
+                                            {client.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p className="apt-title">{client.name}</p>
+                                            <p className="apt-address">{client.phone_number || "Client vérifié"}</p>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td className="col-apartment">{client.apartment}</td>
-                                <td className="col-address">{client.address}</td>
+
+                                {/* Apartment Details */}
+                                <td className="col-details">
+                                    <div>
+                                        <p className="apt-title" style={{ fontSize: '0.9rem' }}>{client.apartment}</p>
+                                        <p className="apt-address"><MapPin size={12} /> {client.address}</p>
+                                    </div>
+                                </td>
+
+                                {/* Profile/Role */}
+                                <td className="col-status">
+                                    <span className="detail-chip">
+                                        <Users size={14} />
+                                        {client.profil || "Locataire"}
+                                    </span>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                {!isLoading && filtered.length === 0 && (
+                    <p className="empty-text">Aucun client trouvé.</p>
+                )}
             </div>
 
             {/* ── Pagination ── */}
             <div className="pagination">
-                <button
-                    className="btnPage"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                >
+                <button className="btnPage" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
                     Précédent
                 </button>
-                <button className="btnPage btnPage--current" disabled>
-                    Page {page}
-                </button>
-                <button
-                    className="btnPage"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                >
+                <button className="btnPage btnPage--current" disabled>Page {page}</button>
+                <button className="btnPage" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
                     Suivant
                 </button>
             </div>
@@ -136,32 +158,48 @@ export default function MyClientsPage() {
     const [user, setUser] = useState({ prenom: "", nom: "" });
     const [clientCount, setClientCount] = useState(0);
     const [stats, setStats] = useState({ total: 0, approved: 0, pending: 0 });
-    
-    // In a real scenario, you might want to fetch these stats from a global dashboard API
-    const STATS = [
-        { label: "Mes Annonces", value: stats.total,    color: "#0F2744", subtitle: "Total des annonces",     icon: MapPinHouse },
-        { label: "Approuvée",    value: stats.approved, color: "#1E9E6B", subtitle: "Annonces en ligne",      icon: CheckCircle   },
-        { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock         },
-    ];
+    const [isLoadingStats, setIsLoadingStats] = useState(false);
 
-    const TAB_BADGES = {
-        "Mes Clients": clientCount || undefined,
-    };
-
+    // Fetch User Profile and Global Stats on Mount
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchHeaderData = async () => {
+            setIsLoadingStats(true);
             try {
-                const res = await fetch(`${API}/auth/me`, { headers: authHeaders() });
-                const data = await res.json();
-                if (res.ok) {
-                    setUser({ prenom: data.user.first_name, nom: data.user.last_name });
+                // 1. Fetch User Info
+                const userRes = await fetch(`${API}/auth/me`, { headers: authHeaders() });
+                const userData = await userRes.json();
+                if (userRes.ok) {
+                    setUser({ prenom: userData.user.first_name, nom: userData.user.last_name });
+                }
+
+                // 2. Fetch Stats (We call the same apartments/my endpoint to get the metadata)
+                // We use limit=1 because we only care about the count/stats headers at the top level
+                const statsRes = await fetch(`${API}/appartements/my?page=1&limit=1`, { 
+                    headers: authHeaders() 
+                });
+                const statsData = await statsRes.json();
+                if (statsRes.ok) {
+                    setStats({
+                        total:    statsData.total    ?? 0,
+                        approved: statsData.approved ?? 0,
+                        pending:  statsData.pending  ?? 0,
+                    });
                 }
             } catch (err) {
-                console.error("Erreur chargement utilisateur", err);
+                console.error("Erreur chargement données entête", err);
+            } finally {
+                setIsLoadingStats(false);
             }
         };
-        fetchUser();
+
+        fetchHeaderData();
     }, []);
+
+    const STATS = [
+        { label: "Mes Annonces", value: stats.total,    color: "#0F2744", subtitle: "Total des annonces",     icon: MapPinHouse },
+        { label: "Approuvée",    value: stats.approved, color: "#1E9E6B", subtitle: "Annonces en ligne",      icon: CheckCircle },
+        { label: "En Attente",   value: stats.pending,  color: "#E87722", subtitle: "En cours de validation", icon: Clock       },
+    ];
 
     const renderTab = () => {
         switch (activeTab) {
@@ -177,7 +215,6 @@ export default function MyClientsPage() {
     return (
         <div className="page">
             <Navbar />
-
             <main className="main">
                 <div className="pageHeader">
                     <div className="pageHeader__user">
@@ -189,19 +226,18 @@ export default function MyClientsPage() {
                             </p>
                         </div>
                     </div>
-
+{/* 
                     <div className="statsRow">
                         {STATS.map((s) => (
                             <StatCard key={s.label} {...s} />
                         ))}
-                    </div>
+                    </div> */}
                 </div>
 
                 <TabBar 
                     tabs={TABS} 
                     active={activeTab} 
                     onChange={setActiveTab} 
-                    badges={TAB_BADGES} 
                 />
 
                 <div className="tabContent">{renderTab()}</div>

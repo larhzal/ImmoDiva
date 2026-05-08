@@ -6,6 +6,7 @@ const {
     fetchApartmentById,
     fetchAllApartments,
     fetchApartmentsByOwner,
+    fetchMyClients,
     updateApartmentRecord,
     deleteStorageFiles,
     deletePictureRecords,
@@ -145,6 +146,25 @@ const getMyApartments = async (req, res) => {
 };
 
 // ─────────────────────────────────────────────
+// GET /api/clients/my
+// ─────────────────────────────────────────────
+const getMyClients = async (req, res) => {
+    try {
+        const ownerId = req.user.id;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 7;
+
+        const result = await fetchMyClients(ownerId, page, limit);
+
+        return res.status(200).json(result);
+    } catch (err) {
+        console.error("getMyClients ERROR:", err);
+        res.status(500).json({error: err.message, details: err});
+    }
+};
+
+
+// ─────────────────────────────────────────────
 // DELETE /api/appartements/:id
 // ─────────────────────────────────────────────
 const deleteAppartement = async (req, res) => {
@@ -181,6 +201,7 @@ module.exports = {
     getAllAppartements,
     updateAppartement,
     getMyApartments,
+    getMyClients,
     deleteAppartement,
 };
  

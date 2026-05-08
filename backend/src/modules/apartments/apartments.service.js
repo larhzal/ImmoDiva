@@ -227,11 +227,11 @@ const fetchApartmentsByOwner = async (ownerId, page = 1, limit = 7) => {
         .eq("owner_id", ownerId)
         .order("created_at", { ascending: false })
         .range(from, to);
-
+        
     if (error) throw error; // ✅ check error BEFORE using data
-
+    
     const approved = data.filter(a => a.status === "Acceptée").length;
-    const pending  = data.filter(a => a.status !== "Acceptée").length;
+    const pending  = data.filter(a => a.status === "En Attente").length;
 
     return {
         apartments: data.map((apartment) => ({
@@ -239,7 +239,7 @@ const fetchApartmentsByOwner = async (ownerId, page = 1, limit = 7) => {
             photos: apartment.photos.map((photo) => ({
                 ...photo,
                 url: photo.file_path.startsWith("http")
-                    ? photo.file_path
+                ? photo.file_path
                     : supabase.storage.from("appartements").getPublicUrl(photo.file_path).data.publicUrl,
             })),
         })),
@@ -247,6 +247,53 @@ const fetchApartmentsByOwner = async (ownerId, page = 1, limit = 7) => {
         totalPages: Math.ceil(count / limit),
         approved,
         pending,
+    };
+};
+
+/**
+ * Fetch all clients belonging to a specific owner, with pagination.
+ */
+const fetchMyClients = async (ownerId, page = 1, limit = 7) => {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
+        .from("sent_request")
+        .select(`
+            id,
+            client:User!client_id (
+                first_name,
+                last_name,
+                phone_number
+            ),
+            apartment:Apartment!inner (
+                title,
+                address,
+                owner_id
+            ),
+            profil
+        `, { count: "exact" })
+        .eq("apartment.owner_id", ownerId) // Filters requests for this owner's apartments 
+        .eq("response", "accepted")
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+    if (error) {
+        console.error("Supabase Error:", error);
+        throw error;
+    }
+
+    return {
+        // data is now a flat list of requests, no flatMap needed
+        clients: data.map((req) => ({
+            name: `${req.client?.first_name || 'Unknown'} ${req.client?.last_name || 'Client'}`.trim(),
+            apartment: req.apartment?.title || 'N/A',
+            address: req.apartment?.address || 'N/A',
+            phone_number: req.client?.phone_number || 'N/A',
+            profil: req.profil || 'N/A',
+        })),
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit),
     };
 };
 
@@ -285,6 +332,7 @@ module.exports = {
     fetchApartmentById,
     fetchAllApartments,
     fetchApartmentsByOwner,
+    fetchMyClients,
     fetchPicturesByApartment,
     deleteApartmentRecord,
 };
