@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/ui/loader';
 import { getDemandesRecues } from '../../services/rentalService';
 
-import '../../styles/profile/profile.css';
+
 import '../../styles/ui/rentalRequestDisplay.css';
 import {
   Building2,
