@@ -1,37 +1,44 @@
-
 .tabBar {
   display: flex;
-  gap: 12px; /* Adjusted spacing between buttons */
+  gap: 8px;
+  border-bottom: 2px solid #e5e7eb;
   margin-bottom: 24px;
 }
-
+ 
 .tabBtn {
-  flex: 1; /* Makes all buttons equal width if desired, or remove for auto-width */
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: none; /* No border in the image */
-  background: #f4f5f7; /* Light grey background for inactive */
-  color: #2c3e50; /* Dark blue/grey text */
-  font-size: 14px;
-  font-weight: 600; /* Semi-bold text */
+  padding: 10px 4px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #6b7280;
+  border: none;
+  background: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 24px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s;
 }
-
+ 
+.tabBtn:hover { color: #0F2744; }
+ 
 .tabBtnActive {
-  background: #fcd69a; /* Soft orange background from image */
-  color: #2c3e50; /* Keeps the same text color */
+  color: #0F2744;
+  font-weight: 700;
+  border-bottom-color: #E87722;
 }
-
-/* Optional: Subtle hover effect for better UX */
-.tabBtn:hover:not(.tabBtnActive) {
-  background: #ebedf0;
+ 
+.tabBadge {
+  background: #0F2744;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  line-height: 18px;
 }
-
-.tabContent {
-  background: #fff;
-  border: 1px solid #e8eaed;
-  border-radius: 0 10px 10px 10px;
-  padding: 28px 32px;
-  margin-top: -1px;
-}
+ 
+.tabBtnActive .tabBadge { background: #E87722; }

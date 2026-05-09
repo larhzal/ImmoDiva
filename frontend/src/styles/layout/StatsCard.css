@@ -1,34 +1,45 @@
-/* Ensure the stats take up the full available width */
-.statsRow {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  width: 100%;
-}
-
 .statCard {
-  background: #fff;
-  border: 1px solid #f1f1f1; /* Light border as seen in image */
-  border-radius: 12px;
-  padding: 24px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Pushes content to top and bottom */
-  min-height: 80px; /* Gives the card height to show the gap */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02); /* Subtle shadow */
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  flex: 1;
+  min-width: 280px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
 }
-
-.statLabel {
-  font-size: 15px;
-  font-weight: 700;
-  text-align: left; /* Aligns text to the left */
-  margin: 0;
+ 
+.statCard__left { display: flex; flex-direction: column; gap: 4px; }
+ 
+.statLabel   { font-size: 14px; font-weight: 600; margin: 0; }
+.statValue   { font-size: 32px; font-weight: 700; color: #0F2744; margin: 0; line-height: 1.1; }
+.statSubtitle{ font-size: 12px; color: #9ca3af; margin: 0; }
+ 
+.statCard__icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: white;
+  opacity: 0.22;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  /* The icon sits on top via a wrapper trick below */
+  position: relative;
 }
-
-.statValue {
-  font-size: 32px;
-  font-weight: 700;
-  text-align: right; /* Aligns number to the right */
-  color: #555 !important; /* The numbers in your image are dark grey/neutral */
-  margin: 0;
+ 
+/* Wrap icon in a relative container so it shows above the tinted bg */
+.statCard__iconWrap {
+  position: relative;
+  width: 48px; height: 48px;
+  flex-shrink: 0;
+}
+.statCard__iconBg {
+  position: absolute; inset: 0;
+  border-radius: 12px;
+  opacity: 0.12;
+  background: currentColor;
+}
+.statCard__iconSvg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
 }

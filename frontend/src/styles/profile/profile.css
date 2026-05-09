@@ -1,66 +1,82 @@
+/* ===========================
+   GLOBAL PAGE LAYOUT
+   =========================== */
 .page {
   min-height: 100vh;
-  background: #f7f8fa;
-  font-family: 'Segoe UI', sans-serif;
-  color: #333;
+  background: #f5f7fa;
+  font-family: "Inter", sans-serif;
 }
 
-main {
-  max-width: 1020px;
+.main {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: 32px 24px;
 }
 
+/* ===========================
+   HEADER (DashboardHeader)
+   =========================== */
 .pageHeader {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 32px;
   display: flex;
-  flex-direction: column; /* Stacked as per your image */
-  align-items: flex-start;
-  gap: 32px;
-  margin-bottom: 28px;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  margin-bottom: 32px;
 }
 
 .avatar {
-  width: 52px;
-  height: 52px;
-}
-
-/* Avatar Icon Styling to match the image exactly */
-.avatarGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-  width: 36px; /* Slightly smaller as per image */
-  height: 36px;
-}
-
-.avatarBlock {
-  border-radius: 5px;
-  background: #bdc3c7; /* Light grey for three of the blocks */
-}
-
-/* The first block (top-left) is black in your image */
-.avatarBlock.active {
-  background: #000000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .pageTitle {
+  margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #666; /* Muted grey title in image */
-  margin: 0;
+  color: #666;
 }
 
 .pageSubtitle {
+  margin: 2px 0 0;
   font-size: 14px;
   color: #999;
-  margin: 0;
+}
+
+/* ===========================
+   STATS SECTION
+   =========================== */
+.statsRow {
+  display: flex;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+/* ===========================
+   PAGE CONTENT
+   =========================== */
+.tabContent {
+  margin-top: 32px;
 }
 
 .placeholder {
-  padding: 48px 0;
+  margin-top: 40px;
+  padding: 48px;
   text-align: center;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e6e8eb;
+  font-size: 16px;
+  color: #6b7280;
 }
 
+/* ===========================
+   SECTIONS
+   =========================== */
 .section {
   margin-bottom: 8px;
 }
@@ -78,15 +94,20 @@ main {
   margin: 20px 0;
 }
 
-/* Ensure the grid doesn't collapse */
+/* ===========================
+   FORMS LAYOUT
+   =========================== */
+.infoGrid,
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 40px;
   row-gap: 20px;
+  align-items: start;
+  margin-top: 20px;
 }
 
-/* Password section usually needs full width for the inputs */
+/* Password section */
 .passGrid {
   display: flex;
   flex-direction: column;
@@ -94,60 +115,7 @@ main {
   margin-bottom: 20px;
 }
 
-/* Right-align the buttons */
-.actionsRight {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-/* Container for the form fields */
-.infoGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal columns */
-  column-gap: 40px;
-  row-gap: 20px;
-  margin-top: 20px;
-}
-
-.field input {
-  flex: 1;
-  background-color: #f5f5f5; /* Light gray background from image */
-  border: none;
-  border-radius: 12px; /* Rounded corners from image */
-  padding: 10px 15px;
-  outline: none;
-}
-
-/* Modifier Button */
-.btnModifier {
-  background-color: #fcd395; /* Light orange color from image */
-  border: none;
-  border-radius: 12px;
-  padding: 12px 40px;
-  color: #333;
-  font-weight: 500;
-  cursor: pointer;
-  float: right;
-  margin-top: 20px;
-}
-
-.btnModifier:hover {
-  background-color: #fbbd61;
-}
-
-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #f0f2f5;
-  font-size: 14px;
-  color: #333;
-  outline: none;
-}
-
-/* Container for label + input */
+/* Field layout */
 .field {
   display: flex;
   align-items: center;
@@ -158,14 +126,44 @@ input {
 .fieldLabel {
   font-size: 14px;
   color: #444;
-  width: 150px; /* Fixed width for labels to align inputs */
+  width: 150px;
   flex-shrink: 0;
 }
 
+.field input {
+  flex: 1;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+}
+
+/* ===========================
+   INPUT STATES / ERRORS
+   =========================== */
+.field-input--error {
+  border-color: #f09595 !important;
+  background-color: #fff8f8;
+}
+
+.field-error {
+  display: block;
+  color: #a32d2d;
+  font-size: 12px;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* ===========================
+   BUTTONS
+   =========================== */
 .btnPrimary {
   padding: 10px 28px;
   background: #f5a42268;
-  color: #000000;
+  color: #000;
   border: none;
   border-radius: 8px;
   font-size: 14px;
@@ -173,39 +171,25 @@ input {
   transition: background 0.15s;
 }
 
-/* ── Info Grid ───────────────────────────────────────────────── */
-/* The grid must align rows to the TOP so error text doesn't     */
-/* overflow into the neighboring column                          */
-
-.info-grid,
-.infoGrid {
-  align-items: start; /* was likely "center" — this is the root cause */
+.btnModifier {
+  background: #fcd395;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 40px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 20px;
+  float: right;
 }
 
-/* ── Profile Field ───────────────────────────────────────────── */
-.profile-field {
-  display: grid;
-  flex-direction: column;
-  gap: 4px;
+.btnModifier:hover {
+  background: #fbbd61;
 }
 
-/* ── Field Error ─────────────────────────────────────────────── */
-.field-error {
-  display: block;
-  color: #A32D2D;
-  font-size: 12px;
-  line-height: 1.4;
-  margin-top: 2px;
-  width: 100%;
-}
-
-/* ── Error Input State ───────────────────────────────────────── */
-.field-input--error {
-  border-color: #F09595 !important;
-  background-color: #FFF8F8;
-}
-
-/* ── Status Banner ───────────────────────────────────────────── */
+/* ===========================
+   STATUS BANNERS
+   =========================== */
 .status-banner {
   display: flex;
   align-items: center;
@@ -219,64 +203,33 @@ input {
 }
 
 .status-banner--error {
-  background: #FCEBEB;
-  color: #A32D2D;
-  border-color: #F09595;
+  background: #fcebeb;
+  color: #a32d2d;
+  border-color: #f09595;
 }
 
 .status-banner--success {
-  background: #EAF3DE;
-  color: #3B6D11;
-  border-color: #97C459;
+  background: #eaf3de;
+  color: #3b6d11;
+  border-color: #97c459;
 }
 
-.page {
-  min-height: 100vh;
-  background: #f5f5f5;
+/* ===========================
+   AVATAR GRID (custom icon)
+   =========================== */
+.avatarGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  width: 36px;
+  height: 36px;
 }
 
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
+.avatarBlock {
+  border-radius: 5px;
+  background: #bdc3c7;
 }
 
-.pageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-}
-
-.avatar {
-  width: 48px;
-  height: 48px;
-}
-
-.pageTitle {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.pageSubtitle {
-  margin: 4px 0 0;
-  color: #777;
-  font-size: 14px;
-}
-
-.statsRow {
-  display: flex;
-  gap: 20px;
-}
-
-.tabContent {
-  margin-top: 32px;
-}
-
-.placeholder {
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
+.avatarBlock.active {
+  background: #000;
 }

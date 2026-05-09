@@ -64,7 +64,10 @@ exports.getDemandesRecues = async (publisherId) => {
         id,
         title,
         address,
-        owner_id
+        owner_id,
+        Pictures:Pictures(
+          file_path
+        )
       )
     `)
     .eq('Apartment.owner_id', publisherId)

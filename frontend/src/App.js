@@ -6,12 +6,11 @@ import RentalRequestsPage from './pages/publisher/RentalRequestsPage';
 import './styles/layout/StatsCard.css'
 import './styles/layout/TabBar.css'
 import RentalRequestDetailPage from './pages/publisher/RentalRequestDetailsPage';
-import Toaster from 'react-hot-toast'
+
 
 function App() {
   return (
     <>
-      <Toaster position="top-right" />
       <Navbar />
       <BrowserRouter>
         <Routes>

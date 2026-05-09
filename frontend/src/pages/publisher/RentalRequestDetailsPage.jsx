@@ -139,15 +139,22 @@ export default function RentalRequestDetailPage() {
         <div className="card clientCard">
 
           <div className="clientHeader">
-            <div>
-              <h3 className="clientName">
-                {demande.User.first_name} {demande.User.last_name}, {demande.User.age} ans ({demande.User.nationality})
-              </h3>
+              <div className="clientIdentity">
+                  <div className="clientAvatarLarge">
+                    {demande.User.first_name?.[0]}
+                    {demande.User.last_name?.[0]}
+                  </div>
+              <div>
+                <h3 className="clientName">
+                  {demande.User.first_name}{" "}
+                  {demande.User.last_name}
+                </h3>
               <p className="clientEmail">{demande.email}</p>
             </div>
-
-            <button className="profileBtn">Voir le profile</button>
+            
           </div>
+          <button className="profileBtn">Voir le profile</button>
+        </div>
 
           <div className="gridInfo">
             {[
@@ -166,22 +173,27 @@ export default function RentalRequestDetailPage() {
           </div>
 
           {/* DATE + DUREE */}
-          <div className="row rowSplit">
+          <div className="dateCards">
 
-            <div className="rowItem">
-              <span>Date d’emménagement :</span>
-              <span className="valueBox">
+            <div className="dateCard">
+              <span>Date d’emménagement</span>
+
+              <strong>
                 {demande.date_emmenagement
-                  ? new Date(demande.date_emmenagement).toLocaleDateString("fr-FR")
+                  ? new Date(
+                      demande.date_emmenagement
+                    ).toLocaleDateString("fr-FR")
                   : "—"}
-              </span>
+              </strong>
             </div>
 
-            <div className="rowItem">
-              <span>Durée :</span>
-              <span className="valueBox">
-                {demande.duree_location || "—"} {demande.unite_duree}
-              </span>
+            <div className="dateCard">
+              <span>Durée</span>
+
+              <strong>
+                {demande.duree_location || "—"}{" "}
+                {demande.unite_duree}
+              </strong>
             </div>
 
           </div>
