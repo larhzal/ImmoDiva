@@ -1,612 +1,433 @@
-/* =========================================
-   PAGE CONTAINER
-   ========================================= */
-* {
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+  :root {
+    --gold: #E8A020;
+    --gold-light: #F5C060;
+    --gold-pale: #FDF3E0;
+    --dark: #1A1A2E;
+    --dark-2: #2D2D44;
+    --grey-1: #F7F7F9;
+    --grey-2: #EFEFEF;
+    --grey-3: #C8C8D4;
+    --grey-4: #8888A0;
+    --text: #1A1A2E;
+    --text-soft: #5A5A72;
+    --green: #2ECC8A;
+    --green-bg: #E8F9F2;
+    --orange: #F5853A;
+    --orange-bg: #FEF0E7;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 16px rgba(26,26,46,0.07);
+    --shadow-md: 0 8px 32px rgba(26,26,46,0.12);
+    --shadow-lg: 0 20px 60px rgba(26,26,46,0.16);
+  }
+
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
 }
 
-.page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
+.adp-page {
+    min-height: 100vh;
+    background-color: var(--grey-1);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+  }
 
-/* =========================================
-   HERO
-   ========================================= */
-.hero-section {
-    text-align: center;
-    margin: 50px 0 40px;
-    padding: 0 20px;
-}
-
-.hero-title {
-    font-size: 2.4rem;
-    font-weight: 800;
-    color: #111827;
-    margin-bottom: 12px;
-    line-height: 1.25;
-    letter-spacing: -0.5px;
-}
-
-.hero-subtitle {
-    color: #6b7280;
-    font-size: 1.05rem;
-    margin-bottom: 0;
-}
-
-/* =========================================
-   BARRE DE RECHERCHE
-   ========================================= */
-.search-bar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 16px;
-    background: #ffffff;
-    padding: 28px 32px;
-    border-radius: 20px;
-    max-width: 980px;
-    margin: 32px auto 48px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-.search-field {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 180px;
-    text-align: left;
-}
-
-.search-field label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #9ca3af;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 8px;
-}
-
-.search-field select {
-    padding: 11px 14px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 10px;
-    background-color: #f9fafb;
-    font-size: 0.93rem;
-    color: #374151;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.2s, background-color 0.2s;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 36px;
-}
-
-.search-field select:focus {
-    border-color: #f59e0b;
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
-}
-
-/* =========================================
-   BOUTONS DE RECHERCHE
-   ========================================= */
-.search-actions {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-}
-
-.search-btn {
-    background: #f59e0b;
-    color: white;
-    border: none;
-    padding: 11px 24px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 0.93rem;
-    cursor: pointer;
+  /* ── Back bar ── */
+  .adp-topbar {
+    background: #fff;
+    border-bottom: 1px solid var(--grey-2);
+    padding: 14px 48px;
     display: flex;
     align-items: center;
-    gap: 7px;
-    height: 44px;
-    transition: background-color 0.2s, transform 0.15s;
-    letter-spacing: 0.2px;
-}
-
-.search-btn:hover {
-    background: #d97706;
-    transform: translateY(-1px);
-}
-
-.search-btn:active {
-    transform: translateY(0);
-}
-
-.search-btn svg,
-.search-btn i {
-    width: 17px;
-    height: 17px;
-    font-size: 17px;
-}
-
-.reset-btn {
-    background: #ffffff;
-    color: #6b7280;
-    border: 1.5px solid #e5e7eb;
-    padding: 11px 18px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.88rem;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .adp-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1.5px solid var(--grey-2);
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-soft);
     cursor: pointer;
-    height: 44px;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    transition: all .2s;
+  }
+  .adp-back-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-pale);
+  }
+  .adp-back-arrow { font-size: 16px; }
+  .adp-breadcrumb {
+    font-size: 13px;
+    color: var(--grey-4);
     display: flex;
     align-items: center;
     gap: 6px;
-    letter-spacing: 0.2px;
-}
+  }
+  .adp-breadcrumb span { color: var(--text-soft); font-weight: 500; }
 
-.reset-btn:hover {
-    background: #f3f4f6;
-    color: #374151;
-    border-color: #d1d5db;
-}
-
-/* =========================================
-   FILTRES ACTIFS
-   ========================================= */
-.active-filters {
-    background: #fffbeb;
-    color: #92400e;
-    padding: 12px 20px;
-    border-radius: 12px;
-    margin: 0 auto 24px auto;
-    max-width: 980px;
-    font-size: 0.9rem;
-    border: 1px solid #fde68a;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.active-filters strong {
-    font-weight: 700;
-}
-
-.active-filters span {
-    background: #fef3c7;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 0.83rem;
-    font-weight: 600;
-    border: 1px solid #fde68a;
-}
-
-/* =========================================
-   GRILLE DES CARTES
-   ========================================= */
-.listings-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 28px;
-    padding: 8px 0;
-    max-width: 1200px;
-    margin: 0 auto 60px auto;
-}
-
-/* =========================================
-   CARTE INDIVIDUELLE
-   ========================================= */
-.listing-card {
-    background: #ffffff;
-    border: 1px solid #f1f5f9;
-    border-radius: 18px;
-    overflow: hidden;
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-}
-
-.listing-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
-}
-
-.listing-card-image-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.listing-card-image {
-    width: 100%;
-    height: 210px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.35s ease;
-}
-
-.listing-card:hover .listing-card-image {
-    transform: scale(1.04);
-}
-
-.listing-card-content {
-    padding: 18px 20px 20px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.listing-card-title {
-    margin: 0 0 6px 0;
-    color: #111827;
-    font-size: 1.05rem;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.listing-card-price {
-    font-weight: 800;
-    color: #f59e0b;
-    font-size: 1.15rem;
-    margin: 0 0 14px 0;
-}
-
-.listing-card-price span {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #9ca3af;
-}
-
-.listing-card-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 4px 0;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.listing-card-icon {
-    width: 16px;
-    height: 16px;
-    color: #d1d5db;
-    flex-shrink: 0;
-}
-
-.listing-card-text {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-/* =========================================
-   BOUTON VOIR DÉTAILS
-   ========================================= */
-.listing-card-footer {
-    padding: 14px 20px 18px;
-    border-top: 1px solid #f1f5f9;
-    margin-top: auto;
-}
-
-.detail-btn {
-    display: block;
-    width: 100%;
-    padding: 11px;
-    background: #111827;
-    color: #ffffff;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 0.2s, transform 0.15s;
-    letter-spacing: 0.3px;
-}
-
-.detail-btn:hover {
-    background: #1f2937;
-    transform: translateY(-1px);
-}
-
-.detail-btn:active {
-    transform: translateY(0);
-}
-
-/* =========================================
-   PAGE DE DÉTAIL D'APPARTEMENT
-   ========================================= */
-.apartment-detail {
-    display: flex;
-    gap: 36px;
+  /* ── Main layout ── */
+  .adp-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-}
+    padding: 36px 48px 64px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 28px;
+    align-items: start;
+  }
 
-.image-gallery {
-    flex: 1;
-    max-width: 580px;
-}
-
-.main-image-container {
+  /* ── Gallery ── */
+  .adp-gallery { grid-column: 1; }
+  .adp-main-img-wrap {
     position: relative;
-    border-radius: 20px;
+    border-radius: var(--radius);
     overflow: hidden;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.main-image {
+    background: var(--grey-2);
+    aspect-ratio: 16/10;
+    box-shadow: var(--shadow-md);
+  }
+  .adp-main-img {
     width: 100%;
-    height: 400px;
+    height: 100%;
     object-fit: cover;
     display: block;
-}
+    transition: transform .4s ease;
+  }
+  .adp-main-img-wrap:hover .adp-main-img { transform: scale(1.02); }
 
-.nav-btn {
+  .adp-img-counter {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: rgba(26,26,46,.65);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+  }
+
+  .adp-nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.9);
-    color: #374151;
+    background: rgba(255,255,255,.92);
     border: none;
-    width: 40px;
-    height: 40px;
     border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    color: var(--dark);
     cursor: pointer;
-    font-size: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.15);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.2s;
-}
+    transition: all .2s;
+    z-index: 2;
+  }
+  .adp-nav-btn:hover { background: var(--gold); color: #fff; transform: translateY(-50%) scale(1.08); }
+  .adp-prev { left: 14px; }
+  .adp-next { right: 14px; }
 
-.nav-btn:hover {
-    background: #ffffff;
-}
-
-.prev-btn { left: 12px; }
-.next-btn { right: 12px; }
-
-.thumbnail-container {
+  .adp-thumbs {
     display: flex;
     gap: 10px;
+    margin-top: 12px;
     overflow-x: auto;
-    padding: 4px 0;
-}
-
-.thumbnail {
-    width: 78px;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .adp-thumb {
+    width: 80px;
     height: 58px;
     object-fit: cover;
     border-radius: 8px;
     cursor: pointer;
-    opacity: 0.65;
-    transition: opacity 0.2s, border 0.2s;
+    border: 2.5px solid transparent;
+    transition: all .2s;
     flex-shrink: 0;
-    border: 2px solid transparent;
-}
+    opacity: .7;
+  }
+  .adp-thumb.active, .adp-thumb:hover { border-color: var(--gold); opacity: 1; }
 
-.thumbnail.active,
-.thumbnail:hover {
-    opacity: 1;
-    border-color: #f59e0b;
-}
+  /* ── Sidebar card ── */
+  .adp-sidebar { grid-column: 2; display: flex; flex-direction: column; gap: 18px; }
 
-.detail-content {
-    flex: 1;
-    padding: 28px 30px;
-    background: white;
-    border-radius: 20px;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-}
-
-.detail-header {
-    margin-bottom: 24px;
-}
-
-.back-btn {
-    background: #f3f4f6;
-    color: #374151;
-    border: none;
-    padding: 9px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.88rem;
-    transition: background-color 0.2s;
+  .adp-price-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-2);
+  }
+  .adp-status-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-}
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .adp-status-badge.approved { background: var(--green-bg); color: #1A9E68; }
+  .adp-status-badge.pending { background: var(--orange-bg); color: var(--orange); }
+  .adp-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-.back-btn:hover {
-    background: #e5e7eb;
-    color: #111827;
-}
+  .adp-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .adp-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--grey-4);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .adp-location svg { flex-shrink: 0; }
 
-.detail-header-info {
-    margin-bottom: 28px;
-}
-
-.apartment-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #111827;
-    margin-bottom: 12px;
-    line-height: 1.2;
-}
-
-.price-tag {
+  .adp-price-row {
     display: flex;
     align-items: baseline;
     gap: 6px;
-}
-
-.price {
-    font-size: 1.7rem;
+    padding: 16px 0;
+    border-top: 1px solid var(--grey-2);
+    border-bottom: 1px solid var(--grey-2);
+    margin-bottom: 20px;
+  }
+  .adp-price-amount {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 32px;
     font-weight: 800;
-    color: #f59e0b;
-}
+    color: var(--dark);
+  }
+  .adp-price-unit { font-size: 14px; color: var(--grey-4); font-weight: 400; }
+  .adp-price-deposit { font-size: 13px; color: var(--text-soft); margin-top: 6px; }
 
-.price-period {
-    color: #9ca3af;
-    font-size: 0.95rem;
-}
+  .adp-cta-group { display: flex; flex-direction: column; gap: 10px; }
+  .adp-btn-primary {
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  .adp-btn-primary:hover { background: #d08c10; box-shadow: 0 4px 16px rgba(232,160,32,.35); transform: translateY(-1px); }
+  .adp-btn-secondary {
+    background: #fff;
+    color: var(--dark);
+    border: 1.5px solid var(--grey-2);
+    border-radius: var(--radius-sm);
+    padding: 13px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+  }
+  .adp-btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
 
-.apartment-info-grid {
+  /* ── Quick stats ── */
+  .adp-quick-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 14px;
-    margin-bottom: 28px;
-}
-
-.info-item {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-2);
+  }
+  .adp-stat {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    background: #f8fafc;
-    border-radius: 12px;
-    border: 1px solid #e9eef5;
-}
-
-.info-icon {
-    width: 22px;
-    height: 22px;
-    color: #f59e0b;
+    gap: 10px;
+    padding: 10px;
+    background: var(--grey-1);
+    border-radius: var(--radius-sm);
+  }
+  .adp-stat-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--gold-pale);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
     flex-shrink: 0;
-}
+  }
+  .adp-stat-label { font-size: 11px; color: var(--grey-4); font-weight: 500; text-transform: uppercase; letter-spacing: .4px; }
+  .adp-stat-value { font-size: 14px; font-weight: 600; color: var(--dark); }
 
-.info-content {
+  /* ── Content area (left col) ── */
+  .adp-content { display: flex; flex-direction: column; gap: 24px; }
+
+  .adp-section {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-2);
+  }
+  .adp-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .adp-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--grey-2);
+  }
+
+  .adp-description {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-soft);
+  }
+
+  /* ── Details grid ── */
+  .adp-details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .adp-detail-item {
+    background: var(--grey-1);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
-}
+    gap: 4px;
+  }
+  .adp-detail-label { font-size: 11px; color: var(--grey-4); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .adp-detail-value { font-size: 15px; font-weight: 600; color: var(--dark); }
 
-.info-label {
-    font-size: 0.78rem;
-    color: #9ca3af;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-}
-
-.info-value {
-    font-size: 0.95rem;
-    color: #111827;
-    font-weight: 700;
-}
-
-.description-section {
-    margin-bottom: 28px;
-}
-
-.description-section h3 {
-    font-size: 1rem;
-    color: #111827;
-    margin-bottom: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.8rem;
-    color: #9ca3af;
-}
-
-.description {
-    color: #4b5563;
-    line-height: 1.65;
-    font-size: 0.95rem;
-}
-
-.action-buttons {
-    display: flex;
+  /* ── Amenities / booleans ── */
+  .adp-amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-    margin-top: 28px;
-    flex-wrap: wrap;
-}
+  }
+  .adp-amenity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    border: 1.5px solid;
+    transition: all .15s;
+  }
+  .adp-amenity.yes {
+    background: var(--green-bg);
+    border-color: #B2EED6;
+    color: #1A9E68;
+  }
+  .adp-amenity.no {
+    background: var(--grey-1);
+    border-color: var(--grey-2);
+    color: var(--grey-4);
+    text-decoration: line-through;
+    opacity: .7;
+  }
+  .adp-amenity-icon { font-size: 16px; }
 
-.feedback-btn,
-.contact-btn {
-    padding: 13px 26px;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.93rem;
-    transition: transform 0.15s, box-shadow 0.15s, background-color 0.2s;
-    letter-spacing: 0.2px;
-}
+  /* ── Tenant profile tags ── */
+  .adp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .adp-tag {
+    background: var(--gold-pale);
+    color: var(--gold);
+    border: 1px solid #F5C06040;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
 
-.feedback-btn {
-    background: #f59e0b;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
-}
+  /* ── Rental conditions ── */
+  .adp-conditions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
 
-.feedback-btn:hover {
-    background: #d97706;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
-}
+  /* ── Full-width feedback section ── */
+  .adp-feedback-section {
+    max-width: 1200px;
+    margin: 0 auto 60px;
+    padding: 0 48px;
+    background-color: var(--grey-1);
+  }
 
-.contact-btn {
-    background: white;
-    color: #374151;
-    border: 1.5px solid #e5e7eb;
-}
+  /* ── Loading / error states ── */
+  .adp-state {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-soft);
+    background: var(--grey-1);
+  }
+  .adp-state-icon { font-size: 48px; }
+  .adp-state h2 { font-family: 'Syne', sans-serif; font-size: 22px; color: var(--dark); }
+  .adp-state p { font-size: 15px; }
+  .adp-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--grey-2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-.contact-btn:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
-    transform: translateY(-1px);
-}
-
-/* =========================================
-   RESPONSIVE
-   ========================================= */
-@media (max-width: 900px) {
-    .apartment-detail {
-        flex-direction: column;
-    }
-    .image-gallery {
-        max-width: 100%;
-    }
-}
-
-@media (max-width: 600px) {
-    .hero-title {
-        font-size: 1.7rem;
-    }
-    .search-bar {
-        padding: 20px 16px;
-    }
-    .search-actions {
-        width: 100%;
-    }
-    .search-btn,
-    .reset-btn {
-        flex: 1;
-        justify-content: center;
-    }
-    .action-buttons {
-        flex-direction: column;
-    }
-    .feedback-btn,
-    .contact-btn {
-        width: 100%;
-        text-align: center;
-    }
-}
+  @media (max-width: 900px) {
+    .adp-container { grid-template-columns: 1fr; padding: 20px; }
+    .adp-sidebar { grid-column: 1; }
+    .adp-details-grid { grid-template-columns: repeat(2, 1fr); }
+    .adp-amenities-grid { grid-template-columns: repeat(2, 1fr); }
+    .adp-topbar { padding: 14px 20px; }
+    .adp-feedback-section { padding: 0 20px; }
+  }
