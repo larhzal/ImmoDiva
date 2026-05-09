@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
 /* =========================================
    FEEDBACK FORM
    ========================================= */
@@ -162,21 +164,38 @@
    ========================================= */
 
 .feedback-list-container {
-    margin: 40px 0;
+    margin: -37px 0;
     padding: 0 4px;
+    max-width: 895px;
+    background-color: #F7F7F9;
 }
 
 .rating-summary {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: #fff;
     padding: 28px;
-    border-radius: 24px;
-    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    border-color: #C8C8D4;
     margin-bottom: 30px;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 2px 16px rgba(26,26,46,0.07);
+    max-width: 770px;
 }
 
 .rating-header {
-    margin-bottom: 20px;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rating-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #EFEFEF;
 }
 
 .rating-header h3 {
@@ -244,6 +263,8 @@
     padding: 12px 16px;
     border-radius: 8px;
     margin-top: 20px;
+    max-width: 770px;
+    margin-bottom: 0;
 }
 
 .loading {

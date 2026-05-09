@@ -1,16 +1,5 @@
-/* =========================================
-   PAGE CONTAINER
-   ========================================= */
-.page-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
-
-/* =========================================
-   SECTION HERO (TITRE ET SOUS-TITRE)
-   ========================================= */
-.hero-section {
+/* SECTION HERO (TITRE ET SOUS-TITRE)*/
+   .hero-section {
     text-align: center;
     margin: 40px 0;
     padding: 0 20px;
@@ -19,7 +8,7 @@
 .hero-title {
     font-size: 2.2rem;
     font-weight: 800;
-    color: #111827; /* Bleu/Gris très foncé */
+    color: #111827; 
     margin-bottom: 10px;
     line-height: 1.3;
 }
@@ -30,29 +19,49 @@
     margin-bottom: 40px;
 }
 
-/* =========================================
-   BARRE DE RECHERCHE
-   ========================================= */
+  /* ── Loading / error states ── */
+  .adp-state {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-soft);
+    background: var(--grey-1);
+  }
+  .adp-state-icon { font-size: 48px; }
+  .adp-state h2 { font-family: 'Syne', sans-serif; font-size: 22px; color: var(--dark); }
+  .adp-state p { font-size: 15px; }
+  .adp-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--grey-2);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+/* BARRE DE RECHERCHE*/
 .search-bar {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-end;
     justify-content: center;
-    gap: 18px;
-    background-color: rgba(255, 255, 255, 0.92);
-    padding: 28px 32px;
-    border-radius: 24px;
+    gap: 20px;
+    background-color: #f9fafb; 
+    padding: 25px 35px;
+    border-radius: 12px;
     max-width: 1000px;
     margin: 0 auto 50px auto;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
 }
 
 .search-field {
     display: flex;
     flex-direction: column;
     text-align: left;
-    flex: 1; /* Permet aux champs de prendre l'espace disponible */
+    flex: 1; 
     min-width: 200px;
 }
 
@@ -79,8 +88,7 @@
 }
 
 .search-btn {
-    background-color: #f59e0b; /* Orange de la maquette */
-    color: white;
+    background-color: #f59e0b; 
     border: none;
     padding: 12px 28px;
     border-radius: 8px;
@@ -90,289 +98,27 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    height: 45px; /* Aligné avec la hauteur des select */
+    height: 45px; 
     transition: background-color 0.2s ease;
 }
 
 .search-btn:hover {
-    background-color: #d97706; /* Orange un peu plus foncé au survol */
+    background-color: #d97706; 
 }
 
-/* =========================================
-   PAGE DE DÉTAIL D'APPARTEMENT
-   ========================================= */
-
-.apartment-detail {
-    display: flex;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.image-gallery {
-    flex: 1;
-    max-width: 600px;
-}
-
-.main-image-container {
-    position: relative;
-    border-radius: 24px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
-}
-
-.main-image {
-    width: 100%;
-    height: 420px;
-    object-fit: cover;
-    display: block;
-}
-
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
+.detail-btn {
+    background: #E8A020;
+    color: #fff;
     border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.prev-btn {
-    left: 10px;
-}
-
-.next-btn {
-    right: 10px;
-}
-
-.thumbnail-container {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 10px 0;
-}
-
-.thumbnail {
-    width: 80px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.thumbnail.active {
-    opacity: 1;
-    border: 2px solid #f59e0b;
-}
-
-.detail-content {
-    flex: 1;
-    padding: 28px 32px;
-    background: white;
-    border-radius: 24px;
-    border: 1px solid #f1f5f9;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
-}
-
-.detail-header-info {
-    margin-bottom: 30px;
-}
-
-.apartment-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 15px;
-}
-
-.price-tag {
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-}
-
-.price {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #f59e0b;
-}
-
-.price-period {
-    color: #6b7280;
-    font-size: 1rem;
-}
-
-.apartment-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px;
-    background: #f8fafc;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-}
-
-.info-icon {
-    width: 24px;
-    height: 24px;
-    color: #f59e0b;
-    flex-shrink: 0;
-}
-
-.info-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-label {
-    font-size: 0.85rem;
-    color: #6b7280;
-    font-weight: 500;
-}
-
-.info-value {
-    font-size: 1rem;
-    color: #111827;
-    font-weight: 600;
-}
-
-.description-section {
-    margin-bottom: 30px;
-}
-
-.description-section h3 {
-    font-size: 1.2rem;
-    color: #111827;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.description {
-    color: #4b5563;
-    line-height: 1.6;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.feedback-btn, .contact-btn {
-    padding: 14px 28px;
-    border-radius: 999px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-    box-shadow: 0 10px 24px rgba(245, 158, 11, 0.16);
-}
-
-.feedback-btn {
-    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-    color: white;
-    border: none;
-}
-
-.feedback-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(245, 158, 11, 0.24);
-}
-
-.contact-btn {
-    background: white;
-    color: #334155;
-    border: 2px solid rgba(15, 23, 42, 0.12);
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-}
-
-.contact-btn:hover {
-    background: #f8fafc;
-    color: #111827;
-}
-
-.detail-header {
-    margin-bottom: 20px;
-}
-
-.back-btn {
-    background: #f3f4f6;
-    color: #374151;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
-}
-
-.back-btn:hover {
-    background: #e5e7eb;
-}
-
-/* =========================================
-   FILTRES ACTIFS
-   ========================================= */
-.active-filters {
-    background: linear-gradient(90deg, rgba(254, 240, 138, 0.2), rgba(254, 224, 138, 0.08));
-    color: #92400e;
-    padding: 16px 22px;
-    border-radius: 16px;
-    margin: 0 auto 20px auto;
-    max-width: 1000px;
-    font-size: 0.95rem;
-    border: 1px solid rgba(245, 158, 11, 0.18);
-}
-
-.active-filters strong {
-    margin-right: 10px;
-}
-
-.active-filters span {
-    margin-right: 15px;
-}
-
-/* =========================================
-   ACTIONS DE RECHERCHE
-   ========================================= */
-.search-actions {
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-}
-
-.reset-btn {
-    background: #6b7280;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    height: 45px;
-    transition: background-color 0.2s ease;
-}
-
-.reset-btn:hover {
-    background: #4b5563;
+    transition: all .2s;
+    text-align: center;
 }
 /* Le conteneur qui englobe toutes les cartes */
 .listings-grid {
@@ -404,8 +150,8 @@
 /* L'image dans la carte */
 .listing-card-image {
     width: 100%;
-    height: 200px; /* Hauteur fixe pour l'alignement */
-    object-fit: cover; /* Recadre sans déformer */
+    height: 200px; 
+    object-fit: cover; 
 }
 
 /* Le conteneur du texte sous l'image */
@@ -414,18 +160,18 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    text-align: left; /* Aligné à gauche comme la maquette */
+    text-align: left; 
 }
 
 /* Titre de l'annonce */
 .listing-card-title {
     margin: 0 0 8px 0;
-    color: #111827; /* Gris très foncé */
+    color: #111827; 
     font-size: 1.1rem;
     font-weight: 700;
 }
 
-/* Prix de l'annonce (en jaune/orange comme la maquette) */
+/* Prix de l'annonce */
 .listing-card-price {
     font-weight: bold;
     color: #f59e0b;
@@ -436,20 +182,20 @@
 /* Conteneur pour l'icône + texte */
 .listing-card-info {
     display: flex;
-    align-items: center; /* Alignement vertical parfait */
-    gap: 12px; /* Espace entre icône et texte */
+    align-items: center; 
+    gap: 12px; 
     margin: 5px 0;
 }
 
-/* 🚨 STYLE DES NOUVELLES ICÔNES LUCIDE */
+/*  STYLE DES NOUVELLES ICÔNES LUCIDE */
 .listing-card-icon {
-    width: 1.3rem; /* Taille de l'icône */
+    width: 1.3rem; 
     height: 1.3rem;
-    color: #9ca3af; /* Gris clair subtil, comme la maquette */
+    color: #9ca3af; 
 }
 
 /* Texte à côté de l'icône */
 .listing-card-text {
-    color: #6b7280; /* Gris moyen pour le texte */
+    color: #6b7280; 
     font-size: 1rem;
 }

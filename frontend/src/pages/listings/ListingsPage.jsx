@@ -120,24 +120,25 @@ const ListingsPage = () => {
                     <button className="search-btn" onClick={handleSearch}>
                         🔍 Rechercher
                     </button>
-                    <button className="reset-btn" onClick={handleReset}>
+                    {/* <button className="reset-btn" onClick={handleReset}>
                         Réinitialiser
-                    </button>
+                    </button> */}
                 </div>
             </div>
 
-            {(city || priceRange || rooms) && (
+            {/* {(city || priceRange || rooms) && (
                 <div className="active-filters">
                     <strong>Filtres actifs :</strong>
                     <span>{city ? ` Ville: ${city}` : ''}</span>
                     <span>{priceRange ? ` Prix: ${priceOptions.find((p) => p.value === priceRange)?.label}` : ''}</span>
                     <span>{rooms ? ` Chambres: ${roomOptions.find((r) => r.value === rooms)?.label}` : ''}</span>
                 </div>
-            )}
+            )} */}
 
             {/* --- MESSAGES D'ÉTAT --- */}
             {loading && (
-                <div className="loading-container">
+                <div className="adp-state">
+                    <div className="adp-spinner" />
                     <p>Chargement des annonces en cours...</p>
                 </div>
             )}
@@ -157,9 +158,11 @@ const ListingsPage = () => {
                     {annonces.map((annonce) => {
                         const listingId = annonce.id || annonce.ID || annonce.apartment_id || annonce.apartmentId;
                         const pictures = annonce.pictures || annonce.Pictures;
+                        const imgUrl = (path) =>
+                            `https://fipyteeltzqzeifwdpca.supabase.co/storage/v1/object/public/appartements/${path}`;
                         const imageAafficher = pictures && pictures.length > 0 
-                            ? pictures[0].url 
-                            : "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+                            ? imgUrl(pictures[0].file_path)
+                             : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80';
 
                         return (
                             <div key={listingId || annonce.title || annonce.city || Math.random()} className="listing-card">

@@ -87,7 +87,7 @@ const FeedbackList = ({ apartmentId }) => {
             {/* Rating Summary */}
             <div className="rating-summary">
                 <div className="rating-header">
-                    <h3>Avis des clients</h3>
+                        Avis des clients
                 </div>
                 {totalReviews > 0 ? (
                     <div className="rating-info">
