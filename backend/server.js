@@ -25,6 +25,24 @@ app.get('/api/annonces', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+app.get('/', async (req, res) => {
+    try {
+        
+        const { data, error } = await supabase
+            .from('User')
+            .select('*');
+
+        if (error) throw error;
+        
+        res.json({
+            message: "Bienvenue sur l'API ImmoDiva",
+            total_users: data.length,
+            users: data
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 

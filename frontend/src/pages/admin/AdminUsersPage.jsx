@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../services/adminService';
 import '../../styles/pages/adminUsers.css';
 
-const AdminUsers = () => {
-  const dummyUsers = [
-    { id: 1, full_name: "Ahmed Alami", email: "ahmed@mail.com", role: "publisher", status: "Actif", date: "2024-05-10" },
-    { id: 2, full_name: "Sara Benani", email: "sara@mail.com", role: "locataire", status: "Bloqué", date: "2024-05-11" },
-  ];
+const AdminUsersPage = () => { 
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('User') 
+          .select('id, first_name, last_name, role, status, created_at');
+        if (error) throw error;
+        setUsers(data || []);
+      } catch (err) {
+        console.error(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) return <div className="admin-container">Chargement...</div>;
 
   return (
     <div className="admin-container">
@@ -16,7 +34,7 @@ const AdminUsers = () => {
 
       <div className="stat-card">
         <p className="stat-label">Total Utilisateurs</p>
-        <p className="stat-value">{dummyUsers.length}</p>
+        <p className="stat-value">{users.length}</p>
       </div>
 
       <div className="users-table-container">
@@ -30,25 +48,29 @@ const AdminUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyUsers.map((user) => (
+            {users.map((user) => (
               <tr key={user.id}>
                 <td>
                   <div className="user-info">
-                    <div className="user-avatar">{user.full_name.charAt(0)}</div>
+                    <div className="user-avatar">{user.first_name?.charAt(0)}</div>
                     <div>
-                      <p className="user-name">{user.full_name}</p>
-                      <p className="user-email">{user.email}</p>
+                      <p className="user-name">{user.first_name} {user.last_name}</p>
+                      <p className="user-email">ID: {user.id.substring(0, 8)}</p>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <span className={`badge badge-${user.role}`}>
-                    {user.role}
+                  <span className={`role-badge ${
+                      user.role?.toUpperCase() === 'CLIENT' ? 'role-orange' : 
+                      user.role?.toUpperCase() === 'PUBLISHER' ? 'role-navy' : 
+                      'role-green'
+                  }`}>
+                      {user.role}
                   </span>
-                </td>
-                <td style={{color: '#374151', fontSize: '14px'}}>{user.date}</td>
+               </td>
+                <td>{new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
-                  <span className={user.status === 'Actif' ? "status-active" : "status-blocked"}>
+                  <span className={user.status === 'active' ? "status-active" : "status-blocked"}>
                     ● {user.status}
                   </span>
                 </td>
@@ -61,4 +83,4 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default AdminUsersPage; 
