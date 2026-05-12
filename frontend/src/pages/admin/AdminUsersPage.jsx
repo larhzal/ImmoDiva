@@ -7,21 +7,49 @@ const AdminUsersPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('User') 
-          .select('id, first_name, last_name, role, status, created_at');
-        if (error) throw error;
-        setUsers(data || []);
-      } catch (err) {
-        console.error(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('User') 
+        .select('id, first_name, last_name, role, status, created_at');
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // SCRUM-130: Fonction pour bloquer un utilisateur
+  const handleBlock = async (userId) => {
+    if (window.confirm("Voulez-vous vraiment bloquer cet utilisateur ?")) {
+      try {
+        console.log("Blocage de l'utilisateur:", userId);
+        // Hna ghadi t-zidi l-appel Supabase f l-mرحلة l-jaya
+        alert("Utilisateur bloqué (Interface mise à jour)");
+      } catch (err) {
+        console.error("Erreur lors du blocage:", err);
+      }
+    }
+  };
+
+  // SCRUM-134: Fonction pour débloquer un utilisateur
+  const handleUnblock = async (userId) => {
+    if (window.confirm("Voulez-vous vraiment débloquer cet utilisateur ?")) {
+      try {
+        console.log("Déblocage de l'utilisateur:", userId);
+        // Hna ghadi t-zidi l-appel Supabase f l-mرحلة l-jaya
+        alert("Utilisateur débloqué (Interface mise à jour)");
+      } catch (err) {
+        console.error("Erreur lors du déblocage:", err);
+      }
+    }
+  };
 
   if (loading) return <div className="admin-container">Chargement...</div>;
 
@@ -29,7 +57,6 @@ const AdminUsersPage = () => {
     <div className="admin-container">
       <div className="admin-header">
         <h1>Gestion des Utilisateurs</h1>
-        <button className="add-user-btn">+ Ajouter un utilisateur</button>
       </div>
 
       <div className="stat-card">
@@ -45,6 +72,7 @@ const AdminUsersPage = () => {
               <th>Rôle</th>
               <th>Date d'inscription</th>
               <th>Statut</th>
+              <th>Actions</th> {/* Zadna had l-colonne */}
             </tr>
           </thead>
           <tbody>
@@ -67,12 +95,26 @@ const AdminUsersPage = () => {
                   }`}>
                       {user.role}
                   </span>
-               </td>
+                </td>
                 <td>{new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
-                  <span className={user.status === 'active' ? "status-active" : "status-blocked"}>
+                  <span className={user.status?.toLowerCase() === 'active' || user.status?.toLowerCase() === 'unblocked' ? "status-active" : "status-blocked"}>
                     ● {user.status}
                   </span>
+                </td>
+                <td>
+                  {/* SCRUM-128 & SCRUM-132: Les boutons d'action */}
+                  <div className="action-buttons">
+                    {user.status?.toLowerCase() === 'blocked' ? (
+                      <button className="btn-unblock" onClick={() => handleUnblock(user.id)}>
+                        Débloquer
+                      </button>
+                    ) : (
+                      <button className="btn-block" onClick={() => handleBlock(user.id)}>
+                        Bloquer
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -83,4 +125,4 @@ const AdminUsersPage = () => {
   );
 };
 
-export default AdminUsersPage; 
+export default AdminUsersPage;
