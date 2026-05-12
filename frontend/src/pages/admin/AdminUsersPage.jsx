@@ -25,28 +25,54 @@ const AdminUsersPage = () => {
     }
   };
 
-  // SCRUM-130: Fonction pour bloquer un utilisateur
+  // SCRUM-129 & 133: Vérifier l'autorisation Admin avant l'action
+  const checkAdminPermission = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+
+    const { data: profile } = await supabase
+      .from('User')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    return profile?.role?.toUpperCase() === 'ADMIN';
+  };
+
+  // SCRUM-130: Bloquer un utilisateur
   const handleBlock = async (userId) => {
     if (window.confirm("Voulez-vous vraiment bloquer cet utilisateur ?")) {
-      try {
-        console.log("Blocage de l'utilisateur:", userId);
-        // Hna ghadi t-zidi l-appel Supabase f l-mرحلة l-jaya
-        alert("Utilisateur bloqué (Interface mise à jour)");
-      } catch (err) {
-        console.error("Erreur lors du blocage:", err);
+      const isAdmin = await checkAdminPermission();
+      if (!isAdmin) return alert("Action réservée aux administrateurs");
+
+      const { error } = await supabase
+        .from('User')
+        .update({ status: 'blocked' })
+        .eq('id', userId);
+
+      if (!error) {
+        setUsers(users.map(u => u.id === userId ? { ...u, status: 'blocked' } : u));
+      } else {
+        alert("Erreur lors du blocage");
       }
     }
   };
 
-  // SCRUM-134: Fonction pour débloquer un utilisateur
+  // SCRUM-134: Débloquer un utilisateur
   const handleUnblock = async (userId) => {
     if (window.confirm("Voulez-vous vraiment débloquer cet utilisateur ?")) {
-      try {
-        console.log("Déblocage de l'utilisateur:", userId);
-        // Hna ghadi t-zidi l-appel Supabase f l-mرحلة l-jaya
-        alert("Utilisateur débloqué (Interface mise à jour)");
-      } catch (err) {
-        console.error("Erreur lors du déblocage:", err);
+      const isAdmin = await checkAdminPermission();
+      if (!isAdmin) return alert("Action réservée aux administrateurs");
+
+      const { error } = await supabase
+        .from('User')
+        .update({ status: 'active' }) 
+        .eq('id', userId);
+
+      if (!error) {
+        setUsers(users.map(u => u.id === userId ? { ...u, status: 'active' } : u));
+      } else {
+        alert("Erreur lors du déblocage");
       }
     }
   };
@@ -72,7 +98,7 @@ const AdminUsersPage = () => {
               <th>Rôle</th>
               <th>Date d'inscription</th>
               <th>Statut</th>
-              <th>Actions</th> {/* Zadna had l-colonne */}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -103,7 +129,6 @@ const AdminUsersPage = () => {
                   </span>
                 </td>
                 <td>
-                  {/* SCRUM-128 & SCRUM-132: Les boutons d'action */}
                   <div className="action-buttons">
                     {user.status?.toLowerCase() === 'blocked' ? (
                       <button className="btn-unblock" onClick={() => handleUnblock(user.id)}>

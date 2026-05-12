@@ -154,7 +154,7 @@
 
 .role-navy {
   background-color: #E2E8F0; 
-  color: #1A365D; /* Bleu marin ghameq */
+  color: #1A365D; 
   border: 1px solid #CBD5E1;
 }
 
@@ -201,4 +201,26 @@
 .btn-unblock:hover {
   background-color: #16a34a;
   color: white;
+}
+
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+
+.status-active, .status-blocked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
 }
