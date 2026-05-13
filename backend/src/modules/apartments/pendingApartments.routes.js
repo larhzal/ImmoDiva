@@ -1,12 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const { createClient } = require("@supabase/supabase-js");
+const nodemailer = require("nodemailer");
 
 // Supabase (use SERVICE ROLE here 🔥)
 const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
 // GET pending annonces
 router.get("/", async (req, res) => {
@@ -23,30 +32,124 @@ router.get("/", async (req, res) => {
 
 // VALIDATE
 router.put("/:id/validate", async (req, res) => {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const { error } = await supabase
-        .from("Apartment")
-        .update({ status: "Acceptée" })
-        .eq("id", id);
+        console.log("Apartment ID:", id);
 
-    if (error) return res.status(500).json({ error });
+        // GET APARTMENT
+        const { data: apartment, error: apartmentError } = await supabase
+            .from("Apartment")
+            .select("*")
+            .eq("id", id)
+            .single();
 
-    res.json({ message: "validé" });
+        console.log("Apartment:", apartment);
+
+        if (apartmentError) {
+            console.log("Apartment error:", apartmentError);
+            return res.status(500).json({ error: apartmentError.message });
+        }
+
+        // UPDATE STATUS
+        const { error: updateError } = await supabase
+            .from("Apartment")
+            .update({ status: "Acceptée" })
+            .eq("id", id);
+
+        if (updateError) {
+            console.log("Update error:", updateError);
+            return res.status(500).json({ error: updateError.message });
+        }
+
+        // GET USER
+        const { data: userData, error: userError } =
+            await supabase.auth.admin.getUserById(apartment.owner_id);
+
+        console.log("User data:", userData);
+
+        if (userError) {
+            console.log("User error:", userError);
+            return res.status(500).json({ error: userError.message });
+        }
+
+        const email = userData.user.email;
+
+        console.log("EMAIL:", email);
+
+        // SEND EMAIL
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Appartement validé",
+            text: "Votre appartement a été accepté."
+        });
+
+        console.log("Mail sent:", info);
+
+        res.json({
+            message: "Appartement validé"
+        });
+
+    } catch (err) {
+        console.log("SERVER ERROR:", err);
+        res.status(500).json({
+            error: err.message
+        });
+    }
 });
 
 // REJECT
 router.put("/:id/reject", async (req, res) => {
     const { id } = req.params;
 
-    const { error } = await supabase
-        .from("Apartment")
-        .update({ status: "Rejetée" })
-        .eq("id", id);
+    try {
+        const { data: apartment, error: apartmentError } = await supabase
+            .from("Apartment")
+            .select("*")
+            .eq("id", id)
+            .single();
 
-    if (error) return res.status(500).json({ error });
+        if (apartmentError) {
+            return res.status(500).json({ error: apartmentError.message });
+        }
 
-    res.json({ message: "rejeté" });
+        const { error: updateError } = await supabase
+            .from("Apartment")
+            .update({ status: "Rejetée" })
+            .eq("id", id);
+
+        if (updateError) {
+            return res.status(500).json({ error: updateError.message });
+        }
+
+        const { data: userData, error: userError } =
+            await supabase.auth.admin.getUserById(apartment.owner_id);
+
+        if (userError) {
+            return res.status(500).json({ error: userError.message });
+        }
+
+        const email = userData.user.email;
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Appartement rejeté",
+            text: "Votre appartement a été rejeté par l'administration."
+        });
+
+        console.log("Owner email:", email);
+
+        // Send reject email here
+
+        res.json({
+            message: "Appartement rejeté",
+            emailSentTo: email
+        });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // GET /apartments/stats
