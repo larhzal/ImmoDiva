@@ -79,11 +79,37 @@ router.put("/:id/validate", async (req, res) => {
 
         // SEND EMAIL
         const info = await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+            from: `"ImmoDiva" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: "Appartement validé",
-            text: "Votre appartement a été accepté."
+            subject: "Appartement accepté",
+            html: `
+                <div style="
+                    font-family: Arial, sans-serif;
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #e5e5e5;
+                    border-radius: 10px;
+                ">
+                    <h2 style="color: green; font-weight: bold; text-align: center;">
+                        Votre appartement a été accepté! 
+                    </h2>
+
+                    <p>
+                        Félicitations ! Votre appartement 
+                        <strong>
+                          ${apartment.title}
+                        </strong>
+                        a été <strong style="color: green;">accepté</strong>.
+                    </p>
+
+                    <p style="color:gray; font-size:12px; text-align: center; margin-top: 30px;">
+                        ImmoDiva - Plateforme de location immobilière
+                    </p>
+                </div>
+            `
         });
+
 
         console.log("Mail sent:", info);
 
@@ -132,10 +158,35 @@ router.put("/:id/reject", async (req, res) => {
 
         const email = userData.user.email;
         await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+            from: `"ImmoDiva" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: "Appartement rejeté",
-            text: "Votre appartement a été rejeté par l'administration."
+            html: `
+                <div style="
+                    font-family: Arial, sans-serif;
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 20px;
+                    border: 1px solid #e5e5e5;
+                    border-radius: 10px;
+                ">
+                    <h2 style="color: red; font-weight: bold; text-align: center;">
+                        Votre appartement a été rejeté! 
+                    </h2>
+
+                    <p>
+                        Nous sommes désolés, votre appartement à été rejeté!
+                        <strong>
+                          ${apartment.title}
+                        </strong>
+                        a été <strong style="color: red;">rejeté</strong>.
+                    </p>
+
+                    <p style="color:gray; font-size:12px; text-align: center; margin-top: 30px;">
+                        ImmoDiva - Plateforme de location immobilière
+                    </p>
+                </div>
+            `
         });
 
         console.log("Owner email:", email);
