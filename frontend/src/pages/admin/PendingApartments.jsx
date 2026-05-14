@@ -21,14 +21,25 @@ export default function PendingApartments() {
 
 
   // Fetch paginated annonces pending validation
-  const fetchAnnonces = async () => {
-    setLoading(true);
+  const fetchAnnonces = async (currentPage = 1) => {
+    try {
 
-    const res = await fetch("http://localhost:5000/apartments/pending");
-    const data = await res.json();
+      setLoading(true);
 
-    setAnnonces(data || []);
-    setLoading(false);
+      const res = await fetch(
+        `http://localhost:5000/apartments/pending?page=${currentPage}`
+      );
+
+      const data = await res.json();
+
+      setAnnonces(data.annonces || []);
+      setTotalPages(data.totalPages || 1);
+
+    } catch (err) {
+      console.error("Erreur fetch annonces:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchStats = async () => {
@@ -48,9 +59,9 @@ export default function PendingApartments() {
   // }, [page]);
 
   useEffect(() => {
-    fetchAnnonces();
+    fetchAnnonces(page);
     fetchStats();
-  }, []);
+  }, [page]);
 
   // Open confirmation modal
   const openModal = (type, annonce) => {
@@ -89,7 +100,7 @@ export default function PendingApartments() {
       }
 
       closeModal();
-      fetchAnnonces();
+      fetchAnnonces(page);
       fetchStats();
 
     } catch (err) {

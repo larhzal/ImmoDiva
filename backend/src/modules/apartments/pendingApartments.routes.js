@@ -18,16 +18,40 @@ const transporter = nodemailer.createTransport({
 });
 
 // GET pending annonces
+// GET pending annonces with pagination
 router.get("/", async (req, res) => {
-    const { data, error } = await supabase
-        .from("Apartment")
-        .select("*")
-        .eq("status", "En Attente")
-        .order("created_at", { ascending: false });
+    try {
 
-    if (error) return res.status(500).json({ error });
+        const page = parseInt(req.query.page) || 1;
+        const PAGE_SIZE = 5;
 
-    res.json(data);
+        const from = (page - 1) * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+
+        // GET apartments
+        const { data, error, count } = await supabase
+            .from("Apartment")
+            .select("*", { count: "exact" })
+            .eq("status", "En Attente")
+            .order("created_at", { ascending: false })
+            .range(from, to);
+
+        if (error) {
+            return res.status(500).json({ error: error.message });
+        }
+
+        res.json({
+            annonces: data,
+            total: count,
+            totalPages: Math.ceil(count / PAGE_SIZE),
+            currentPage: page
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            error: err.message
+        });
+    }
 });
 
 // VALIDATE
