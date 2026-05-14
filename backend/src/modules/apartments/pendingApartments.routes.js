@@ -17,7 +17,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// GET pending annonces
 // GET pending annonces with pagination
 router.get("/", async (req, res) => {
     try {

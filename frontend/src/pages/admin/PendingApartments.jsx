@@ -15,7 +15,7 @@ export default function PendingApartments() {
   // Confirmation modal state
   const [modal, setModal] = useState({
     open: false,
-    type: null, // "valider" | "rejeter"
+    type: null, 
     annonce: null,
   });
 
@@ -53,10 +53,6 @@ export default function PendingApartments() {
     }
   };
 
-  // useEffect(() => {
-  //   fetchStats();
-  //   fetchAnnonces(page);
-  // }, [page]);
 
   useEffect(() => {
     fetchAnnonces(page);
