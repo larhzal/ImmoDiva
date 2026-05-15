@@ -12,7 +12,8 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: false,
     persistSession:   false,
+
   },
 });
 
-module.exports = supabase;
+module.exports = supabase; 

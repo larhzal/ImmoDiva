@@ -1,0 +1,306 @@
+* {
+  transition: all 0.2s ease;
+}
+
+/* Container principal */
+.rental-request-form {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: "Inter", sans-serif;
+  color: #333;
+}
+
+/* Titres */
+.rental-request-form h1 {
+  font-size: 28px;
+  color: #e27c00;
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.rental-request-form h2 {
+  font-size: 20px;
+  color: #2a2a2a;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid #ececec;
+  padding-bottom: 5px;
+}
+
+/* Grid 2 colonnes */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px 40px;
+  margin-top: 20px;
+}
+
+/* Groupes de champs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+/* Input, select, textarea */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px 15px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group textarea {
+  resize: none;
+}
+
+/* Sections radio */
+.radio-group {
+  margin-top: 25px;
+}
+
+.radio-group > label {
+  font-size: 15px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.radio-options {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+/* Style radio personnalisé */
+.radio-options input[type="radio"] {
+  accent-color: #1f4b82;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.radio-options label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Bloc conditionnel enfants */
+.conditional-field {
+  margin-top: 15px;
+  padding-left: 10px;
+}
+
+/* Bouton submit */
+.clearfix {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 35px;
+}
+
+.submit-button {
+  background-color: #f7bf75;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: #f5b35d;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Message d'erreur */
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Fond semi-transparent */
+.success-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Carte centrée */
+.success-card {
+  background: white;
+  width: 380px;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Icone circulaire verte */
+.success-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: #e8f9e8;
+  color: #27ae60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 15px;
+  border: 2px solid #27ae60;
+}
+
+/* Bouton */
+.success-btn {
+  margin-top: 20px;
+  background-color: #f7bf75;
+  /* color: white; */
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.success-btn:hover {
+  background-color: #f5b35d;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clearfix {
+    justify-content: center;
+  }
+}
+
+
+/* Smooth inputs */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #fff;
+  border: 1px solid #f7bf75;
+  box-shadow: 0 0 0 3px rgba(247,191,117,0.2);
+}
+
+/* Animation entrée page */
+.rental-request-form {
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bouton moderne */
+.submit-button {
+  transition: all 0.25s ease;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* Animation success */
+.success-icon {
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  80% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Card style */
+.rental-request-form {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 250px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #2c3e50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
