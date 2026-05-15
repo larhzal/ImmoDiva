@@ -5,7 +5,7 @@ import AppRouter from "./router/AppRouter";
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <AppRouter />
     </>
   );

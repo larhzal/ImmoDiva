@@ -19,6 +19,8 @@ const FeedbackList = ({ apartmentId }) => {
             const response = await fetch(
                 `http://localhost:5000/api/annonces/${apartmentId}/feedback`
             );
+            console.log(response);
+            
 
             if (!response.ok) {
                 throw new Error('Erreur lors du chargement des avis');

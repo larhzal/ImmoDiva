@@ -23,7 +23,13 @@ class FeedbackService {
     async getFeedbacksByApartment(apartmentId) {
         const { data, error } = await supabase
             .from('Feedback')
-            .select('*,User(id,name,email)')
+            .select(`
+                *,
+                User!feedback_writer(
+                    id,
+                    username
+                )
+            `)
             .eq('apartment_id', apartmentId)
             .order('created_at', { ascending: false });
 
@@ -35,7 +41,13 @@ class FeedbackService {
     async getFeedbackById(feedbackId) {
         const { data, error } = await supabase
             .from('Feedback')
-            .select('*,User(id,name,email)')
+            .select(`
+                *,
+                User!feedback_writer(
+                    id,
+                    username
+                )
+            `)
             .eq('id', feedbackId)
             .single();
 

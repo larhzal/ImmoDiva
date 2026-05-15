@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Navbar from '../../components/layout/Navbar';
 
-import '../../styles/pages/listings.css';
+import '../../styles/pages/listings.css'
 
 const priceOptions = [
     { value: '', label: 'Tous les prix' },
@@ -110,12 +110,9 @@ const ListingsPage = () => {
     };
 
     return (
-
+        <>
+        <Navbar/>
         <div className="page-container">
-
-            {/* Navbar */}
-            <Navbar />
-
             {/* HERO */}
             <section className="hero-section">
 
@@ -309,6 +306,7 @@ const ListingsPage = () => {
             )}
 
         </div>
+        </>
     );
 };
 

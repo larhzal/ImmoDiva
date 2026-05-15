@@ -14,13 +14,16 @@ export default function Navbar() {
 
   const [loading, setLoading] = useState(false);
 
+  // Vérifier si utilisateur connecté
+  const token =
+    localStorage.getItem("immodiva_token");
+
+  const isAuthenticated = !!token;
+
   // Déconnexion
   const confirmLogout = async () => {
 
     setLoading(true);
-
-    const token =
-      localStorage.getItem("immodiva_token");
 
     try {
 
@@ -84,23 +87,47 @@ export default function Navbar() {
           </a>
 
           <a href="#" className="nav-link">
-            Ajouter une appartement à louer
+            Ajouter un appartement à louer
           </a>
 
-          {/* Logout */}
-          <span
-            className="nav-link logout-link"
-            onClick={() => setShowModal(true)}
-          >
-            Déconnexion
-          </span>
+          {/* Auth Buttons */}
+          {isAuthenticated ? (
+
+            <span
+              className="nav-link logout-link"
+              onClick={() => setShowModal(true)}
+            >
+              Déconnexion
+            </span>
+
+          ) : (
+
+            <>
+
+              <a
+                href="/login"
+                className="nav-link"
+              >
+                Login
+              </a>
+
+              <a
+                href="/register"
+                className="register-btn"
+              >
+                Register
+              </a>
+
+            </>
+
+          )}
 
         </div>
 
       </nav>
 
-      {/* Modal */}
-      {showModal && (
+      {/* Logout Modal */}
+      {showModal && isAuthenticated && (
 
         <div
           className="logout-modal-overlay"

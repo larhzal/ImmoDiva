@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import FeedbackList from '../../components/feedback/FeedbackList';
-import '../../styles/pages/listings.css';
+import '../../styles/pages/ApartmentDetails.css'
+import Navbar from '../../components/layout/Navbar';
 
 const IconLocation = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -123,6 +124,7 @@ const ApartmentDetailPage = () => {
 
   return (
     <>
+      <Navbar/>
       <div className="adp-page">
         {/* Top bar */}
         <div className="adp-topbar">
