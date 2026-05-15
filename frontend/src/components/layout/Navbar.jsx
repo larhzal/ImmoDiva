@@ -85,10 +85,12 @@ export default function Navbar() {
           <a href="#" className="nav-link">
             Tarifs
           </a>
-
-          <a href="#" className="nav-link">
+          {isAuthenticated && 
+          <a href="addApartment" className="nav-link">
             Ajouter un appartement à louer
           </a>
+          }
+          
 
           {/* Auth Buttons */}
           {isAuthenticated ? (
