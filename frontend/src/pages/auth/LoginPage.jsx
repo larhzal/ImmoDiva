@@ -76,6 +76,13 @@ export default function LoginPage() {
         setLoading(false);
         return;
       }
+            // ── Sauvegarde dans localStorage ─────────────────────────────────────
+      // On stocke l'utilisateur et le token pour les utiliser partout
+      // (Navbar, pages protegees, logout...)
+      localStorage.setItem('immodiva_user',  JSON.stringify(data.user));
+      localStorage.setItem('immodiva_token', data.session?.access_token || '');
+      // ─────────────────────────────────────────────────────────────────────
+ 
 
       setSuccessMessage('Connexion réussie. Redirection...');
       setFormValues(initialState);
@@ -100,15 +107,15 @@ export default function LoginPage() {
       <div className="h-32 bg-orange-400" />
       <main className="mx-auto -mt-24 flex w-full max-w-md flex-col items-center px-4 pb-12 sm:px-6">
         <div className="w-full overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-soft">
-          <div className="bg-orange-100 px-8 py-10 text-center">
-            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto" />
-            <h1 className="mt-6 text-3xl font-semibold text-slate-900">Connexion</h1>
+          <div className="px-8 py-8 text-center">
+            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto mt-8" />
+            <h1 className="mt-10 text-3xl font-semibold text-slate-900">Connexion</h1>
             <p className="mt-3 text-sm text-slate-600">
               Connectez-vous pour accéder à votre espace client.
             </p>
           </div>
 
-          <div className="px-8 py-10">
+          <div className="px-8 py-2">
             <form onSubmit={handleLogin} className="space-y-6">
               <FormInput
                 id="username"
@@ -156,18 +163,18 @@ export default function LoginPage() {
             <div className="mt-4 text-center text-sm">
               <a
                 href="/forgot-password"
-                className="font-medium text-orange-500 hover:text-orange-600"
+                className="font-regular text-orange-500 hover:text-orange-600"
               >
                 Mot de passe oublié ?
               </a>
             </div>
-
-            <div className="mt-3 text-center text-sm text-slate-500">
+            <div className="my-3 text-center text-sm text-slate-500 font-regular">
               Pas encore de compte ?{' '}
-              <a href="/register" className="font-semibold text-orange-600 hover:text-orange-700">
+              <a href="/role" className="font-semibold text-orange-600 hover:text-orange-700">
                 Créer un compte
               </a>
             </div>
+
           </div>
         </div>
       </main>

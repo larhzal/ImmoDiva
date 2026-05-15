@@ -17,5 +17,6 @@
     "express": "^5.2.1",
     "pg": "^8.20.0"
   },
-  "type": "commonjs"
-}
+  "type": "commonjs",
+    "nodemailer": "^8.0.7"
+  }

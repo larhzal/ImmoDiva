@@ -43,6 +43,29 @@ exports.forgotPassword = async (req, res) => {
   }
 };
  
+// ─────────────────────────────────────────────────────────────────────────────
+// LOGOUT
+// Le frontend envoie : Authorization: Bearer <access_token>
+// On extrait le token depuis le header et on invalide la session
+// ─────────────────────────────────────────────────────────────────────────────
+exports.logout = async (req, res) => {
+  try {
+    // Extraire le token depuis le header Authorization: Bearer <token>
+    const authHeader = req.headers["authorization"];
+    const accessToken = authHeader?.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : null;
+ 
+    const result = await authService.logoutUser({ accessToken });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(error.status || 500).json({
+      message: error.message,
+      details: error.details || null,
+    });
+  }
+};
+ 
 // ─────────────────────────
 // RESET PASSWORD — Tâche 7
 // POST /api/auth/reset-password

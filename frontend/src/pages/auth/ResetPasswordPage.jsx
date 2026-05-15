@@ -24,20 +24,19 @@ export default function ResetPasswordPage() {
 
   // Extraire le token depuis le hash de l'URL dès l'arrivée sur la page
   // Supabase redirige vers : /reset-password#access_token=xxx&type=recovery
-  useEffect(() => {
-    const hash   = window.location.hash.substring(1); // supprimer le #
-    const params = new URLSearchParams(hash);
-    const token  = params.get('access_token');
-    const type   = params.get('type');
+// Remplacer l'ancien useEffect par :
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search); // ← search, pas hash
+  const token  = params.get('token');
 
-    if (token && type === 'recovery') {
-      setAccessToken(token);
-    } else {
-      setTokenError(
-        "Lien de réinitialisation invalide ou expiré. Veuillez refaire une demande."
-      );
-    }
-  }, []);
+  if (token) {
+    setAccessToken(token);
+  } else {
+    setTokenError(
+      "Lien de réinitialisation invalide ou expiré. Veuillez refaire une demande."
+    );
+  }
+}, []); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -112,9 +111,9 @@ export default function ResetPasswordPage() {
         <div className="w-full overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-soft">
 
           {/* En-tête */}
-          <div className="bg-orange-100 px-8 py-10 text-center">
-            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto" />
-            <h1 className="mt-6 text-3xl font-semibold text-slate-900">
+          <div className="px-8 py-4 text-center">
+            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto mt-14 mb-4" />
+            <h1 className="mt-10 text-3xl font-semibold text-slate-900">
               Nouveau mot de passe
             </h1>
             <p className="mt-3 text-sm text-slate-600">

@@ -74,12 +74,12 @@ export default function ForgotPasswordPage() {
         <div className="w-full overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-soft">
 
           {/* En-tête */}
-          <div className="bg-orange-100 px-8 py-10 text-center">
-            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto" />
-            <h1 className="mt-6 text-3xl font-semibold text-slate-900">
+          <div className="px-8 py-4 text-center">
+            <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto mt-14 mb-4" />
+            <h1 className="mt-8 text-3xl font-semibold text-slate-900">
               Mot de passe oublié
             </h1>
-            <p className="mt-3 text-sm text-slate-600">
+            <p className="mt-3 text-sm text-slate-600 mb-0">
               Entrez votre email et nous vous enverrons un lien de réinitialisation.
             </p>
           </div>
@@ -90,8 +90,8 @@ export default function ForgotPasswordPage() {
             {/* Message de succès — affiché à la place du formulaire */}
             {successMessage ? (
               <div className="space-y-6">
-                <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-6 text-center text-sm text-emerald-800">
-                  <p className="text-2xl mb-3">📧</p>
+                <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-center text-sm text-emerald-800">
+                  {/* <p className="text-2xl mb-3">📧</p> */}
                   <p className="font-semibold text-base mb-2">Email envoyé !</p>
                   <p>{successMessage}</p>
                   <p className="mt-3 text-slate-500">
