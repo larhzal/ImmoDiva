@@ -40,3 +40,96 @@ exports.getOwnerEmailByApartmentId = async (apartmentId) => {
 
   return data.user.email;
 };
+
+// recuperer les demandes 
+//fonction pour recuperer les denmandes recues
+exports.getDemandesRecues = async (publisherId) => {
+  const { data, error } = await supabase
+    .from('sent_request')
+    .select(`
+      id,
+      created_at,
+      response,
+      statut,
+      profil,
+      date_emmenagement,
+      duree_location,
+      presentation,
+      motivation,
+      User (
+        first_name,
+        last_name
+      ),
+      Apartment!inner (
+        id,
+        title,
+        address,
+        owner_id,
+        Pictures:Pictures(
+          file_path
+        )
+      )
+    `)
+    .eq('Apartment.owner_id', publisherId)
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
+  return data || []
+}
+//repondre a le demande de location d'un client
+exports.repondreDemande = async (id, response) => {
+  const { data, error } = await supabase
+    .from('sent_request')
+    .update({ response })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) throw new Error(error.message)
+  return data
+}
+
+exports.getDemandeById = async (id) => {
+  // on recupere tous d'abord les infos de la demande, de l'appartement comcerne et de client
+  const { data, error } = await supabase
+    .from("sent_request")
+    .select(`
+      *,
+      Apartment:apartment_id (
+        id,
+        title,
+        city,
+        address,
+        monthly_price,
+        Pictures:Pictures(file_path)
+      ),
+      User:client_id (
+        id,
+        first_name,
+        last_name,
+        age,
+        nationality
+      )
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  // on recupere l'email de client de auth.users a travers client_id
+  let email = null;
+
+  if (data?.client_id) {
+    const { data: user, error: userError } =
+      await supabase.auth.admin.getUserById(data.client_id);
+
+    if (!userError && user?.user) {
+      email = user.user.email;
+    }
+  }
+
+  return {
+    ...data,
+    email,
+  };
+};

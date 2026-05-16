@@ -1,5 +1,5 @@
 const rentalsService = require("./rentals.service");
-const { sendEmailToOwner } = require("../../services/email.service");
+const { sendEmail } = require("../../services/email.service");
 
 
 //Envoyer une demande de location
@@ -86,7 +86,7 @@ exports.creerDemande = async (req, res) => {
     const ownerEmail = await rentalsService.getOwnerEmailByApartmentId(apartment_id);
 //envoyer l'email
 console.log("OWNER EMAIL =>", ownerEmail);
-    await sendEmailToOwner({
+    await sendEmail({
       to: ownerEmail,
       subject: "Nouvelle demande de location",
       html: `
@@ -135,3 +135,180 @@ console.log("OWNER EMAIL =>", ownerEmail);
     });
   }
 };
+
+exports.getDemandesRecues = async (req, res) => {
+  try {
+    // const publisher = req.user.id
+    const publisherTest = "c081cec2-4d39-461a-adfc-a0870fdfcb6e"
+    const demandes = await rentalsService.getDemandesRecues(publisherTest)
+    res.status(200).json(demandes)
+  } catch (err) {
+    res.status(500).json({
+      message: "Erreur serveur",
+      error: err.message
+    })
+  }
+}
+
+
+
+//fonction pour accepter la demande de location vient du client 
+exports.accept_request = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const demande = await rentalsService.repondreDemande(id, "accepted");
+    //on recupere la demande pour recuperer l'email de l'utilisateur
+    const fullDemande = await rentalsService.getDemandeById(id);
+    console.log(fullDemande);
+    
+    const clientEmail = fullDemande.email;
+
+    await sendEmail({
+      to: clientEmail,
+      subject: "Votre demande a été acceptée",
+      html: `
+          <div style="font-family: 'Arial', sans-serif; background: #f5f7fa; padding: 40px;">
+            <div style="
+              max-width: 600px;
+              margin: auto;
+              background: #ffffff;
+              border-radius: 14px;
+              padding: 35px;
+              box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            ">
+
+              <h2 style="
+                color: #2ecc71;
+                text-align: center;
+                font-size: 26px;
+                margin-bottom: 10px;
+              ">
+                Votre demande a été acceptée
+              </h2>
+
+              <p style="color: #444; font-size: 16px; line-height: 1.6;">
+                Félicitations ! Votre demande pour l’appartement
+                <strong style="color:#000;">${fullDemande.Apartment.title}</strong>
+                a été <strong style="color:#2ecc71;">acceptée</strong>.
+              </p>
+
+              <p style="color: #444; font-size: 16px; line-height: 1.6;">
+                Le propriétaire vous contactera très prochainement pour finaliser les étapes de location.
+              </p>
+
+              <div style="text-align: center; margin-top: 25px;">
+                <a href="http://localhost:3000/"
+                  style="
+                    background: #2ecc71;
+                    color: white;
+                    padding: 14px 24px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    font-size: 15px;
+                    font-weight: bold;
+                  ">
+                  Voir ma demandes
+                </a>
+              </div>
+
+              <p style="margin-top: 35px; color: #999; font-size: 13px; text-align:center;">
+                ImmoDiva — Plateforme de location immobilière.
+              </p>
+            </div>
+          </div>
+        `   });
+    res.status(200).json({
+      message: "Demande acceptée avec succès",
+      demande,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+// fonction pour refuser la demande
+exports.reject_request = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const demande = await rentalsService.repondreDemande(id, "refused");
+
+    const fullDemande = await rentalsService.getDemandeById(id);
+    const clientEmail = fullDemande.email;
+    console.log(clientEmail);
+    
+    //envoyer mail
+    await sendEmail({
+      to: clientEmail,
+      subject: "Votre demande a été refusée",
+      html: `
+        <div style="font-family: 'Arial', sans-serif; background: #f5f7fa; padding: 40px;">
+          <div style="
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+          ">
+
+            <h2 style="
+              color: #e74c3c;
+              text-align: center;
+              font-size: 26px;
+              margin-bottom: 10px;
+            ">
+              Votre demande a été refusée
+            </h2>
+
+            <p style="color: #444; font-size: 16px; line-height: 1.6;">
+              Nous sommes désolés. Votre demande concernant l’appartement
+              <strong style="color:#000;">${fullDemande.Apartment.title}</strong>
+              a été <strong style="color:#e74c3c;">refusée</strong> par le propriétaire.
+            </p>
+
+            <p style="color: #444; font-size: 16px; line-height: 1.6;">
+              Vous pouvez continuer à explorer d'autres appartements adaptés à vos besoins.
+            </p>
+
+            <div style="text-align: center; margin-top: 25px;">
+              <a href="http://localhost:3000/"
+                style="
+                  background: #e74c3c;
+                  color: white;
+                  padding: 14px 24px;
+                  border-radius: 8px;
+                  text-decoration: none;
+                  font-size: 15px;
+                  font-weight: bold;
+                ">
+                Explorer les appartements
+              </a>
+            </div>
+
+            <p style="margin-top: 35px; color: #999; font-size: 13px; text-align:center;">
+              ImmoDiva — Plateforme de location immobilière.
+            </p>
+          </div>
+        </div>
+      `
+    });
+    res.status(200).json({
+      message: "Demande refusée avec succès",
+      demande,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message });
+  }
+};
+
+//recuprer une demande par l'id dans l'url 
+exports.getDemandeById = async (req, res) => {
+  try {
+    const demande = await rentalsService.getDemandeById(req.params.id)
+    if (!demande) return res.status(404).json({ message: "Demande non trouvée" })
+    res.status(200).json(demande)
+  } catch (err) {
+    res.status(500).json({ message: "Erreur serveur", error: err.message })
+  }
+}

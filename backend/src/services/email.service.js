@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-exports.sendEmailToOwner = async ({ to, subject, text, html }) => {
+exports.sendEmail = async ({ to, subject, text, html }) => {
   try {
     await transporter.sendMail({
       from: "ImmoDiva <sgrnassira@gmail.com>",

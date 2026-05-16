@@ -1,16 +1,22 @@
-// components/ui/TabBar.jsx
-export default function TabBar({ tabs, active, onChange }) {
+// components/layout/TabBar.jsx
+import { Link } from "react-router-dom";
+import "../../styles/layout/TabBar.css";
+
+export default function TabBar({ tabs, active, badges = {} }) {
   return (
-    <div className="tabBar">
+    <nav className="tabBar">
       {tabs.map((tab) => (
-        <button
-          key={tab}
-          onClick={() => onChange(tab)}
-          className={`tabBtn ${active === tab ? "tabBtnActive" : ""}`}
+        <Link
+          key={tab.path}
+          to={tab.path}
+          className={`tabBtn ${active === tab.label ? "tabBtnActive" : ""}`}
         >
-          {tab}
-        </button>
+          {tab.label}
+          {badges[tab.label] != null && (
+            <span className="tabBadge">{badges[tab.label]}</span>
+          )}
+        </Link>
       ))}
-    </div>
+    </nav>
   );
 }
