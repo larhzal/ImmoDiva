@@ -138,9 +138,9 @@ console.log("OWNER EMAIL =>", ownerEmail);
 
 exports.getDemandesRecues = async (req, res) => {
   try {
-    // const publisher = req.user.id
-    const publisherTest = "c081cec2-4d39-461a-adfc-a0870fdfcb6e"
-    const demandes = await rentalsService.getDemandesRecues(publisherTest)
+    const publisher = req.user.id
+    // const publisherTest = "c081cec2-4d39-461a-adfc-a0870fdfcb6e"
+    const demandes = await rentalsService.getDemandesRecues(publisher)
     res.status(200).json(demandes)
   } catch (err) {
     res.status(500).json({

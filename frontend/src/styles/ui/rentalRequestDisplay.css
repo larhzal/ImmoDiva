@@ -551,3 +551,23 @@
     width: 100%;
   }
 }
+
+
+.emptyText {
+  width: 100%;
+
+  padding: 50px 20px;
+  margin-top: 20px;
+
+  text-align: center;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  color: #7b8794;
+
+  background: #ffffff;
+
+  border: 1px dashed #d9d9d9;
+  border-radius: 20px;
+}

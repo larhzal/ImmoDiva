@@ -6,12 +6,9 @@ import { getDemandesRecues } from '../../services/rentalService';
 
 
 import '../../styles/ui/rentalRequestDisplay.css';
-import {
-  Building2,
-  MapPin,
-  User2,
-  Eye
-} from "lucide-react"
+import {Building2,MapPin,User2,Eye} from "lucide-react"
+import Navbar from '../../components/layout/Navbar';
+import { useAuth } from '../../hooks/useAuth';
 
 const TABS = ['Mes Annonces', 'Les Demandes', 'Mes Clients', 'Mon Profile'];
 
@@ -21,16 +18,22 @@ export default function RentalRequestsPage() {
   const [activeTab, setActiveTab] = useState('Les Demandes');
   const [page, setPage] = useState(1);
 
-  const [user] = useState({
-    prenom: 'Ali',
-    nom: 'Lahlou',
-  });
+
+  
 
   const [demandes, setDemandes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erreur, setErreur] = useState('');
 
   const itemsParPage = 6;
+
+  const { user, loading:authLoading } = useAuth();
+
+useEffect(() => {
+  if (!loading && !user) {
+    navigate("/login");
+  }
+}, [user, authLoading, navigate]);
 
   useEffect(() => {
     fetchDemandes();
@@ -96,20 +99,22 @@ export default function RentalRequestsPage() {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="page">
       <div className="main">
         {/* ================= HEADER ================= */}
         <div className="pageHeader">
           <div className="avatar">
-            {user.prenom[0]}
-            {user.nom[0]}
+            {user?.first_name[0]}
+            {user?.last_name[0]}
           </div>
 
           <div>
             <h1 className="pageTitle">Mon Espace</h1>
 
             <p className="pageSubtitle">
-              Bienvenue, {user.prenom} {user.nom}
+              Bienvenue, {user?.first_name} {user?.last_name}
             </p>
           </div>
         </div>
@@ -294,5 +299,6 @@ export default function RentalRequestsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

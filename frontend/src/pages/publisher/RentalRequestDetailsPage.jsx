@@ -8,6 +8,7 @@ import { MapPin } from "lucide-react";
 
 import "../../styles/ui/RentalRequestDetails.css";
 import Loader from "../../components/ui/loader";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function RentalRequestDetailPage() {
   const { id } = useParams();
@@ -19,12 +20,17 @@ export default function RentalRequestDetailPage() {
   const [traitement, setTraitement] = useState(false);
   const [alertBox, setAlertBox] = useState(null);
 
+ const {user , loading :authLoading} = useAuth()
   useEffect(() => {
     chargerDemande();
   }, [id]);
 
   
-
+  useEffect(() => {
+  if (!loading && !user) {
+    navigate("/login");
+  }
+}, [user, authLoading, navigate]);
   const chargerDemande = async () => {
     try {
       setLoading(true);

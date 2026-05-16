@@ -70,19 +70,21 @@ export default function Navbar() {
 
         {/* Logo */}
         <div className="nav-logo">
-
-          <img
+          <a href="/listings">
+            <img
             src={Logo}
             alt="Immo DIVA"
             className="logo-img"
           />
+          </a>
+          
 
         </div>
 
         {/* Links */}
         <div className="nav-links">
-        {user.role == 'Publisher' ? 
-        <a href="/publisher-profile" className="nav-link">
+        {isAuthenticated && user.role == 'Publisher' ? 
+        <a href="/demandes" className="nav-link">
             Mon Espace
         </a>  : <a href="client-profile" className="nav-link">
             Mon Espace

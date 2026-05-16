@@ -8,9 +8,8 @@ export const createDemandeLocation = async (formData) => {
 // Récupérer les demandes reçues par le publicateur
 export const getDemandesRecues = async () => {
   const res = await axiosClient.get("/rentals/received")
-  return res.data
-
-}
+  return res.data;
+};
 
 export const getDemandeById= async (requestId) =>{
   const res = await axiosClient.get(`/rentals/${requestId}`)

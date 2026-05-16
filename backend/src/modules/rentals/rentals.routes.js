@@ -7,21 +7,16 @@ const { auth } = require('../../config/db');
 
 // Envoyer une demande de location
 // pour tester decommenter la ligne 9 et commenter les ligne 11,12,13 et 14
-// router.post('/', rentalsController.creerDemande);
-// router.patch('/:id/accept', rentalsController.accept_request);
-// router.patch('/:id/refuse', rentalsController.reject_request);
-// router.get('/received', rentalsController.getDemandesRecues);
-// router.get('/:id', rentalsController.getDemandeById)
+router.post('/', rentalsController.creerDemande);
 
-router.get('/:id', authMiddleware, rentalsController.getDemandeById)
 router.get(
   '/received',
-  authMiddleware,
-  roleMiddleware('publisher'),
+  authMiddleware,roleMiddleware('Publisher'),
   rentalsController.getDemandesRecues
 )
-router.patch('/:id/accept',authMiddleware,roleMiddleware('publisher'), rentalsController.accept_request);
-router.patch('/:id/refuse',authMiddleware,roleMiddleware('publisher'), rentalsController.reject_request);
+router.get('/:id', authMiddleware,roleMiddleware('Publisher'), rentalsController.getDemandeById)
+router.patch('/:id/accept',authMiddleware,roleMiddleware('Publisher'), rentalsController.accept_request);
+router.patch('/:id/refuse',authMiddleware,roleMiddleware('Publisher'), rentalsController.reject_request);
 
 // router.patch(
 //   '/:id/response',
@@ -30,8 +25,8 @@ router.patch('/:id/refuse',authMiddleware,roleMiddleware('publisher'), rentalsCo
 //   rentalsController.repondreDemande
 // )
 
-router.post(
-  '/',authMiddleware,roleMiddleware('Client'),
-  rentalsController.creerDemande
-)
+// router.post(
+//   '/',authMiddleware,roleMiddleware('Client'),
+//   rentalsController.creerDemande
+// )
 module.exports = router;
