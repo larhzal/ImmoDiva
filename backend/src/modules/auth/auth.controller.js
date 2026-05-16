@@ -15,6 +15,7 @@ exports.register = async (req, res) => {
 
 // LOGIN
 exports.login = async (req, res) => {
+  
   try {
     const result = await authService.loginUser(req.body);
     return res.status(200).json(result);
@@ -84,3 +85,13 @@ exports.resetPassword = async (req, res) => {
   }
 };
  
+
+exports.getMe = async (req, res) => {
+  console.log(req.user);
+  try {
+    const userProfile = await authService.getProfile(req.user.id);
+    res.status(200).json({ user: userProfile });
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message });
+  }
+};

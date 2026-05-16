@@ -7,6 +7,7 @@ import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import FeedbackPage from '../pages/tenant/FeedbackPage';
 import  RolePage from '../pages/auth/RolePage'
+import RentalRequestPage from '../pages/tenant/RentalRequestPage'
 const AppRouter = () => {
     return (
         <Router>

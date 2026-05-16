@@ -8,6 +8,43 @@ const logoPath   = path.join(__dirname, '../../../../frontend/src/assets/images/
 const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 const logoSrc    = `data:image/png;base64,${logoBase64}`;
 
+
+exports.getProfile = async (userId) => {
+
+  // Step 1: Get profile from User table
+  const { data: profile, error } = await supabase
+    .from("User")
+    .select(`id,first_name,last_name,username,role,phone_number,status,nationality,age`)
+    .eq("id", userId)
+    .single();
+
+  if (error || !profile) {
+    throw {
+      status: 500,
+      message: "Erreur lors de la récupération du profil."
+    };
+  }
+
+  // Step 2: Get email from auth.users
+  const {
+    data,
+    error: authError
+  } = await supabase.auth.admin.getUserById(userId);
+
+  if (authError || !data?.user) {
+    throw {
+      status: 500,
+      message: "Erreur lors de la récupération de l'email."
+    };
+  }
+
+  return {
+    ...profile,
+    email: data.user.email,
+  };
+};
+
+
 // Mapping des rôles
 const roleMappings = {
   Client: "Client",

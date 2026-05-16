@@ -20,6 +20,10 @@ export default function Navbar() {
 
   const isAuthenticated = !!token;
 
+  const user = JSON.parse(localStorage.getItem('immodiva_user'));
+
+  // console.log(user.role);
+  
   // Déconnexion
   const confirmLogout = async () => {
 
@@ -77,10 +81,14 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="nav-links">
-
-          <a href="#" className="nav-link">
+        {user.role == 'Publisher' ? 
+        <a href="/publisher-profile" className="nav-link">
             Mon Espace
-          </a>
+        </a>  : <a href="client-profile" className="nav-link">
+            Mon Espace
+        </a>
+      }
+          
 
           <a href="#" className="nav-link">
             Tarifs

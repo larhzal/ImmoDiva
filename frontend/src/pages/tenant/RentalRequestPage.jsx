@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import "../../styles/ui/rentalRequest.css"
+import "../../styles/pages/rentalRequest.css"
 import { createDemandeLocation } from "../../services/rentalService"
 //ligne 6 a commente pour tester
 import { useAuth } from "../../hooks/useAuth"
+import Navbar from "../../components/layout/Navbar"
 
 export default function RentalRequestPage() {
 
@@ -11,13 +12,14 @@ export default function RentalRequestPage() {
   const navigate = useNavigate()
   // ligne 13 a commente 
   const { user } = useAuth()
+  console.log(user);
 
   const [formData, setFormData] = useState({
-    prenom: "",//user?.first_name || "",
-    nom: "",//user?.last_name || "",
-    age: "",//user?.age || "",
-    nationalite:"",// user?.nationality || "",
-    email: "",// user?.email || "",
+    prenom:  "",
+    nom:  "",
+    age: "",
+    nationalite:"",
+    email: "",
     statut: "",
     profil: "",
     nb_personnes: "",
@@ -31,6 +33,23 @@ export default function RentalRequestPage() {
     presentation: "",
     motivation: ""
   })
+
+  useEffect(() => {
+      console.log("USER :", user);
+  if (user) {
+
+    setFormData((prev) => ({
+      ...prev,
+
+      prenom: user.first_name || "",
+      nom: user.last_name || "",
+      age: user.age || "",
+      nationalite: user.nationality || "",
+      email: user.email || "",
+    }));
+  }
+
+}, [user]);
 
   const [loading, setLoading] = useState(false)
   const [erreur, setErreur] = useState(null)
@@ -155,7 +174,8 @@ export default function RentalRequestPage() {
     };
 
   return (
-    
+    <>
+    <Navbar/>
     <div className="rental-request-form">
       
       {loading && (
@@ -336,5 +356,6 @@ export default function RentalRequestPage() {
         </div>
       </form>
     </div>
+    </>
   )
 }

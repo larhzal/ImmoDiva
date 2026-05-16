@@ -31,6 +31,7 @@ const ListingsPage = () => {
     const [error, setError] = useState(null);
     const [city, setCity] = useState('');
     const [priceRange, setPriceRange] = useState('');
+    const [cities, setCitites] = useState([])
     const [rooms, setRooms] = useState('');
 
     const fetchAnnonces = async ({ city = '', priceRange = '', rooms = '' } = {}) => {

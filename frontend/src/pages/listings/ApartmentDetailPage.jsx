@@ -312,7 +312,7 @@ const ApartmentDetailPage = () => {
                 <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)}>
                   ✍️ Donner un feedback
                 </button>
-                <button className="adp-btn-secondary">
+                  <button className="adp-btn-secondary" onClick={() => navigate(`/demande/${id}`)}>
                   📞 Contacter le propriétaire
                 </button>
               </div>

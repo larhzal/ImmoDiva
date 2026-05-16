@@ -6,20 +6,25 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
+    const token = localStorage.getItem("immodiva_token");
+    // console.log('token',token);
     if (!token) {
       setLoading(false);
       return;
     }
 
     axiosClient
-      .get("/auth/me")
+      .get("/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
+        console.log(res.data.user);
         setUser(res.data.user);
       })
       .catch(() => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("immodiva_token");
         setUser(null);
       })
       .finally(() => {

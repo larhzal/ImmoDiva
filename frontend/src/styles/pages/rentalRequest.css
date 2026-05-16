@@ -1,0 +1,468 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f6f8fb;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.rental-request-form {
+  max-width: 1150px;
+  margin: 40px auto;
+  padding: 45px;
+  border-radius: 28px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 10px 40px rgba(15, 39, 68, 0.08),
+    0 2px 10px rgba(0,0,0,0.03);
+
+  font-family: "Inter", sans-serif;
+  color: #1e293b;
+
+  animation: pageFade 0.5s ease;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   HEADINGS
+========================= */
+
+.rental-request-form h1 {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #0f2744;
+  letter-spacing: -0.5px;
+}
+
+.rental-request-form h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 45px;
+  margin-bottom: 20px;
+  color: #172033;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.rental-request-form h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  width: 70px;
+  height: 4px;
+
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f7bf75, #e29a2d);
+}
+
+/* =========================
+   GRID
+========================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px 35px;
+}
+
+/* =========================
+   FORM GROUP
+========================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 15px 18px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  background: #f8fafc;
+
+  font-size: 14px;
+  color: #1e293b;
+
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #cbd5e1;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #fff;
+  border-color: #f7bf75;
+
+  box-shadow:
+    0 0 0 4px rgba(247,191,117,0.18),
+    0 6px 16px rgba(247,191,117,0.12);
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   RADIO
+========================= */
+
+.radio-group {
+  margin-top: 30px;
+}
+
+.radio-group > label {
+  display: block;
+  margin-bottom: 14px;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.radio-options {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.radio-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 18px;
+
+  border-radius: 14px;
+
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.radio-options label:hover {
+  background: #fff;
+  border-color: #f7bf75;
+  transform: translateY(-2px);
+}
+
+.radio-options input[type="radio"] {
+  accent-color: #0f2744;
+  transform: scale(1.15);
+  cursor: pointer;
+}
+
+/* =========================
+   CONDITIONAL BLOCK
+========================= */
+
+.conditional-field {
+  margin-top: 18px;
+  padding: 18px;
+
+  border-radius: 16px;
+
+  background: #fff8ef;
+  border: 1px solid #ffe2b8;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.clearfix {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 45px;
+}
+
+.submit-button {
+  border: none;
+
+  padding: 16px 38px;
+
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    #0f2744,
+    #1e4976
+  );
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 10px 20px rgba(15,39,68,0.18);
+}
+
+.submit-button:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 16px 28px rgba(15,39,68,0.25);
+}
+
+.submit-button:active {
+  transform: scale(0.98);
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.error-message {
+  margin-top: 12px;
+
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* =========================
+   SUCCESS MODAL
+========================= */
+
+.success-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(5px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.success-card {
+  width: 400px;
+
+  padding: 35px 30px;
+
+  border-radius: 24px;
+
+  background: white;
+
+  text-align: center;
+
+  animation: modalPop 0.35s ease;
+
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.18);
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ecfdf3;
+  color: #16a34a;
+
+  border: 3px solid #16a34a;
+
+  font-size: 34px;
+
+  animation: pop 0.45s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  80% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-btn {
+  margin-top: 24px;
+
+  border: none;
+
+  padding: 12px 24px;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #f7bf75,
+    #e29a2d
+  );
+
+  color: #1e293b;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.success-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.loading-card {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 20px;
+
+  text-align: center;
+
+  min-width: 260px;
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.15);
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+
+  margin: auto auto 15px;
+
+  border-radius: 50%;
+
+  border: 4px solid #e2e8f0;
+  border-top-color: #0f2744;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+
+  .rental-request-form {
+    padding: 28px;
+    margin: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clearfix {
+    justify-content: center;
+  }
+
+  .submit-button {
+    width: 100%;
+  }
+}
