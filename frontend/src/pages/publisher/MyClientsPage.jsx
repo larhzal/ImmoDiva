@@ -5,7 +5,7 @@ import StatCard from "../../components/layout/StatsCard";
 import TabBar from "../../components/layout/TabBar";
 import Loader from "../../components/ui/loader";
 import "../../styles/profile/profile.css";
-import "../../styles/publisher/MyClients.css";
+import "../../styles/publisher/myClients.css";
 
 // ── Constants ─────────────────────────────────────────────────
 const API = "http://localhost:5000/api";

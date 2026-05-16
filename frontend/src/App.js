@@ -3,6 +3,7 @@ import ProfilePage from './pages/profile/ProfilePage';
 import ClientProfilePage from './pages/profile/ClientProfilePage';
 import MyApartmentsPage from './pages/publisher/MyApartmentsPage';
 import MyClientsPage from './pages/publisher/MyClientsPage';
+import Tarifs from './pages/listings/Tarifs';
 
 import UpdateAppartement from './pages/publisher/UpdateApartmentPage';
 
@@ -12,6 +13,8 @@ function App() {
       <Routes>
         {/* Redirect home to your profile for now */}
         <Route path="/" element={<Navigate to="/" />} />
+
+        <Route path="/tarifs" element={<Tarifs />} />
 
         {/* Path for the Agent/Owner Profile (ProfilePage.jsx) */}
         <Route path="/publisher-profile" element={<ProfilePage />} />
