@@ -15,7 +15,9 @@ const AdminUsersPage = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('User') 
-        .select('id, first_name, last_name, role, status, created_at');
+        .select('id, first_name, last_name, role, status, created_at')
+        .neq('role', 'Admin'); 
+
       if (error) throw error;
       setUsers(data || []);
     } catch (err) {
@@ -25,7 +27,10 @@ const AdminUsersPage = () => {
     }
   };
 
-  // SCRUM-129 & 133: Vérifier l'autorisation Admin avant l'action
+  // Calcul des statistiques
+  const totalLocataires = users.filter(u => u.role?.toLowerCase() === 'client').length;
+  const totalPublicateurs = users.filter(u => u.role?.toLowerCase() === 'publisher').length;
+
   const checkAdminPermission = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return false;
@@ -39,7 +44,6 @@ const AdminUsersPage = () => {
     return profile?.role?.toUpperCase() === 'ADMIN';
   };
 
-  // SCRUM-130: Bloquer un utilisateur
   const handleBlock = async (userId) => {
     if (window.confirm("Voulez-vous vraiment bloquer cet utilisateur ?")) {
       const isAdmin = await checkAdminPermission();
@@ -58,7 +62,6 @@ const AdminUsersPage = () => {
     }
   };
 
-  // SCRUM-134: Débloquer un utilisateur
   const handleUnblock = async (userId) => {
     if (window.confirm("Voulez-vous vraiment débloquer cet utilisateur ?")) {
       const isAdmin = await checkAdminPermission();
@@ -85,9 +88,22 @@ const AdminUsersPage = () => {
         <h1>Gestion des Utilisateurs</h1>
       </div>
 
-      <div className="stat-card">
-        <p className="stat-label">Total Utilisateurs</p>
-        <p className="stat-value">{users.length}</p>
+      {/* Section des statistiques corrigée */}
+      <div className="stats-container" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+        <div className="stat-card">
+          <p className="stat-label">TOTAL UTILISATEURS</p>
+          <h2 className="stat-value">{users.length}</h2>
+        </div>
+
+        <div className="stat-card">
+          <p className="stat-label">NOMBRE DE LOCATAIRES</p>
+          <h2 className="stat-value">{totalLocataires}</h2>
+        </div>
+
+        <div className="stat-card">
+          <p className="stat-label">NOMBRE DE PUBLICATEURS</p>
+          <h2 className="stat-value">{totalPublicateurs}</h2>
+        </div>
       </div>
 
       <div className="users-table-container">
@@ -125,7 +141,7 @@ const AdminUsersPage = () => {
                 <td>{new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
                   <span className={user.status?.toLowerCase() === 'active' || user.status?.toLowerCase() === 'unblocked' ? "status-active" : "status-blocked"}>
-                    ● {user.status}
+                    ● {user.status || 'unblocked'}
                   </span>
                 </td>
                 <td>
