@@ -11,7 +11,7 @@ export default function RentalRequestPage() {
   const { apartmentId } = useParams()
   const navigate = useNavigate()
   // ligne 13 a commente 
-  const { user } = useAuth()
+  const { user, loading:authLoading } = useAuth()
   console.log(user);
 
   const [formData, setFormData] = useState({
@@ -34,6 +34,12 @@ export default function RentalRequestPage() {
     motivation: ""
   })
 
+  useEffect(() => {
+      if (!authLoading && !user) {
+        navigate("/login");
+      }
+    }, [user, authLoading, navigate]);
+    
   useEffect(() => {
       console.log("USER :", user);
   if (user) {

@@ -47,7 +47,7 @@ export default function RentalRequestsPage() {
   const { user, loading:authLoading } = useAuth();
 
 useEffect(() => {
-  if (!loading && !user) {
+  if (!authLoading && !user) {
     navigate("/login");
   }
 }, [user, authLoading, navigate]);
