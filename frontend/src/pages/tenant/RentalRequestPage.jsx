@@ -341,7 +341,7 @@ export default function RentalRequestPage() {
           <label>Présentation</label>
           <textarea name="presentation" value={formData.presentation} onChange={handleChange} rows={4} required />
         </div>
-
+        <br />
         <div className="form-group">
           <label>Motivation</label>
           <textarea name="motivation" value={formData.motivation} onChange={handleChange} rows={4} required />

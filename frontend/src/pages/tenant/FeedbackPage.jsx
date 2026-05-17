@@ -42,9 +42,9 @@ const FeedbackPage = () => {
         }
     }, [id, fetchApartmentDetails]);
 
-    const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const storedUser = JSON.parse(localStorage.getItem('immodiva_user') || 'null');
     const userId = storedUser?.id || null;
-    const userName = storedUser?.name || 'Utilisateur';
+    const userName = storedUser?.username || 'Utilisateur';
 
     const handleFeedbackSubmitted = () => {
         setSubmitted(true);

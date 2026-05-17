@@ -48,6 +48,7 @@ export default function ForgotPasswordPage() {
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (!response.ok) {
         setGeneralError(data.message || "Une erreur est survenue.");
@@ -74,7 +75,7 @@ export default function ForgotPasswordPage() {
         <div className="w-full overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-soft">
 
           {/* En-tête */}
-          <div className="px-8 py-4 text-center">
+          <div className="px-8 text-center">
             <img src={Logo} alt="ImmoDIVA" className="mx-auto h-16 w-auto mt-14 mb-4" />
             <h1 className="mt-8 text-3xl font-semibold text-slate-900">
               Mot de passe oublié

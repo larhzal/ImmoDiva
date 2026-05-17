@@ -8,18 +8,35 @@ import { getDemandesRecues } from '../../services/rentalService';
 import '../../styles/ui/rentalRequestDisplay.css';
 import {Building2,MapPin,User2,Eye} from "lucide-react"
 import Navbar from '../../components/layout/Navbar';
+import TabBar from "../../components/layout/TabBar";
 import { useAuth } from '../../hooks/useAuth';
 
-const TABS = ['Mes Annonces', 'Les Demandes', 'Mes Clients', 'Mon Profile'];
+const TABS = [
+    { label: "Mes Annonces",  path: "/my-apartments" },
+    { label: "Les Demandes",  path: "/demandes" },
+    { label: "Mes Clients",   path: "/my-clients" },
+    { label: "Mon Profile",   path: "/publisher-profile" },
+];
+
+// ── Status Badge ──────────────────────────────────────────────
+function StatusBadge({ status }) {
+    const map = {
+        "accepted": { label: "Acceptée",  cls: "status-badge--approved" },
+        "refused":  { label: "Refusée",   cls: "status-badge--rejected" },
+    };
+    const entry = map[status?.toLowerCase()];
+    return (
+        <span className={`status-badge ${entry ? entry.cls : "status-badge--pending"}`}>
+            {entry ? entry.label : "En Attente"}
+        </span>
+    );
+}
 
 export default function RentalRequestsPage() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('Les Demandes');
   const [page, setPage] = useState(1);
-
-
-  
 
   const [demandes, setDemandes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,23 +72,6 @@ useEffect(() => {
     }
   };
 
-  const stats = [
-    { label: 'Mes Annonces', value: 15, color: '#0F2744',par:"Total des annonces" },
-    {
-      label: 'Approuvée',
-      value: demandes.filter((d) => d.response === 'accepted').length,
-      color: '#1E9E6B',
-      par:"Annonces en Ligne",
-    },
-    {
-      label: 'En Attente',
-      value: demandes.filter((d) => !d.response || d.response === 'en_attente')
-        .length,
-      color: '#E87722',
-      par:"En cours de validation"
-    },
-  ];
-
   const totalPages = Math.ceil(demandes.length / itemsParPage);
 
   const demandesPaginees = demandes.slice(
@@ -105,160 +105,111 @@ useEffect(() => {
       <div className="main">
         {/* ================= HEADER ================= */}
         <div className="pageHeader">
-          <div className="avatar">
-            {user?.first_name[0]}
-            {user?.last_name[0]}
-          </div>
-
-          <div>
-            <h1 className="pageTitle">Mon Espace</h1>
-
-            <p className="pageSubtitle">
-              Bienvenue, {user?.first_name} {user?.last_name}
-            </p>
-          </div>
-        </div>
-
-        {/* ================= STATS ================= */}
-        <div className="statsRow">
-          {stats.map((s) => (
-            <div key={s.label} className="statCard">
-              <div className="statContent">
-                <p style={{ color: s.color }}>{s.label}</p>
-
-                <h3>{s.value}</h3>
-
-                <span>{s.par}</span>
-              </div>
-
-              <div className="statIcon" style={{ background: s.color }} />
+         <div className="pageHeader__user">
+            <div className="avatar-initials">
+              {user?.first_name[0]}
+              {user?.last_name[0]}
             </div>
-          ))}
+            <div>
+                <h1 className="pageTitle">Mon Espace</h1>
+                <p className="pageSubtitle">
+                    Bienvenue, {user?.first_name} {user?.last_name}
+                </p>
+            </div>
         </div>
-
-        <br />
-        <br />
+            
+        </div>
 
         {/* ================= TABS ================= */}
-        <div className="tabBar">
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={activeTab === tab ? 'tabActive' : 'tabItem'}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab}/>
 
-        {/* ================= CONTENT ================= */}
-        <div className="tabContent">
-          {activeTab === 'Les Demandes' && (
-            <>
-              {/* TABLE */}
-              <div className="tableContainer">
-                <div className="tableHeader">
-
-                  <span className="tableHeaderCell">
-                    <Building2 size={15} />
-                    Appartement
-                  </span>
-
-                  <span className="tableHeaderCell">
-                    <MapPin size={15} />
-                    Adresse
-                  </span>
-
-                  <span className="tableHeaderCell">
-                    <User2 size={15} />
-                    Client
-                  </span>
-
-                  <span className="tableHeaderCell">
-                    Status
-                  </span>
-
-                  <span className="tableHeaderCell">
-                    <Eye size={15} />
-                    Action
-                  </span>
-
-                </div>
-
+{/* ================= CONTENT ================= */}
+          <div className="tabContent">
+            {activeTab === 'Les Demandes' && (
+              <>
+                {/* TABLE */}
                 {demandesPaginees.length === 0 ? (
-                  <p className="emptyText">Aucune demande reçue</p>
+                  <p className="empty-text">Aucune demande reçue</p>
                 ) : (
-                  demandesPaginees.map((demande) => (
-                    <div key={demande.id} className="tableRow">
-                      <div className="apartmentCell">
+                  <div className="table-wrapper">
+                    <table className="apartments-table">
+                      <thead>
+                        <tr>
+                          <th>APPARTEMENT</th>
+                          <th>CLIENT</th>
+                          <th>STATUT</th>
+                          <th>ACTIONS</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {demandesPaginees.map((demande) => (
+                          <tr key={demande.id} className="table-row">
+                            
+                            {/* Apartment Column (Thumbnail + Title + Address) */}
+                            <td className="col-apartment">
+                              <div className="apt-thumb-wrap">
+                                <img
+                                  src={demande?.Apartment?.Pictures?.[0]?.file_path
+                                    ? toStorageURL(demande.Apartment.Pictures[0].file_path)
+                                    : "/assets/images/apr.jpg"
+                                  }
+                                  alt={demande?.Apartment?.title}
+                                  className="apt-thumb"
+                                />
+                                <div>
+                                  <p className="apt-title">{demande?.Apartment?.title || '—'}</p>
+                                  <p className="apt-address">
+                                    <MapPin size={12} />
+                                    {demande?.Apartment?.address || '—'}
+                                  </p>
+                                </div>
+                              </div>
+                            </td>
 
-                        {/* <div className="apartmentImageMini" /> */}
-                        <img
-                          src={demande?.Apartment?.Pictures?.[0]?.file_path
-                          ? toStorageURL(demande.Apartment.Pictures[0].file_path)
-                          : "/assets/images/apr.jpg"
-                          }
-                          alt={demande?.Apartment?.title}
-                          className="apartmentImageMini"
-                        />
+                            {/* Client Column */}
+                            <td className="col-details">
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div className="avatar-initials" style={{ width: '34px', height: '34px', fontSize: '13px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e2e8f0', color: '#FFF', fontWeight: '600', margin: 0 }}>
+                                  {demande?.User?.first_name?.[0]?.toUpperCase()}
+                                  {demande?.User?.last_name?.[0]?.toUpperCase()}
+                                </div>
+                                <div>
+                                  <p style={{ fontWeight: '500', margin: 0, color: '#0f172a', fontSize: '14px' }}>
+                                    {demande?.User
+                                      ? `${demande.User.first_name} ${demande.User.last_name}`
+                                      : '—'}
+                                  </p>
+                                  <p style={{ margin: 0, color: '#64748b', fontSize: '12px' }}>
+                                    Client locataire
+                                  </p>
+                                </div>
+                              </div>
+                            </td>
 
-                        <div>
-                          <h4>
-                            {demande?.Apartment?.title || '—'}
-                          </h4>
-                        </div>
+                            {/* Status Column */}
+                            <td className="col-status">
+                              <StatusBadge status={demande.response} />
+                            </td>
 
-                      </div>
+                            {/* Actions Column */}
+                            <td className="col-actions">
+                              <div className="action-icons">
+                                <button
+                                  className="action-icon action-icon--view"
+                                  title="Voir"
+                                  onClick={() => navigate(`/demandes/${demande.id}`)}
+                                >
+                                  <Eye size={16} />
+                                </button>
+                              </div>
+                            </td>
 
-                      <div className="addressBadge">
-                        {demande?.Apartment?.address || '—'}
-                      </div>
-
-                      <div className="clientCell">
-
-                        <div className="clientAvatar">
-                          {demande?.User?.first_name?.[0]}
-                        </div>
-
-                        <div>
-                          <h5>
-                            {demande?.User
-                              ? `${demande.User.first_name} ${demande.User.last_name}`
-                              : '—'}
-                          </h5>
-
-                          <span>Client locataire</span>
-                        </div>
-
-                      </div>
-                              <div
-                        className={`statusBadge ${
-                          demande.response === "accepted"
-                            ? "statusAccepted"
-                            : demande.response === "refused"
-                            ? "statusRefused"
-                            : "statusPending"
-                        }`}
-                      >
-                        {
-                          demande.response === "accepted"
-                            ? "Acceptée"
-                            : demande.response === "refused"
-                            ? "Refusée"
-                            : "En attente"
-                        }
-                      </div>
-                      <span
-                        className="viewLink"
-                        onClick={() => navigate(`/demandes/${demande.id}`)}
-                      >
-                        Voir
-                      </span>
-                    </div>
-                  ))
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
-              </div>
 
               {/* PAGINATION */}
               {totalPages > 1 && (

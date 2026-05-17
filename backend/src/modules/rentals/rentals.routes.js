@@ -3,7 +3,7 @@ const router = express.Router();
 const rentalsController = require('./rentals.controller');
 const roleMiddleware = require('../../middleware/role.middleware');
 const authMiddleware = require('../../middleware/auth.middleware');
-const { auth } = require('../../config/db');
+// const { auth } = require('../../config/db');
 
 // Envoyer une demande de location
 // pour tester decommenter la ligne 9 et commenter les ligne 11,12,13 et 14

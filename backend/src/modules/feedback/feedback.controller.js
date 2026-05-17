@@ -1,5 +1,5 @@
 const feedbackService = require('./feedback.service');
-const supabase = require('../../config/db');
+const {supabase} = require('../../config/db');
 
 class FeedbackController {
 
@@ -35,6 +35,7 @@ class FeedbackController {
         try {
             const { apartmentId } = req.params;
             const { userId, content } = req.body;
+                console.log(req.body)
 
             if (!content) {
                 return res.status(400).json({ error: 'Le contenu du feedback est obligatoire.' });

@@ -1,27 +1,30 @@
-const supabase = require('../config/db')
+const { supabase } = require('../config/db');
 
-module.exports = async (req, res, next) => {
-  try {
-    // recuperation de token depuis le header
-    const authHeader = req.headers.authorization
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: "Token manquant" })
-    }
+const authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-    const token = authHeader.split(' ')[1]
-
-    // verifier le token avec supabase
-    const { data: { user }, error } = await supabase.auth.getUser(token)
-
-    if (error || !user) {
-      return res.status(401).json({ message: "Token invalide" })
-    }
-
-    // attacher l'utilisateur a la requete
-    req.user = user
-    next()
-
-  } catch (err) {
-    res.status(500).json({ message: "Erreur serveur", error: err.message })
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Accès refusé ! Token manquant ou invalide.' });
   }
-}
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    // ✅ Syntaxe correcte pour Supabase v2
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    
+    if (error || !user) {
+      return res.status(401).json({ error: 'Token invalide ou expiré.' });
+    }
+
+    // On attache l'utilisateur à la requête pour que le contrôleur puisse l'utiliser
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error('Erreur Auth Middleware:', err);
+    // ✅ On renvoie une structure propre en cas de crash interne
+    return res.status(500).json({ error: 'Erreur interne du serveur lors de l\'authentification.' });
+  }
+};
+
+module.exports = authMiddleware;

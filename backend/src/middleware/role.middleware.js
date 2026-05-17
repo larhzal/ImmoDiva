@@ -1,4 +1,4 @@
-const supabase = require('../config/db')
+const {supabase} = require('../config/db')
 
 module.exports = (roleRequis) => {
   return async (req, res, next) => {

@@ -10,6 +10,24 @@ const FeedbackForm = ({ apartmentId, userId, userName, onFeedbackSubmitted }) =>
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
+        const getAuthHeaders = async (extra = {}) => {
+        const raw = localStorage.getItem("immodiva_token");
+        let token = null;
+
+        if (raw) {
+            try {
+                // Étape 1 : On tente de le parser au cas où c'est un objet JSON complet stocké
+                const parsed = JSON.parse(raw);
+                token = parsed?.access_token || raw; 
+            } catch (e) {
+                // Étape 2 : Si JSON.parse plante (erreur 'e'), c'est que c'est déjà le JWT string brut !
+                token = raw;
+            }
+        }
+
+        return { Authorization: `Bearer ${token}`, ...extra };
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -35,6 +53,7 @@ const FeedbackForm = ({ apartmentId, userId, userName, onFeedbackSubmitted }) =>
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ... await getAuthHeaders(),
                 },
                 body: JSON.stringify({
                     ...(userId ? { userId } : {}),

@@ -64,11 +64,12 @@
 }
 
 .search-btn {
-    background-color: #f59e0b; 
+    background-color: #F5C060; 
     border: none;
     padding: 12px 28px;
     border-radius: 8px;
-    font-weight: 700;
+    font-weight: 500;
+    color: #6b7280;
     font-size: 1rem;
     cursor: pointer;
     display: flex;
@@ -79,7 +80,7 @@
 }
 
 .search-btn:hover {
-    background-color: #d97706; 
+    background-color: rgba(217, 119, 6, 0.508); 
 }
 /* Le conteneur qui englobe toutes les cartes */
 .listings-grid {

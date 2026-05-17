@@ -1,5 +1,5 @@
-const { data } = require('react-router-dom')
-const supabase = require('../../config/db')
+// const { data } = require('react-router-dom')
+const {supabase} = require('../../config/db')
 
 
 // Envoyer une demande de location

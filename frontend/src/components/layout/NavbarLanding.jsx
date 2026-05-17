@@ -10,10 +10,10 @@ export default function NavbarLanding() {
           <img src={Logo} alt="Immo DIVA" className="logo-img" />
         </div>
         <div className="nav-links">
-          <a href="#" className="nav-link">Tarifs</a>
+          <a href="/tarifs" className="nav-link">Tarifs</a>
           <a href="#" className="nav-link">Contact</a>
-          <a href="#" className="nav-link">Connexion</a>
-          <a href="#" className="nav-link-highlight">Mettre votre appartement en location</a>
+          <a href="/login" className="nav-link">Connexion</a>
+          <a href="/role" className="nav-link-highlight">Mettre votre appartement en location</a>
         </div>
       </nav>
     </>

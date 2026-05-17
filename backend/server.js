@@ -6,23 +6,21 @@ const cors = require("cors");
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 
-const supabase = require("./src/config/db");
+const {supabase, supabaseAdmin} = require("./src/config/db");
 
-// routes
+// Routes
 const userRoutes = require("./src/modules/users/users.routes.js");
 const authRoutes = require("./src/modules/auth/auth.routes");
 const feedbackRoutes = require("./src/modules/feedback/feedback.routes");
-
-// API Routes
 const rentalRoutes = require('./src/modules/rentals/rentals.routes.js');
-
+const appartementRoutes = require("./src/modules/apartments/apartments.routes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/annonces", feedbackRoutes);
+app.use("/api/rentals", rentalRoutes);
+app.use("/api/appartements", appartementRoutes);
 
 // GET annonces avec filtres
 app.get("/api/annonces", async (req, res) => {
@@ -118,10 +116,11 @@ app.get("/api/annonces/:id", async (req, res) => {
         });
     }
 });
-app.use("/api/rentals", rentalRoutes);
+
+// feedbackRoutes last, so the inline GET handlers above take priority
+app.use("/api/annonces", feedbackRoutes);
 
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

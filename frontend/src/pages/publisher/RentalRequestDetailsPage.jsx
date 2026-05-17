@@ -6,6 +6,8 @@ import {
 } from "../../services/rentalService";
 import { MapPin } from "lucide-react";
 
+import Navbar from "../../components/layout/Navbar";
+
 import "../../styles/ui/RentalRequestDetails.css";
 import Loader from "../../components/ui/loader";
 import { useAuth } from "../../hooks/useAuth";
@@ -93,6 +95,7 @@ export default function RentalRequestDetailPage() {
 
   return (
     <div className="pageContainer">
+      <Navbar />
       <div className="contentContainer">
 
         
