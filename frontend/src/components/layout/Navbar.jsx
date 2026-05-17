@@ -96,7 +96,7 @@ export default function Navbar() {
             Tarifs
           </a>
           {isAuthenticated && 
-          <a href="addApartment" className="nav-link">
+          <a href="/addApartment" className="nav-link">
             Ajouter un appartement à louer
           </a>
           }

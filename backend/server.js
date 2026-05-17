@@ -119,8 +119,6 @@ app.get("/api/annonces/:id", async (req, res) => {
 
 // feedbackRoutes last, so the inline GET handlers above take priority
 app.use("/api/annonces", feedbackRoutes);
-
-const appartementRoutes = require("./src/modules/apartments/apartments.routes");
 app.use("/api/appartements", appartementRoutes);
 
 

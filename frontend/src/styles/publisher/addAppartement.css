@@ -46,7 +46,7 @@
 /* Text/number fields */
 .field {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   gap: 10px;
   color: #353535;
 }

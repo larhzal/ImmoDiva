@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import "../../styles/publisher/addAppartement.css";
 import { validateAppartementForm } from "../../utils/validators";
+import Navbar from "../../components/layout/Navbar";
 
 function AddAppartement() {
     const [titre, setTitre] = useState("");
@@ -128,16 +129,31 @@ function AddAppartement() {
             formData.append("fumeurs", fumeurs);
             formData.append("colocataires", colocataires);
             formData.append("profilLocataire", JSON.stringify(profilLocataire));
-            formData.append("owner_id", "550e8400-e29b-41d4-a716-446655440000");
 
 
             photos.forEach((photo) => {
                 formData.append("photos", photo.file);
             });
 
+            const raw = localStorage.getItem("immodiva_token");
+
+            let token = null;
+
+            if (raw) {
+                try {
+                    const parsed = JSON.parse(raw);
+                    token = parsed?.access_token || raw;
+                } catch {
+                    token = raw;
+                }
+            }
+
             const response = await fetch("http://localhost:5000/api/appartements", {
                 method: "POST",
-                body: formData
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData,
             });
 
             const data = await response.json();
@@ -184,10 +200,11 @@ function AddAppartement() {
         }
     };
 
-    
+
     return (
-        
+
         <>
+            <Navbar />
             {formError && (
                 <div style={{
                     backgroundColor: "#f44336",

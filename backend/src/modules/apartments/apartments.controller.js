@@ -13,7 +13,7 @@ const {
     fetchPicturesByApartment,
     deleteApartmentRecord,
 } = require("./apartments.service");
- 
+
 // ─────────────────────────────────────────────
 // POST /api/appartements
 // ─────────────────────────────────────────────
@@ -22,20 +22,30 @@ const createAppartement = async (req, res) => {
         const fields = req.body;
         const profilLocataire = JSON.parse(fields.profilLocataire);
         const files = req.files;
- 
-        // 1. Upload images to storage
+
+        // 👇 THIS is what you were missing
+        const ownerId = req.user?.id;
+
+        if (!ownerId) {
+            return res.status(401).json({ error: "User not authenticated" });
+        }
+
         const photoUrls = await uploadPhotos(files);
- 
-        // 2. Insert apartment row
-        const apartmentData = await insertApartment(fields, profilLocataire);
- 
-        // 3. Insert picture rows
+
+        // ✅ pass ownerId correctly
+        const apartmentData = await insertApartment(
+            fields,
+            profilLocataire,
+            ownerId
+        );
+
         await insertPictures(apartmentData.id, photoUrls);
- 
+
         return res.status(201).json({
             message: "Apartment created with photos ✅",
             data: apartmentData,
         });
+
     } catch (err) {
         console.error("createAppartement ERROR:", err);
         res.status(500).json({ error: err.message, details: err });
@@ -49,18 +59,18 @@ const getAppartement = async (req, res) => {
     try {
         const { id } = req.params;
         const apartment = await fetchApartmentById(id);
- 
+
         if (!apartment) {
             return res.status(404).json({ error: "Apartment not found" });
         }
- 
+
         return res.status(200).json({ data: apartment });
     } catch (err) {
         console.error("getAppartement ERROR:", err);
         res.status(500).json({ error: err.message, details: err });
     }
 };
- 
+
 // ─────────────────────────────────────────────
 // GET /api/appartements
 // ─────────────────────────────────────────────
@@ -73,7 +83,7 @@ const getAllAppartements = async (req, res) => {
         res.status(500).json({ error: err.message, details: err });
     }
 };
- 
+
 // ─────────────────────────────────────────────
 // PUT /api/appartements/:id
 // ─────────────────────────────────────────────
@@ -83,12 +93,12 @@ const updateAppartement = async (req, res) => {
         const fields = req.body;
         const profilLocataire = JSON.parse(fields.profilLocataire);
         const newFiles = req.files ?? [];
- 
+
         // IDs of existing pictures the client wants removed
         const deletedPhotoIds = fields.deletedPhotoIds
             ? JSON.parse(fields.deletedPhotoIds)
             : [];
- 
+
         // 1. If any existing photos were removed, delete from storage + DB
         if (deletedPhotoIds.length > 0) {
             // Fetch file_path values for the pictures to delete
@@ -96,27 +106,27 @@ const updateAppartement = async (req, res) => {
                 .from("Pictures")
                 .select("id, file_path")
                 .in("id", deletedPhotoIds);
- 
+
             if (fetchPicError) throw fetchPicError;
- 
+
             const filePaths = picRows.map((p) => p.file_path);
- 
+
             // Remove files from Supabase Storage
             await deleteStorageFiles(filePaths);
- 
+
             // Remove rows from Pictures table
             await deletePictureRecords(deletedPhotoIds);
         }
- 
+
         // 2. Upload newly added photos (if any)
         if (newFiles.length > 0) {
             const newPhotoUrls = await uploadPhotos(newFiles);
             await insertPictures(id, newPhotoUrls);
         }
- 
+
         // 3. Update the Apartment row
         const updatedApartment = await updateApartmentRecord(id, fields, profilLocataire);
- 
+
         return res.status(200).json({
             message: "Apartment updated",
             data: updatedApartment,
@@ -133,7 +143,7 @@ const updateAppartement = async (req, res) => {
 const getMyApartments = async (req, res) => {
     try {
         const ownerId = req.user.id; // injected by your auth middleware
-        const page  = parseInt(req.query.page)  || 1;
+        const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 7;
 
         const result = await fetchApartmentsByOwner(ownerId, page, limit);
@@ -159,7 +169,7 @@ const getMyClients = async (req, res) => {
         return res.status(200).json(result);
     } catch (err) {
         console.error("getMyClients ERROR:", err);
-        res.status(500).json({error: err.message, details: err});
+        res.status(500).json({ error: err.message, details: err });
     }
 };
 
@@ -204,4 +214,3 @@ module.exports = {
     getMyClients,
     deleteAppartement,
 };
- 
