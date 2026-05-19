@@ -3,7 +3,7 @@ const router = express.Router();
 const supabase = require("../../config/db");
 
 // GET users
-router.get("/", async (req, res) => {
+router.get("/users", async (req, res) => {
     const { data, error } = await supabase
         .from("User")
         .select("*")

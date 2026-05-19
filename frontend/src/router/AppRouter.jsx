@@ -25,6 +25,7 @@ import AddAppartement from '../pages/publisher/AddApartmentPage';
 // Admin pages
 import PendingApartments from '../pages/admin/PendingApartments';
 import AdminHome from '../pages/admin/AdminHome';
+import AdminUsersPage from '../pages/admin/AdminUsersPage';
 
 // tenant pages
 import FeedbackPage from '../pages/tenant/FeedbackPage';
@@ -61,7 +62,7 @@ const AppRouter = () => {
                 {/* Admin pages */}
                 <Route path="/apartments/pending" element={<PendingApartments />} />
                 <Route path="/admin-home" element={<AdminHome />} />
-
+                <Route path="/admin/users" element={<AdminUsersPage />} />
                 {/* tenant pages */}
                 <Route path="/client-profile" element={<ClientProfilePage />} />
                 <Route path="/demande/:apartmentId" element={<RentalRequestPage />} />

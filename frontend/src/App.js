@@ -9,8 +9,6 @@ import AdminUsersPage from './pages/admin/AdminUsersPage';
 function App() {
   return (
     <>
-      <Navbar />
-      <AdminUsersPage />
       {/* <Navbar /> */}
       <AppRouter />
       {/* <AdminHome /> */}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/adminService';
 import '../../styles/pages/adminUsers.css';
+import AdminNavbar from '../../components/layout/AdminNavbar';
 
 const AdminUsersPage = () => { 
   const [users, setUsers] = useState([]);
@@ -83,6 +84,8 @@ const AdminUsersPage = () => {
   if (loading) return <div className="admin-container">Chargement...</div>;
 
   return (
+    <>
+    <AdminNavbar />
     <div className="admin-container">
       <div className="admin-header">
         <h1>Gestion des Utilisateurs</h1>
@@ -163,6 +166,7 @@ const AdminUsersPage = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 
