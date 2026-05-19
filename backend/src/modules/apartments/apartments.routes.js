@@ -36,8 +36,6 @@ router.post("/", authMiddleware, upload.array("photos", 15),createAppartement);
 router.put("/:id", upload.array("photos", 15), updateAppartement);
 
 
-
-
 router.post("/", upload.array("photos", 15), createAppartement);
 
 module.exports = router;

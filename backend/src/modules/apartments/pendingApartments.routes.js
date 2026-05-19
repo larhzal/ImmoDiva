@@ -198,7 +198,7 @@ router.put("/:id/reject", async (req, res) => {
                     </h2>
 
                     <p>
-                        Nous sommes désolés, votre appartement à été rejeté!
+                        Nous sommes désolés, votre appartement
                         <strong>
                           ${apartment.title}
                         </strong>

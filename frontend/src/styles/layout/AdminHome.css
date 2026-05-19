@@ -1,0 +1,63 @@
+.admin-home {
+    display: flex;
+    gap: 29px;
+    padding: 60px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+.admin-card {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    margin-top: 50px;
+}
+
+.admin-card:hover {
+    border-color: #e07b39;
+    box-shadow: 0 8px 28px rgba(224, 123, 57, 0.18);
+    transform: translateY(-3px);
+}
+
+.admin-icon{
+    font-size: 150px;
+    color: #e07b39;
+    margin: 20px auto 10px auto;
+}
+
+.admin-card-body {
+    padding: 20px 20px 28px 20px;
+}
+
+.admin-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+    transition: color 0.2s ease;
+}
+
+.admin-card:hover .admin-card-title {
+    color: #e07b39;
+}
+
+.admin-card:hover .admin-icon{
+    color: #db8b55;
+}
+
+.admin-card-description {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.5;
+}
+

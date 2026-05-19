@@ -252,6 +252,16 @@
   box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
 }
 
+.av-btn-delete {
+  background: var(--color-delete-bg);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+.av-btn-delete:hover {
+  background: var(--color-delete-hover);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+
 /* ---- Loading / Empty ---- */
 .av-loading,
 .av-empty {

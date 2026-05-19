@@ -48,6 +48,7 @@ exports.getProfile = async (userId) => {
 const roleMappings = {
   Client: "Client",
   Publisher: "Publisher",
+  Admin: "Admin",
 };
 
 // ─────────────────────────
