@@ -17,7 +17,12 @@ const ListingsPage = () => {
             }
             
             const data = await response.json();
-            setAnnonces(data);
+
+            const annoncesFiltrees = data.filter(annonce => annonce.status === 'Acceptée');
+            
+            setAnnonces(annoncesFiltrees);
+            // ----------------------------------------------------------
+
         } catch (err) {
             console.error("Erreur Fetch:", err);
             setError("Désolé, impossible de charger les annonces pour le moment. Notre serveur fait peut-être une petite pause. Veuillez réessayer.");
@@ -84,7 +89,7 @@ const ListingsPage = () => {
 
             {error && (
                 <div className="error-container">
-                    <p className="error-message">Oups 🙄, {error}</p>
+                    <p className="error-message">Oups, {error}</p>
                     <button className="retry-btn" onClick={fetchAnnonces}>
                         Réessayer
                     </button>
@@ -119,7 +124,6 @@ const ListingsPage = () => {
                                     </p>
                                     
                                     <div className="listing-card-info">
-                                        {/* Icône Localisation SVG directe */}
                                         <svg className="listing-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
                                             <circle cx="12" cy="10" r="3"/>
@@ -130,7 +134,6 @@ const ListingsPage = () => {
                                     </div>
                                     
                                     <div className="listing-card-info">
-                                        {/* Icône Lit SVG directe */}
                                         <svg className="listing-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M2 4v16"/>
                                             <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
