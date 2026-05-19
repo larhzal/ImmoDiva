@@ -17,13 +17,6 @@ const roomOptions = [
     { value: '3plus', label: '3+ Chambres' },
 ];
 
-const cityOptions = [
-    { value: '', label: 'Toutes les villes' },
-    { value: 'Casablanca', label: 'Casablanca' },
-    { value: 'Rabat', label: 'Rabat' },
-    { value: 'Meknès', label: 'Meknès' },
-];
-
 const ListingsPage = () => {
     const navigate = useNavigate();
     const [annonces, setAnnonces] = useState([]);
@@ -31,8 +24,28 @@ const ListingsPage = () => {
     const [error, setError] = useState(null);
     const [city, setCity] = useState('');
     const [priceRange, setPriceRange] = useState('');
-    const [cities, setCitites] = useState([])
     const [rooms, setRooms] = useState('');
+
+    // ✅ CORRIGÉ : cities ici DANS le composant, plus de double déclaration
+    const [cities, setCities] = useState([]);
+    const [citiesLoading, setCitiesLoading] = useState(true);
+
+    // ✅ Chargement des villes depuis la DB
+    useEffect(() => {
+        const fetchCities = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/annonces/cities');
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                setCities(data);
+            } catch (err) {
+                console.error('[ListingsPage] fetchCities error:', err);
+            } finally {
+                setCitiesLoading(false);
+            }
+        };
+        fetchCities();
+    }, []);
 
     const fetchAnnonces = async ({ city = '', priceRange = '', rooms = '' } = {}) => {
         setLoading(true);
@@ -82,8 +95,8 @@ const ListingsPage = () => {
             {/* --- SECTION HERO --- */}
             <section className="hero-section">
                 <h1 className="hero-title">
-                    “Trouvez l'appartement idéal au Maroc <br />
-                    — vite, simplement, en toute confiance.”
+                    "Trouvez l'appartement idéal au Maroc <br />
+                    — vite, simplement, en toute confiance."
                 </h1>
                 <p className="hero-subtitle">Votre prochain chez-vous, à portée de clic</p>
             </section>
@@ -92,10 +105,12 @@ const ListingsPage = () => {
             <div className="search-bar">
                 <div className="search-field">
                     <label>Ville / Région</label>
-                    <select value={city} onChange={(e) => setCity(e.target.value)}>
-                        {cityOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                                {option.label}
+                    {/* ✅ Select dynamique depuis la DB */}
+                    <select value={city} onChange={(e) => setCity(e.target.value)} disabled={citiesLoading}>
+                        <option value="">Toutes les villes</option>
+                        {cities.map((cityName) => (
+                            <option key={cityName} value={cityName}>
+                                {cityName}
                             </option>
                         ))}
                     </select>
@@ -122,7 +137,7 @@ const ListingsPage = () => {
                 </div>
                 <div className="search-actions">
                     <button className="search-btn" onClick={handleSearch}>
-                        🔍 Rechercher
+                         Rechercher
                     </button>
                     {/* <button className="reset-btn" onClick={handleReset}>
                         Réinitialiser
@@ -164,30 +179,29 @@ const ListingsPage = () => {
                         const pictures = annonce.pictures || annonce.Pictures;
                         const imgUrl = (path) =>
                             `https://fipyteeltzqzeifwdpca.supabase.co/storage/v1/object/public/appartements/${path}`;
-                        const imageAafficher = pictures && pictures.length > 0 
+                        const imageAafficher = pictures && pictures.length > 0
                             ? imgUrl(pictures[0].file_path)
-                             : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80';
+                            : 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80';
 
                         return (
                             <div key={listingId || annonce.title || annonce.city || Math.random()} className="listing-card">
-                                
-                                <img 
-                                    src={imageAafficher} 
-                                    alt={annonce.title || "Appartement"} 
-                                    className="listing-card-image" 
+
+                                <img
+                                    src={imageAafficher}
+                                    alt={annonce.title || "Appartement"}
+                                    className="listing-card-image"
                                 />
-                                
+
                                 <div className="listing-card-content">
                                     <h3 className="listing-card-title">
                                         {annonce.title || "Titre indisponible"}
                                     </h3>
-                                    
+
                                     <p className="listing-card-price">
                                         {annonce.monthly_price} MAD/ mois
                                     </p>
-                                    
+
                                     <div className="listing-card-info">
-                                        {/* Icône Localisation SVG directe */}
                                         <svg className="listing-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
                                             <circle cx="12" cy="10" r="3"/>
@@ -196,9 +210,8 @@ const ListingsPage = () => {
                                             {annonce.city || "Ville non précisée"}
                                         </span>
                                     </div>
-                                    
+
                                     <div className="listing-card-info">
-                                        {/* Icône Lit SVG directe */}
                                         <svg className="listing-card-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             <path d="M2 4v16"/>
                                             <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
@@ -210,10 +223,10 @@ const ListingsPage = () => {
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 {listingId ? (
-                                    <button 
-                                        className="detail-btn" 
+                                    <button
+                                        className="detail-btn"
                                         onClick={() => navigate(`/apartment/${listingId}`)}
                                     >
                                         Voir les détails
@@ -221,7 +234,7 @@ const ListingsPage = () => {
                                 ) : (
                                     <span className="detail-missing-id">Détail indisponible</span>
                                 )}
-                                
+
                             </div>
                         );
                     })}
@@ -232,7 +245,6 @@ const ListingsPage = () => {
                 <div className="no-results">
                     <p>Aucune annonce n'est disponible pour le moment.</p>
                 </div>
-                
             )}
         </div>
         </>
