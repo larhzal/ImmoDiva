@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("multer")();
+// const { createAppartement } = require("../../controllers/apartment.controller");
 
 const {
     createAppartement,
@@ -29,9 +30,12 @@ router.delete("/:id", authMiddleware, deleteAppartement);
 router.get("/:id", getAppartement);
 
 // Create a new apartment
-router.post("/", upload.array("photos", 15), createAppartement);
+router.post("/", authMiddleware, upload.array("photos", 15),createAppartement);
 
 // Update an existing apartment
 router.put("/:id", upload.array("photos", 15), updateAppartement);
+
+
+router.post("/", upload.array("photos", 15), createAppartement);
 
 module.exports = router;

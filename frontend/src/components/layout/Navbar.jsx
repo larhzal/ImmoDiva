@@ -83,57 +83,10 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="nav-links">
-        {isAuthenticated && user.role == 'Publisher' ? 
-        <a href="/my-apartments" className="nav-link">
-            Mon Espace
-        </a>  : <a href="/client-profile" className="nav-link">
-            Mon Espace
-        </a>
-      }
-          
-
-          <a href="/tarifs" className="nav-link">
-            Tarifs
-          </a>
-          {isAuthenticated && 
-          <a href="addApartment" className="nav-link">
-            Ajouter un appartement à louer
-          </a>
-          }
-          
-
-          {/* Auth Buttons */}
-          {isAuthenticated ? (
-
-            <span
-              className="nav-link logout-link"
-              onClick={() => setShowModal(true)}
-            >
-              Déconnexion
-            </span>
-
-          ) : (
-
-            <>
-
-              <a
-                href="/login"
-                className="nav-link"
-              >
-                Login
-              </a>
-
-              <a
-                href="/register"
-                className="register-btn"
-              >
-                Register
-              </a>
-
-            </>
-
-          )}
-
+          <a href="/" className="nav-link">Mon Espace</a>
+          <a href="/" className="nav-link">Tarifs</a>
+          <a href="/" className="nav-link">Ajouter une appartement à louer</a>
+          <a href="/" className="nav-link">Déconnexion</a>
         </div>
 
       </nav>

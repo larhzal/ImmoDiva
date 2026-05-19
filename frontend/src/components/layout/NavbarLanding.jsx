@@ -1,8 +1,10 @@
-import Logo from "../../assets/images/Logo.png";
-import "../../styles/layout/Navbar.css"; 
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-export default function NavbarLanding() {
+
+function App() {
   return (
+<<<<<<< HEAD
     <>
       <div className="top-bar"></div>
       <nav className="navbar">
@@ -17,5 +19,20 @@ export default function NavbarLanding() {
         </div>
       </nav>
     </>
+=======
+    <Router>
+      <div className="App">
+        <Routes>
+          {/* Route dyal l-Accueil (Home) */}
+          <Route path="/" element={<div>Hna l-Accueil (Home Page)</div>} />
+
+          {/* LA ROUTE LI KHASSNA DABA */}
+          <Route path="/admin/users" element={<AdminUsers />} />
+        </Routes>
+      </div>
+    </Router>
+>>>>>>> feature/us-21-22-user-bloque-debloque
   );
 }
+
+export default App;

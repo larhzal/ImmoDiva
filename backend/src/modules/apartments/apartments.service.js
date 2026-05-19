@@ -113,10 +113,10 @@ const mapFields = (fields, profilLocataire) => ({
 /**
  * Insert a new Apartment row and return the created record.
  */
-const insertApartment = async (fields, profilLocataire) => {
+const insertApartment = async (fields, profilLocataire, id) => {
     const row = {
         ...mapFields(fields, profilLocataire),
-        owner_id: fields.owner_id,
+        owner_id: id,
     };
 
     const { data, error } = await supabase
@@ -251,7 +251,7 @@ const fetchApartmentsByOwner = async (ownerId, page = 1, limit = 7) => {
 };
 
 /**
- * Fetch all clients belonging to a specific owner, with pagination.
+ * Fetch all clients belonging to a specific owner, with pagination.    
  */
 const fetchMyClients = async (ownerId, page = 1, limit = 7) => {
     const from = (page - 1) * limit;

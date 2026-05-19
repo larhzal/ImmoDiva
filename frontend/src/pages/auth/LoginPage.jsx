@@ -90,8 +90,10 @@ export default function LoginPage() {
       setTimeout(() => {
         if (data.user?.role === 'Publisher') {
           window.location.href = '/listings';
-        } else {
+        } else if (data.user?.role === 'Client') {
           window.location.href = '/';
+        } else if (data.user?.role === 'Admin') {
+          window.location.href = '/admin-home';
         }
       }, 800);
     } catch (err) {

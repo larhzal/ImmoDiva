@@ -1,0 +1,213 @@
+:root {
+  --immo-orange: #F39C12;   /* Couleur Locataires */
+  --immo-blue: #3182CE;     /* Couleur Publicateurs */
+  --immo-navy: #1A365D;     /* Couleur Titres et Total */
+  --bg-light: #F8FAFC;
+  --white: #ffffff;
+  --shadow-soft: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --text-main: #2D3748;
+  --text-muted: #718096;
+}
+
+.admin-container {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  padding: 40px 5% !important;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* --- Header --- */
+.admin-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--immo-navy);
+  margin-bottom: 30px;
+}
+
+/* --- Stats Cards (Style homogène) --- */
+.stats-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--white);
+  flex: 1;
+  padding: 22px 25px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Couleurs spécifiques des titres de cartes */
+.stat-card:nth-child(1) .stat-label { color: var(--immo-navy); }
+.stat-card:nth-child(2) .stat-label { color: var(--immo-orange); }
+.stat-card:nth-child(3) .stat-label { color: var(--immo-blue); }
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Petit carré d'accentuation à droite */
+.stat-card::after {
+  content: "";
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  opacity: 0.1;
+}
+.stat-card:nth-child(1)::after { background: var(--immo-navy); }
+.stat-card:nth-child(2)::after { background: var(--immo-orange); }
+.stat-card:nth-child(3)::after { background: var(--immo-blue); }
+
+/* --- Table Styles --- */
+.users-table-container {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid #edf2f7;
+  overflow: hidden;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th {
+  background: #ffffff;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.users-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f8fafc;
+  vertical-align: middle;
+  text-align: center;
+  color: #475569;
+  font-size: 14px;
+}
+
+/* Alignement Utilisateur à gauche */
+.users-table td:first-child {
+  text-align: left;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #f1f5f9;
+  color: var(--immo-navy);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* --- Badges Rôles (Largeur identique) --- */
+.role-badge {
+  display: inline-block;
+  width: 110px;           /* Largeur fixe pour Client et Publisher */
+  padding: 6px 0;         /* Padding vertical uniquement */
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.role-orange {
+  background-color: #FFF7ED; 
+  color: var(--immo-orange); 
+  border: 1px solid #FFEDD5;
+}
+
+.role-navy {
+  background-color: #EFF6FF; 
+  color: var(--immo-blue); 
+  border: 1px solid #DBEAFE;
+}
+
+/* --- Statut --- */
+.status-active { color: #10B981; font-weight: 600; }
+.status-blocked { color: #EF4444; font-weight: 600; }
+
+/* --- Boutons Actions --- */
+.btn-block {
+  background: #FEF2F2;
+  color: #DC2626;
+  border: 1px solid #FEE2E2;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-block:hover {
+  background: #DC2626;
+  color: white;
+}
+
+.btn-unblock {
+  background: #F0FDF4;
+  color: #16A34A;
+  border: 1px solid #BBF7D0;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-unblock:hover {
+  background: #16A34A;
+  color: white;
+}
