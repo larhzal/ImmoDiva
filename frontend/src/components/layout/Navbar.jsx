@@ -83,6 +83,7 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="nav-links">
+<<<<<<< HEAD
         {isAuthenticated && user.role == 'Publisher' ? 
         <a href="/my-apartments" className="nav-link">
             Mon Espace
@@ -135,6 +136,12 @@ export default function Navbar() {
 
           )}
 
+=======
+          <a href="/" className="nav-link">Mon Espace</a>
+          <a href="/" className="nav-link">Tarifs</a>
+          <a href="/" className="nav-link">Ajouter une appartement à louer</a>
+          <a href="/" className="nav-link">Déconnexion</a>
+>>>>>>> feature/us-21-22-user-bloque-debloque
         </div>
 
       </nav>
