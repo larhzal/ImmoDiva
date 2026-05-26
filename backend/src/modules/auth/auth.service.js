@@ -162,7 +162,7 @@ exports.loginUser = async (payload) => {
   // Chercher user
   const { data: userProfile, error: profileError } = await supabase
     .from("User")
-    .select("id, username, role")
+    .select("id, username, role, status") // ✅ ajoute status
     .eq("username", username.trim())
     .maybeSingle();
 
@@ -175,6 +175,13 @@ exports.loginUser = async (payload) => {
   if (!userProfile) {
     const error = new Error("Identifiant ou mot de passe incorrect.");
     error.status = 401;
+    throw error;
+  }
+
+  // Vérifier si bloqué
+  if (userProfile.status === 'blocked') {
+    const error = new Error("Votre compte a été bloqué. Contactez l'administrateur.");
+    error.status = 403;
     throw error;
   }
 

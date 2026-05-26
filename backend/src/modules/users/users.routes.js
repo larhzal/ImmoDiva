@@ -1,25 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const supabase = require("../../config/db");
+const { getAllUsers, blockUser, unblockUser } = require("./users.controller");
+const authMiddleware = require("../../middleware/auth.middleware");
+const roleMiddleware = require("../../middleware/role.middleware");
 
-// GET users
-router.get("/users", async (req, res) => {
-    const { data, error } = await supabase
-        .from("User")
-        .select("*")
-        .limit(5);
-
-    if (error) {
-        return res.status(500).json({
-            message: "Query failed ❌",
-            error: error.message
-        });
-    }
-
-    res.json({
-        message: "Users fetched successfully ✅",
-        data
-    });
-});
+router.get("/", authMiddleware, roleMiddleware('Admin'), getAllUsers);
+router.put("/:id/block", authMiddleware, roleMiddleware('Admin'), blockUser);
+router.put("/:id/unblock", authMiddleware, roleMiddleware('Admin'), unblockUser);
 
 module.exports = router;
