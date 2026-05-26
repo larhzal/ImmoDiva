@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../services/adminService';
 import '../../styles/pages/adminUsers.css';
+import '../../styles/layout/Navbar.css';
 import AdminNavbar from '../../components/layout/AdminNavbar';
 
 const API_URL = "http://localhost:5000/api/users";
@@ -12,6 +12,10 @@ const getToken = () => {
 const AdminUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalAction, setModalAction] = useState(null); // 'block' ou 'unblock'
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -36,38 +40,29 @@ const AdminUsersPage = () => {
   const totalLocataires = users.filter(u => u.role?.toLowerCase() === 'client').length;
   const totalPublicateurs = users.filter(u => u.role?.toLowerCase() === 'publisher').length;
 
-  const handleBlock = async (userId) => {
-    if (window.confirm("Voulez-vous vraiment bloquer cet utilisateur ?")) {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/${userId}/block`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
-      if (res.ok) {
-        setUsers(users.map(u => u.id === userId ? { ...u, status: 'blocked' } : u));
-      } else {
-        const data = await res.json();
-        alert(data.message || "Erreur lors du blocage");
-      }
-    }
+  const openModal = (userId, action) => {
+    setSelectedUserId(userId);
+    setModalAction(action);
+    setShowModal(true);
   };
 
-  const handleUnblock = async (userId) => {
-    if (window.confirm("Voulez-vous vraiment débloquer cet utilisateur ?")) {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/${userId}/unblock`, {
-        method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+  const confirmAction = async () => {
+    setActionLoading(true);
+    const token = getToken();
+    const res = await fetch(`${API_URL}/${selectedUserId}/${modalAction}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
 
-      if (res.ok) {
-        setUsers(users.map(u => u.id === userId ? { ...u, status: 'active' } : u));
-      } else {
-        const data = await res.json();
-        alert(data.message || "Erreur lors du déblocage");
-      }
+    if (res.ok) {
+      setUsers(users.map(u =>
+        u.id === selectedUserId
+          ? { ...u, status: modalAction === 'block' ? 'blocked' : 'active' }
+          : u
+      ));
     }
+    setActionLoading(false);
+    setShowModal(false);
   };
 
   if (loading) return <div className="admin-container">Chargement...</div>;
@@ -130,9 +125,9 @@ const AdminUsersPage = () => {
                   <td>{new Date(user.created_at).toLocaleDateString()}</td>
                   <td>
                     <span className={
-                      user.status?.toLowerCase() === 'active' || 
-                      user.status?.toLowerCase() === 'unblocked' 
-                        ? "status-active" 
+                      user.status?.toLowerCase() === 'active' ||
+                      user.status?.toLowerCase() === 'unblocked'
+                        ? "status-active"
                         : "status-blocked"
                     }>
                       ● {user.status || 'unblocked'}
@@ -141,11 +136,11 @@ const AdminUsersPage = () => {
                   <td>
                     <div className="action-buttons">
                       {user.status?.toLowerCase() === 'blocked' ? (
-                        <button className="btn-unblock" onClick={() => handleUnblock(user.id)}>
+                        <button className="btn-unblock" onClick={() => openModal(user.id, 'unblock')}>
                           Débloquer
                         </button>
                       ) : (
-                        <button className="btn-block" onClick={() => handleBlock(user.id)}>
+                        <button className="btn-block" onClick={() => openModal(user.id, 'block')}>
                           Bloquer
                         </button>
                       )}
@@ -157,6 +152,28 @@ const AdminUsersPage = () => {
           </table>
         </div>
       </div>
+
+      {/* Modal bloquer/débloquer */}
+      {showModal && (
+        <div className="logout-modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="logout-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>{modalAction === 'block' ? 'Bloquer' : 'Débloquer'}</h2>
+            <p>
+              {modalAction === 'block'
+                ? 'Voulez-vous vraiment bloquer cet utilisateur ?'
+                : 'Voulez-vous vraiment débloquer cet utilisateur ?'}
+            </p>
+            <div className="logout-modal-actions">
+              <button className="cancel-btn" onClick={() => setShowModal(false)} disabled={actionLoading}>
+                Annuler
+              </button>
+              <button className="confirm-btn" onClick={confirmAction} disabled={actionLoading}>
+                {actionLoading ? 'En cours...' : 'Oui, confirmer'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
