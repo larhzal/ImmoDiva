@@ -1,10 +1,10 @@
 const { supabase } = require('../../config/db');
 
-/**
- * Récupère toutes les annonces avec filtres optionnels.
- */
 const getAnnonces = async ({ city, priceRange, rooms } = {}) => {
-    let query = supabase.from('Apartment').select('*, Pictures(*)');
+    let query = supabase
+        .from('Apartment')
+        .select('*, Pictures(*)')
+        .eq('status', 'Acceptée'); //  filtre ajouté
 
     if (city) {
         query = query.eq('city', city);
@@ -43,9 +43,6 @@ const getAnnonces = async ({ city, priceRange, rooms } = {}) => {
     return data;
 };
 
-/**
- * Récupère une annonce par son ID.
- */
 const getAnnonceById = async (id) => {
     const { data, error } = await supabase
         .from('Apartment')
@@ -57,13 +54,11 @@ const getAnnonceById = async (id) => {
     return data;
 };
 
-/**
- * Récupère la liste des villes distinctes depuis la table Apartment.
- */
 const getDistinctCities = async () => {
     const { data, error } = await supabase
         .from('Apartment')
         .select('city')
+        .eq('status', 'Acceptée') //  filtre ajouté
         .not('city', 'is', null)
         .neq('city', '');
 
