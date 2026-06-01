@@ -57,9 +57,11 @@ const AdminUsersPage = () => {
     if (res.ok) {
       setUsers(users.map(u =>
         u.id === selectedUserId
-          ? { ...u, status: modalAction === 'block' ? 'blocked' : 'active' }
+          ? { ...u, status: modalAction === 'block' ? 'blocked' : 'unblocked' }
           : u
       ));
+    } else {
+      alert("L'action a échoué, veuillez réessayer.");
     }
     setActionLoading(false);
     setShowModal(false);

@@ -19,7 +19,7 @@ const blockUserById = async (id) => {
 const unblockUserById = async (id) => {
     const { error } = await supabase
         .from("User")
-        .update({ status: 'active' })
+        .update({ status: 'unblocked' })
         .eq('id', id);
     return { error };
 };
