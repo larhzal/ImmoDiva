@@ -52,7 +52,7 @@ export default function RentalRequestDetailPage() {
     await updateRequestStatus(id, reponse);
     await chargerDemande()
     setAlertBox({
-      message: `Demande ${reponse} avec succès !`,
+      message: `Demande ${reponse=='accepted' ? 'Acceptée' : 'Rejetée'} avec succès !`,
       type: "success",
     });
 

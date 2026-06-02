@@ -188,8 +188,9 @@
     text-transform: uppercase;
     letter-spacing: .5px;
   }
-  .adp-status-badge.approved { background: var(--green-bg); color: #1A9E68; }
+  .adp-status-badge.rejected { background: #eb998b ; color: #db381b; }
   .adp-status-badge.pending { background: var(--orange-bg); color: var(--orange); }
+  .adp-status-badge.accepted { background: var(--green-bg); color: var(--green); }
   .adp-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
   .adp-title {

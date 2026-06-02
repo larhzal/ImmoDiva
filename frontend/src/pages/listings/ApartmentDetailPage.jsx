@@ -3,6 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import FeedbackList from '../../components/feedback/FeedbackList';
 import '../../styles/pages/ApartmentDetails.css'
 import Navbar from '../../components/layout/Navbar';
+import { useAuth } from '../../hooks/useAuth';
+import AdminNavbar from '../../components/layout/AdminNavbar'
+import Loader from '../../components/ui/loader';
 
 const IconLocation = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -38,6 +41,11 @@ const ApartmentDetailPage = () => {
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [feedbackRefresh, setFeedbackRefresh] = useState(0);
+  const {user, LoadingUser} = useAuth()
+
+  
+
+  
 
   const fetchApartmentDetails = useCallback(async () => {
     setLoading(true);
@@ -55,7 +63,10 @@ const ApartmentDetailPage = () => {
     }
   }, [id]);
 
-  useEffect(() => { if (id) fetchApartmentDetails(); }, [id, fetchApartmentDetails]);
+  useEffect(() => { if (id) fetchApartmentDetails();
+    // console.log(user);
+    
+   }, [id, fetchApartmentDetails]);
 
   const pictures = apartment?.Pictures || [];
   const imgUrl = (path) =>
@@ -104,7 +115,7 @@ const ApartmentDetailPage = () => {
         <h2>Une erreur est survenue</h2>
         <p>{error}</p>
         <button className="adp-btn-primary" style={{marginTop:8,borderRadius:10,border:'none',cursor:'pointer',padding:'12px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:600,background:'#E8A020',color:'#fff'}} onClick={fetchApartmentDetails}>Réessayer</button>
-        <button className="adp-btn-secondary" style={{borderRadius:10,border:'1.5px solid #EFEFEF',cursor:'pointer',padding:'11px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:500,background:'#fff',color:'#1A1A2E'}} onClick={() => navigate('/listings')}>Retour aux annonces</button>
+        <button className="adp-btn-secondary" style={{borderRadius:10,border:'1.5px solid #EFEFEF',cursor:'pointer',padding:'11px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:500,background:'#fff',color:'#1A1A2E'}} onClick={() => navigate(user.role==='Client' || user.role==='Publisher'? '/listings' :'/admin-home' )}>Retour aux annonces</button>
       </div>
     </>
   );
@@ -114,21 +125,33 @@ const ApartmentDetailPage = () => {
       <div className="adp-state">
         <div className="adp-state-icon">🏚️</div>
         <h2>Appartement introuvable</h2>
-        <button className="adp-btn-secondary" onClick={() => navigate('/listings')}>Retour aux annonces</button>
+        <button className="adp-btn-secondary" onClick={() => navigate(user.role=='Admin'?'/admin-home':'/listings')}>Retour aux annonces</button>
       </div>
     </>
   );
 
-  const isApproved = apartment.status === 'approved' || apartment.status === 'Approuvée';
+  if (LoadingUser) {
+    return (
+      <div className="adp-state">
+        <Loader/>
+      </div>
+    );
+  }
+
+  // const isApproved = apartment.status === 'Acceptée' ;
   const profilTags = Array.isArray(apartment.roomer_profil_desired) ? apartment.roomer_profil_desired : [];
 
   return (
     <>
-      <Navbar/>
+      {user?.role == 'Client' || user?.role=='Publisher' ?
+          <Navbar/> :
+          <AdminNavbar/>
+      }
+      
       <div className="adp-page">
         {/* Top bar */}
         <div className="adp-topbar">
-          <button className="adp-back-btn" onClick={() => navigate('/listings')}>
+          <button className="adp-back-btn" onClick={() => navigate(user.role=='Admin'? '/admin-home':'/listings')}>
             <span className="adp-back-arrow">←</span> Retour aux annonces
           </button>
           <div className="adp-breadcrumb">
@@ -285,9 +308,9 @@ const ApartmentDetailPage = () => {
           <div className="adp-sidebar">
             {/* Price card */}
             <div className="adp-price-card">
-              <div className={`adp-status-badge ${isApproved ? 'approved' : 'pending'}`}>
+              <div className={`adp-status-badge ${apartment.status=='Rejetée' ? 'rejected' : apartment.status=='En Attente' ? 'pending' : 'accepted'}`}>
                 <span className="adp-status-dot" />
-                {isApproved ? 'Acceptée' : 'En attente'}
+                {apartment.status=='Acceptée' ? 'A louer' : apartment.status=='En Attente' ? 'En Attente' : 'Rejetée'}
               </div>
 
               <h1 className="adp-title">{apartment.title || 'Titre non disponible'}</h1>
@@ -309,12 +332,17 @@ const ApartmentDetailPage = () => {
               </div>
 
               <div className="adp-cta-group">
-                <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)}>
+                {user?.role=='Client' &&
+                  <>
+                    <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)}>
                   ✍️ Donner un feedback
                 </button>
                   <button className="adp-btn-secondary" onClick={() => navigate(`/demande/${id}`)}>
                   📞 Contacter le propriétaire
                 </button>
+                  </>
+                }
+                
               </div>
             </div>
 
