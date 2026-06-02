@@ -1,12 +1,26 @@
 const { getAllUsersFromDB, blockUserById, unblockUserById } = require("./users.service");
 
+
 const getAllUsers = async (req, res) => {
     try {
-        const { data, error } = await getAllUsersFromDB();
-        if (error) return res.status(500).json({ error: error.message });
-        res.json({ data });
+        
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 6;
+        console.log(`[Backend] Demande reçue pour Page: ${page}, Limite: ${limit}`);
+
+        const { data, error, count } = await getAllUsersFromDB(page, limit);
+        
+        if (error) {
+            console.error(" Supabase:", error.message);
+            return res.status(500).json({ error: error.message });
+        }
+        
+        // On renvoie la réponse
+        return res.json({ data, count });
+        
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("[Backend Error] Catch:", err.message);
+        return res.status(500).json({ error: err.message });
     }
 };
 
@@ -14,7 +28,7 @@ const blockUser = async (req, res) => {
     try {
         const { error } = await blockUserById(req.params.id);
         if (error) return res.status(500).json({ error: error.message });
-        res.json({ message: "Utilisateur bloqué ✅" });
+        res.json({ message: "Utilisateur bloqué " });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

@@ -3,8 +3,11 @@ const { supabase } = require('../../config/db');
 const getAnnonces = async ({ city, priceRange, rooms } = {}) => {
     let query = supabase
         .from('Apartment')
-        .select('*, Pictures(*)')
-        .eq('status', 'Acceptée'); //  filtre ajouté
+        .select(`*, Pictures(*),
+            User!inner(
+            id, username, status)`)
+        .eq('status', 'Acceptée')
+        .eq('User.status', 'unblocked');
 
     if (city) {
         query = query.eq('city', city);

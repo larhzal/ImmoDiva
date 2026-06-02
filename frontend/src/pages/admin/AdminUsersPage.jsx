@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/pages/adminUsers.css';
 import '../../styles/layout/Navbar.css';
+// Si ton CSS de pagination est centralisé ou si tu veux hériter des styles du composant "pendingApartments" :
+import "../../styles/admin/pendingApartments.css"; 
 import AdminNavbar from '../../components/layout/AdminNavbar';
 import Loader from "../../components/ui/loader";
 
@@ -18,21 +20,46 @@ const AdminUsersPage = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  // stats de pagination 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const USERS_PER_PAGE = 6;
 
-  const fetchUsers = async () => {
+  
+  useEffect(() => {
+    fetchUsers(page);
+  }, [page]);
+
+  const fetchUsers = async (currentPage) => {
     try {
       setLoading(true);
       const token = getToken();
-      const res = await fetch(API_URL, {
+      
+      const res = await fetch(`${API_URL}?page=${currentPage}&limit=${USERS_PER_PAGE}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
       const json = await res.json();
-      setUsers(json.data || []);
+      console.log("DONNEES", json);
+
+      if (json && json.data && Array.isArray(json.data)) {
+        setUsers(json.data);
+        if (json.count !== undefined) {
+          setTotalUsers(json.count);
+          setTotalPages(Math.ceil(json.count / USERS_PER_PAGE) || 1);
+        }
+      } else if (Array.isArray(json)) {
+        setUsers(json);
+        setTotalUsers(json.length);
+        setTotalPages(1);
+      } else {
+        console.error("[Frontend] Le format du JSON n'est pas reconnu", json);
+        setUsers([]);
+      }
     } catch (err) {
-      console.error(err.message);
+      console.error("[Frontend Error] Échec du fetchUsers:", err.message);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -58,7 +85,7 @@ const AdminUsersPage = () => {
     if (res.ok) {
       setUsers(users.map(u =>
         u.id === selectedUserId
-          ? { ...u, status: modalAction === 'block' ? 'blocked' : 'unblocked' }
+          ? { ...u, status: modalAction === 'blocked' ? 'blocked' : 'unblocked' }
           : u
       ));
     } else {
@@ -88,14 +115,14 @@ const AdminUsersPage = () => {
         <div className="stats-container" style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
           <div className="stat-card">
             <p className="stat-label">TOTAL UTILISATEURS</p>
-            <h2 className="stat-value">{users.length}</h2>
+            <h2 className="stat-value">{totalUsers}</h2>
           </div>
           <div className="stat-card">
             <p className="stat-label">NOMBRE DE LOCATAIRES</p>
             <h2 className="stat-value">{totalLocataires}</h2>
           </div>
           <div className="stat-card">
-            <p className="stat-label">NOMBRE DE PUBLICATEURS</p>
+            <p className="stat-label">NOMBRE DE PUBLICATEURS </p>
             <h2 className="stat-value">{totalPublicateurs}</h2>
           </div>
         </div>
@@ -160,6 +187,25 @@ const AdminUsersPage = () => {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* --- BLOC PAGINATION IDENTIQUE À L'AUTRE COMPOSANT --- */}
+        <div className="av-pagination">
+          <button
+            className="av-page-btn"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            Précédent
+          </button>
+          <span className="av-page-indicator">Page {page}</span>
+          <button
+            className="av-page-btn"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages || totalPages === 0}
+          >
+            Suivant
+          </button>
         </div>
       </div>
 

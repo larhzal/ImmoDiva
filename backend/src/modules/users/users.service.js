@@ -1,11 +1,19 @@
 const { supabase } = require("../../config/db");
 
-const getAllUsersFromDB = async () => {
-    const { data, error } = await supabase
+
+const getAllUsersFromDB = async (page = 1, limit = 10) => {
+   
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
         .from("User")
-        .select("id, first_name, last_name, role, status, created_at")
-        .neq('role', 'Admin');
-    return { data, error };
+        .select("id, first_name, last_name, role, status, created_at", { count: 'exact' })
+        .neq('role', 'Admin')
+        .order('created_at', { ascending: false })
+        .range(from, to); 
+
+    return { data, error, count };
 };
 
 const blockUserById = async (id) => {
