@@ -1,37 +1,36 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  FaMapMarkerAlt, 
+  FaBed, 
+  FaSquare, 
+  FaArrowUp, 
+  FaBath,
+  FaChevronLeft,
+  FaChevronRight,
+  FaArrowLeft,
+  FaPen,
+  FaPhoneAlt,
+  FaCar,          
+  FaCouch,        
+  FaSwimmingPool, 
+  FaLeaf,         
+  FaPaw,          
+  FaSmoking,      
+  FaUsers,        
+  FaLightbulb     
+} from 'react-icons/fa'; 
+import { 
+  MdElevator,     
+  MdSecurity      
+} from 'react-icons/md';
+
 import FeedbackList from '../../components/feedback/FeedbackList';
 import '../../styles/pages/ApartmentDetails.css'
 import Navbar from '../../components/layout/Navbar';
 import { useAuth } from '../../hooks/useAuth';
 import AdminNavbar from '../../components/layout/AdminNavbar'
 import Loader from '../../components/ui/loader';
-
-const IconLocation = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
-  </svg>
-);
-const IconBed = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>
-  </svg>
-);
-const IconArea = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="18" height="18" rx="2"/>
-  </svg>
-);
-const IconFloor = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><path d="M5 21H19"/>
-  </svg>
-);
-const IconBath = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><line x1="10" y1="5" x2="8" y2="7"/><line x1="2" y1="12" x2="22" y2="12"/>
-  </svg>
-);
 
 const ApartmentDetailPage = () => {
   const { id } = useParams();
@@ -42,10 +41,6 @@ const ApartmentDetailPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [feedbackRefresh, setFeedbackRefresh] = useState(0);
   const {user, LoadingUser} = useAuth()
-
-  
-
-  
 
   const fetchApartmentDetails = useCallback(async () => {
     setLoading(true);
@@ -63,10 +58,9 @@ const ApartmentDetailPage = () => {
     }
   }, [id]);
 
-  useEffect(() => { if (id) fetchApartmentDetails();
-    // console.log(user);
-    
-   }, [id, fetchApartmentDetails]);
+  useEffect(() => { 
+    if (id) fetchApartmentDetails();
+  }, [id, fetchApartmentDetails]);
 
   const pictures = apartment?.Pictures || [];
   const imgUrl = (path) =>
@@ -83,51 +77,47 @@ const ApartmentDetailPage = () => {
     return String(val) === 'true' || val === true;
   };
 
+  
   const amenities = apartment ? [
-    { key: 'elevator',   label: 'Ascenseur',  icon: '🛗' },
-    { key: 'parking',    label: 'Parking',    icon: '🚗' },
-    { key: 'furnitured', label: 'Meublé',     icon: '🛋️' },
-    { key: 'pool',       label: 'Piscine',    icon: '🏊' },
-    { key: 'balcony',    label: 'Balcon',     icon: '🌿' },
-    { key: 'concierge',  label: 'Gardien',    icon: '👮' },
+    { key: 'elevator',   label: 'Ascenseur',  icon: <MdElevator size={18} /> },
+    { key: 'parking',    label: 'Parking',    icon: <FaCar size={18} /> },
+    { key: 'furnitured', label: 'Meublé',     icon: <FaCouch size={18} /> },
+    { key: 'pool',       label: 'Piscine',    icon: <FaSwimmingPool size={18} /> },
+    { key: 'balcony',    label: 'Balcon',     icon: <FaLeaf size={16} /> },
+    { key: 'concierge',  label: 'Gardien',    icon: <MdSecurity size={18} /> },
   ].filter(a => boolLabel(apartment[a.key]) !== null) : [];
 
+  
   const conditions = apartment ? [
-    { key: 'animals_accepted',   label: 'Animaux acceptés', icon: '🐾' },
-    { key: 'smokers_accepted',   label: 'Fumeurs acceptés', icon: '🚬' },
-    { key: 'rommates_accepted',  label: 'Colocataires',     icon: '👥' },
-    { key: 'charges_included',   label: 'Charges incluses', icon: '💡' },
+    { key: 'animals_accepted',   label: 'Animaux acceptés', icon: <FaPaw size={18} /> },
+    { key: 'smokers_accepted',   label: 'Fumeurs acceptés', icon: <FaSmoking size={18} /> },
+    { key: 'rommates_accepted',  label: 'Colocataires',     icon: <FaUsers size={18} /> },
+    { key: 'charges_included',   label: 'Charges incluses', icon: <FaLightbulb size={18} /> },
   ].filter(c => boolLabel(apartment[c.key]) !== null) : [];
 
   if (loading) return (
-    <>
-      <div className="adp-state">
-        <div className="adp-spinner" />
-        <p>Chargement de l'annonce…</p>
-      </div>
-    </>
+    <div className="adp-state">
+      <div className="adp-spinner" />
+      <p>Chargement de l'annonce…</p>
+    </div>
   );
 
   if (error) return (
-    <>
-      <div className="adp-state">
-        <div className="adp-state-icon">😕</div>
-        <h2>Une erreur est survenue</h2>
-        <p>{error}</p>
-        <button className="adp-btn-primary" style={{marginTop:8,borderRadius:10,border:'none',cursor:'pointer',padding:'12px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:600,background:'#E8A020',color:'#fff'}} onClick={fetchApartmentDetails}>Réessayer</button>
-        <button className="adp-btn-secondary" style={{borderRadius:10,border:'1.5px solid #EFEFEF',cursor:'pointer',padding:'11px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:500,background:'#fff',color:'#1A1A2E'}} onClick={() => navigate(user.role==='Client' || user.role==='Publisher'? '/listings' :'/admin-home' )}>Retour aux annonces</button>
-      </div>
-    </>
+    <div className="adp-state">
+      <div className="adp-state-icon">😕</div>
+      <h2>Une erreur est survenue</h2>
+      <p>{error}</p>
+      <button className="adp-btn-primary" style={{marginTop:8,borderRadius:10,border:'none',cursor:'pointer',padding:'12px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:600,background:'#E8A020',color:'#fff'}} onClick={fetchApartmentDetails}>Réessayer</button>
+      <button className="adp-btn-secondary" style={{borderRadius:10,border:'1.5px solid #EFEFEF',cursor:'pointer',padding:'11px 24px',fontFamily:'DM Sans,sans-serif',fontSize:14,fontWeight:500,background:'#fff',color:'#1A1A2E'}} onClick={() => navigate(user.role === 'Client' || user.role === 'Publisher' ? '/listings' : '/admin-home')}>Retour aux annonces</button>
+    </div>
   );
 
   if (!apartment) return (
-    <>
-      <div className="adp-state">
-        <div className="adp-state-icon">🏚️</div>
-        <h2>Appartement introuvable</h2>
-        <button className="adp-btn-secondary" onClick={() => navigate(user.role=='Admin'?'/admin-home':'/listings')}>Retour aux annonces</button>
-      </div>
-    </>
+    <div className="adp-state">
+      <div className="adp-state-icon">🏚️</div>
+      <h2>Appartement introuvable</h2>
+      <button className="adp-btn-secondary" onClick={() => navigate(user.role === 'Admin' ? '/admin-home' : '/listings')}>Retour aux annonces</button>
+    </div>
   );
 
   if (LoadingUser) {
@@ -138,21 +128,17 @@ const ApartmentDetailPage = () => {
     );
   }
 
-  // const isApproved = apartment.status === 'Acceptée' ;
   const profilTags = Array.isArray(apartment.roomer_profil_desired) ? apartment.roomer_profil_desired : [];
 
   return (
     <>
-      {user?.role == 'Client' || user?.role=='Publisher' ?
-          <Navbar/> :
-          <AdminNavbar/>
-      }
+      {user?.role === 'Client' || user?.role === 'Publisher' ? <Navbar/> : <AdminNavbar/>}
       
       <div className="adp-page">
         {/* Top bar */}
         <div className="adp-topbar">
-          <button className="adp-back-btn" onClick={() => navigate(user.role=='Admin'? '/admin-home':'/listings')}>
-            <span className="adp-back-arrow">←</span> Retour aux annonces
+          <button className="adp-back-btn" onClick={() => navigate(user.role === 'Admin' ? '/admin-home' : '/listings')}>
+            <FaArrowLeft style={{ marginRight: '8px', display: 'inline-block', verticalAlign: 'middle' }} /> Retour aux annonces
           </button>
           <div className="adp-breadcrumb">
             / <span>{apartment.title || 'Appartement'}</span>
@@ -161,7 +147,7 @@ const ApartmentDetailPage = () => {
 
         {/* Main 2-col grid */}
         <div className="adp-container">
-          {/* LEFT — gallery + details */}
+          {/* gallery + details */}
           <div className="adp-content">
             {/* Gallery */}
             <div className="adp-gallery">
@@ -169,8 +155,8 @@ const ApartmentDetailPage = () => {
                 <img src={currentImage} alt={apartment.title || 'Appartement'} className="adp-main-img" />
                 {pictures.length > 1 && (
                   <>
-                    <button className="adp-nav-btn adp-prev" onClick={handlePrev}>‹</button>
-                    <button className="adp-nav-btn adp-next" onClick={handleNext}>›</button>
+                    <button className="adp-nav-btn adp-prev" onClick={handlePrev}><FaChevronLeft /></button>
+                    <button className="adp-nav-btn adp-next" onClick={handleNext}><FaChevronRight /></button>
                     <div className="adp-img-counter">{currentImageIndex + 1} / {pictures.length}</div>
                   </>
                 )}
@@ -235,7 +221,7 @@ const ApartmentDetailPage = () => {
                 {apartment.deposit_required && (
                     <div className="adp-detail-item">
                         <span className="adp-detail-label">Nécessité du Caution : </span>
-                        <span className="adp-detail-value">{Boolean(apartment.deposit_required)? "Oui" : "Non"}</span>
+                        <span className="adp-detail-value">{Boolean(apartment.deposit_required) ? "Oui" : "Non"}</span>
                     </div>
                 )}
                 {apartment.address && (
@@ -247,7 +233,7 @@ const ApartmentDetailPage = () => {
               </div>
             </div>
 
-            {/* Amenities */}
+            {/* Amenities  */}
             {amenities.length > 0 && (
               <div className="adp-section">
                 <div className="adp-section-title">Équipements</div>
@@ -255,8 +241,10 @@ const ApartmentDetailPage = () => {
                   {amenities.map(a => {
                     const val = boolLabel(apartment[a.key]);
                     return (
-                      <div key={a.key} className={`adp-amenity ${val ? 'yes' : 'no'}`}>
-                        <span className="adp-amenity-icon">{a.icon}</span>
+                      <div key={a.key} className={`adp-amenity ${val ? 'yes' : 'no'}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="adp-amenity-icon" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          {a.icon}
+                        </span>
                         {a.label}
                       </div>
                     );
@@ -265,7 +253,7 @@ const ApartmentDetailPage = () => {
               </div>
             )}
 
-            {/* Rental conditions */}
+            {/* Rental conditions  */}
             {(conditions.length > 0 || apartment.rental_min_duration) && (
               <div className="adp-section">
                 <div className="adp-section-title">Conditions de location</div>
@@ -281,8 +269,10 @@ const ApartmentDetailPage = () => {
                   {conditions.map(c => {
                     const val = boolLabel(apartment[c.key]);
                     return (
-                      <div key={c.key} className={`adp-amenity ${val ? 'yes' : 'no'}`}>
-                        <span className="adp-amenity-icon">{c.icon}</span>
+                      <div key={c.key} className={`adp-amenity ${val ? 'yes' : 'no'}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="adp-amenity-icon" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          {c.icon}
+                        </span>
                         {c.label}
                       </div>
                     );
@@ -304,19 +294,19 @@ const ApartmentDetailPage = () => {
             )}
           </div>
 
-          {/* RIGHT — sidebar */}
+          {/* sidebar */}
           <div className="adp-sidebar">
             {/* Price card */}
             <div className="adp-price-card">
-              <div className={`adp-status-badge ${apartment.status=='Rejetée' ? 'rejected' : apartment.status=='En Attente' ? 'pending' : 'accepted'}`}>
+              <div className={`adp-status-badge ${apartment.status === 'Rejetée' ? 'rejected' : apartment.status === 'En Attente' ? 'pending' : 'accepted'}`}>
                 <span className="adp-status-dot" />
-                {apartment.status=='Acceptée' ? 'A louer' : apartment.status=='En Attente' ? 'En Attente' : 'Rejetée'}
+                {apartment.status === 'Acceptée' ? 'A louer' : apartment.status === 'En Attente' ? 'En Attente' : 'Rejetée'}
               </div>
 
               <h1 className="adp-title">{apartment.title || 'Titre non disponible'}</h1>
 
-              <div className="adp-location">
-                <IconLocation />
+              <div className="adp-location" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FaMapMarkerAlt size={14} />
                 {[apartment.address].filter(Boolean).join(', ') || 'Adresse non précisée'}
               </div>
 
@@ -332,45 +322,44 @@ const ApartmentDetailPage = () => {
               </div>
 
               <div className="adp-cta-group">
-                {user?.role=='Client' &&
+                {user?.role === 'Client' && (
                   <>
-                    <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)}>
-                  ✍️ Donner un feedback
-                </button>
-                  <button className="adp-btn-secondary" onClick={() => navigate(`/demande/${id}`)}>
-                  📞 Contacter le propriétaire
-                </button>
+                    <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <FaPen size={12} /> Donner un feedback
+                    </button>
+                    <button className="adp-btn-secondary" onClick={() => navigate(`/demande/${id}`)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <FaPhoneAlt size={12} /> Contacter le propriétaire
+                    </button>
                   </>
-                }
-                
+                )}
               </div>
             </div>
 
             {/* Quick stats */}
             <div className="adp-quick-stats">
               <div className="adp-stat">
-                <div className="adp-stat-icon"><IconBed /></div>
+                <div className="adp-stat-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaBed size={18} /></div>
                 <div>
                   <div className="adp-stat-label">Chambres</div>
                   <div className="adp-stat-value">{apartment.number_rooms ?? '—'}</div>
                 </div>
               </div>
               <div className="adp-stat">
-                <div className="adp-stat-icon"><IconBath /></div>
+                <div className="adp-stat-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaBath size={18} /></div>
                 <div>
                   <div className="adp-stat-label">Salles de bain</div>
                   <div className="adp-stat-value">{apartment.number_bathrooms ?? '—'}</div>
                 </div>
               </div>
               <div className="adp-stat">
-                <div className="adp-stat-icon"><IconArea /></div>
+                <div className="adp-stat-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaSquare size={16} /></div>
                 <div>
                   <div className="adp-stat-label">Surface</div>
                   <div className="adp-stat-value">{apartment.surface ? `${apartment.surface} m²` : '—'}</div>
                 </div>
               </div>
               <div className="adp-stat">
-                <div className="adp-stat-icon"><IconFloor /></div>
+                <div className="adp-stat-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><FaArrowUp size={18} /></div>
                 <div>
                   <div className="adp-stat-label">Étage</div>
                   <div className="adp-stat-value">{apartment.floor ?? '—'}</div>
@@ -380,7 +369,7 @@ const ApartmentDetailPage = () => {
           </div>
         </div>
 
-        {/* Feedback — full width */}
+        {/* Feedback  */}
         <div className="adp-feedback-section">
           <FeedbackList key={feedbackRefresh} apartmentId={id} />
         </div>

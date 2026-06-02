@@ -125,13 +125,15 @@ export default function RentalRequestDetailPage() {
 
             <div className="apartmentInfo">
 
+              <h3 className="apartmentTitle">{apt.title || "—"}</h3>
+
               <div className="priceBadge">
                 {apt.monthly_price
                   ? `${apt.monthly_price.toLocaleString()} MAD / mois`
                   : "Prix non défini"}
-              </div>
+              </div><br/>
 
-              <h3 className="apartmentTitle">{apt.title || "—"}</h3>
+              
 
               <p className="address">
                 <MapPin size={16} />
@@ -162,7 +164,7 @@ export default function RentalRequestDetailPage() {
             </div>
             
           </div>
-          <button className="profileBtn">Voir le profile</button>
+          {/* <button className="profileBtn">Voir le profile</button> */}
         </div>
 
           <div className="gridInfo">

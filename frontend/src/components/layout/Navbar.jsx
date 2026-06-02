@@ -96,6 +96,10 @@ export default function Navbar() {
             Tarifs
           </a>
 
+          <a href="/about" className="nav-link">
+            À propos
+          </a>
+
           {isAuthenticated &&  user.role == 'Publisher' &&
           <a href="/addApartment" className="nav-link">
             Ajouter un appartement à louer

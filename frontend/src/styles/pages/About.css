@@ -1,0 +1,338 @@
+.about-page {
+  font-family: 'Inter', sans-serif;
+}
+
+.about-hero {
+  background-color: #0F2744;
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.about-badge {
+  background-color: #E87722;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.about-hero h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 20px 0 16px;
+}
+
+.about-hero p {
+  font-size: 18px;
+  color: #cbd5e1;
+  max-width: 600px;
+  margin: 0 auto 40px;
+}
+
+.about-hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 700;
+  color: #E87722;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+.about-section,
+.about-values,
+.about-cities,
+.about-team {
+  padding: 60px 20px;
+}
+
+.about-values,
+.about-team {
+  background-color: #F5F5F5;
+}
+
+.about-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.about-container h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0F2744;
+  margin-bottom: 24px;
+}
+
+.about-container p {
+  color: #666666;
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.value-card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.value-icon {
+  font-size: 36px;
+  color: #E87722;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.value-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F2744;
+  margin: 12px 0 8px;
+}
+
+.value-card p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.cities-subtitle,
+.team-subtitle {
+  color: #666666;
+  font-size: 15px;
+  margin-bottom: 28px;
+}
+
+.cities-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.city-card {
+  background: white;
+  border: 2px solid #E87722;
+  border-radius: 10px;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #0F2744;
+  font-size: 16px;
+}
+
+.city-icon {
+  color: #E87722;
+  font-size: 18px;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.team-card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.team-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #0F2744;
+  color: white;
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.team-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 6px;
+}
+
+.team-role {
+  display: block;
+  font-size: 13px;
+  color: #E87722;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.team-exp {
+  display: block;
+  font-size: 12px;
+  color: #999;
+}
+
+.about-contact {
+  padding: 60px 20px;
+  background-color: #F5F5F5;
+}
+
+.contact-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .contact-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-info h2 {
+  font-size: 30px;
+  font-weight: 700;
+  color: #0F2744;
+  margin-bottom: 16px;
+}
+
+.contact-info p {
+  color: #666;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contact-item-icon {
+  width: 44px;
+  height: 44px;
+  background-color: #E87722;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.contact-item-label {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-item-value {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0F2744;
+}
+
+.contact-form-card {
+  background: white;
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.contact-form-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F2744;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0F2744;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1A1A1A;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: 'Inter', sans-serif;
+  resize: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #E87722;
+}
+
+.contact-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: #E87722;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.contact-submit:hover {
+  background-color: #cf6a1a;
+}

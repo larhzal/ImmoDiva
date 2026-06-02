@@ -31,6 +31,7 @@ import AdminUsersPage from '../pages/admin/AdminUsersPage';
 import FeedbackPage from '../pages/tenant/FeedbackPage';
 import RentalRequestPage from '../pages/tenant/RentalRequestPage';
 import ClientProfilePage from '../pages/profile/ClientProfilePage';
+import About from '../pages/listings/About';
 
 const AppRouter = () => {
     return (
@@ -41,6 +42,7 @@ const AppRouter = () => {
                 <Route path="/listings" element={<ListingsPage />} />
                 <Route path="/apartment/:id" element={<ApartmentDetailPage />} />
                 <Route path="/tarifs" element={<Tarifs />} />
+                <Route path="/about" element={<About />} />
 
                 {/* To authenticate */}
                 <Route path="/login" element={<LoginPage />} />

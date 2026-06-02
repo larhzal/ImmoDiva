@@ -27,12 +27,8 @@
 
   margin-bottom: 14px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #0F2744,
-      #E87722
-    );
+  background:#E87722;
+    
 
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
