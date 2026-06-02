@@ -28,7 +28,15 @@ export const validateAppartementForm = (fields) => {
         newErrors.dureeUnit = "Unité obligatoire";
         isValid = false;
     }
+    if (fields.photos.length < 3) {
+        newErrors.photos = "Veuillez ajouter au moins 3 photos";
+        isValid = false;
+    }
 
+    if (fields.photos.length > 15) {
+        newErrors.photos = "Maximum 15 photos autorisées";
+        isValid = false;
+    }
     console.log(fields);
     return { isValid, errors: newErrors };
 };

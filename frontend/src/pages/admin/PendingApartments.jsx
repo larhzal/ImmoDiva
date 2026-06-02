@@ -97,8 +97,8 @@ export default function PendingApartments() {
       }
 
       closeModal();
-      fetchAnnonces(page);
-      fetchStats();
+      await Promise.all([fetchAnnonces(page), fetchStats()]);
+    
 
     } catch (err) {
       console.error("Erreur:", err);
