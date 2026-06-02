@@ -91,6 +91,9 @@ export default function Navbar() {
         </a>
       }
           
+          <a href="/about" className="nav-link">
+            À propos
+          </a>
 
           {/* Auth Buttons */}
           {isAuthenticated ? (

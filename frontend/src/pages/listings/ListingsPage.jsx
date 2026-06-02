@@ -26,11 +26,9 @@ const ListingsPage = () => {
     const [priceRange, setPriceRange] = useState('');
     const [rooms, setRooms] = useState('');
 
-    // ✅ CORRIGÉ : cities ici DANS le composant, plus de double déclaration
     const [cities, setCities] = useState([]);
     const [citiesLoading, setCitiesLoading] = useState(true);
 
-    // ✅ Chargement des villes depuis la DB
     useEffect(() => {
         const fetchCities = async () => {
             try {
@@ -96,7 +94,7 @@ const ListingsPage = () => {
             <section className="hero-section">
                 <h1 className="hero-title">
                     "Trouvez l'appartement idéal au Maroc <br />
-                    — vite, simplement, en toute confiance."
+                       vite, simplement, en toute confiance."
                 </h1>
                 <p className="hero-subtitle">Votre prochain chez-vous, à portée de clic</p>
             </section>
@@ -105,7 +103,7 @@ const ListingsPage = () => {
             <div className="search-bar">
                 <div className="search-field">
                     <label>Ville / Région</label>
-                    {/* ✅ Select dynamique depuis la DB */}
+                    {/*Select dynamique depuis la DB */}
                     <select value={city} onChange={(e) => setCity(e.target.value)} disabled={citiesLoading}>
                         <option value="">Toutes les villes</option>
                         {cities.map((cityName) => (
@@ -164,7 +162,7 @@ const ListingsPage = () => {
 
             {error && (
                 <div className="error-container">
-                    <p className="error-message">Oups 🙄, {error}</p>
+                    <p className="error-message">Oups , {error}</p>
                     <button className="retry-btn" onClick={() => fetchAnnonces({ city, priceRange, rooms })}>
                         Réessayer
                     </button>
