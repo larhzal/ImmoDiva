@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/pages/adminUsers.css';
 import '../../styles/layout/Navbar.css';
 import AdminNavbar from '../../components/layout/AdminNavbar';
+import Loader from "../../components/ui/loader";
 
 const API_URL = "http://localhost:5000/api/users";
 
@@ -67,7 +68,14 @@ const AdminUsersPage = () => {
     setShowModal(false);
   };
 
-  if (loading) return <div className="admin-container">Chargement...</div>;
+  if (loading) return (
+    <>
+      <AdminNavbar />
+      <div className="admin-container">
+        <Loader />
+      </div>
+    </>
+  );
 
   return (
     <>
