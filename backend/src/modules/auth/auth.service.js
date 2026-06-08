@@ -1,12 +1,13 @@
 const fs         = require('fs');
 const path       = require('path');
 const crypto     = require('crypto');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
 const {supabaseAdmin, supabase}   = require("../../config/db");
 
 const logoPath   = path.join(__dirname, '../../../../frontend/src/assets/images/Logo.png');
 const logoBase64 = fs.readFileSync(logoPath).toString('base64');
 const logoSrc    = `data:image/png;base64,${logoBase64}`;
+const {sendEmail} = require('../../services/email.service')
 
 
 exports.getProfile = async (userId) => {
@@ -162,7 +163,7 @@ exports.loginUser = async (payload) => {
   // Chercher user
   const { data: userProfile, error: profileError } = await supabase
     .from("User")
-    .select("id, username, role, status") // ✅ ajoute status
+    .select("id, username, role, status") 
     .eq("username", username.trim())
     .maybeSingle();
 
@@ -259,16 +260,7 @@ exports.logoutUser = async ({ accessToken }) => {
   return { message: "Deconnexion reussie." };
 };
 
-// ─── Nodemailer transporter ───────────────────────────────────────────────────
-const transporter = nodemailer.createTransport({
-  host: 'smtp.resend.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: 'resend',
-    pass: process.env.RESEND_API_KEY,
-  },
-});
+
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -328,27 +320,39 @@ exports.requestPasswordReset = async ({ email }) => {
     try{
       console.log("Attempting to send reset email ...");
       // Envoyer l'email
-      await transporter.sendMail({
-        from: '"ImmoDIVA" <onboarding@resend.dev>',
-        to:      normalizedEmail,
+      await sendEmail({
+        to: normalizedEmail,
         subject: 'Réinitialisation de votre mot de passe',
         html: `
           <div style="font-family:sans-serif;max-width:480px;margin:auto">
-            <img src="${logoSrc}" alt="ImmoDIVA" style="margin-bottom:40px;display:block;height:64px;width:auto;margin-left: 80px;margin-top: 120px;" />
-            <h2 style="margin-left:50px;">Réinitialisation de mot de passe</h2>
-            <p>Vous avez demandé à réinitialiser votre mot de passe ImmoDIVA.</p>
-            <p>Cliquez sur le bouton ci-dessous. Ce lien est valable <strong>1 heure</strong>.</p>
+            <img src="${logoSrc}" alt="ImmoDIVA"
+              style="margin-bottom:40px;display:block;height:64px;width:auto;margin-left:80px;margin-top:120px;" />
+
+            <h2 style="margin-left:50px;">
+              Réinitialisation de mot de passe
+            </h2>
+
+            <p>
+              Vous avez demandé à réinitialiser votre mot de passe ImmoDIVA.
+            </p>
+
+            <p>
+              Cliquez sur le bouton ci-dessous.
+              Ce lien est valable <strong>1 heure</strong>.
+            </p>
+
             <a href="${resetLink}"
               style="display:inline-block;margin:16px 0;padding:12px 24px;
-                      background:#f97316;color:#fff;border-radius:24px;
-                      text-decoration:none;font-weight:600;margin-left:80px;">
+              background:#f97316;color:#fff;border-radius:24px;
+              text-decoration:none;font-weight:600;margin-left:80px;">
               Réinitialiser mon mot de passe
             </a>
+
             <p style="color:#888;font-size:12px;margin-left:70px;">
               Si vous n'avez pas fait cette demande, ignorez cet email.
             </p>
           </div>
-        `,
+        `
       });
       console.log("Reset email sent successfully");
     } catch (mailError) {
