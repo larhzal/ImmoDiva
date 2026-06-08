@@ -82,7 +82,7 @@
   .adp-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 36px 48px 64px;
+    padding: 36px 0px 64px;
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 28px;
@@ -394,9 +394,9 @@
 
   /* ── Full-width feedback section ── */
   .adp-feedback-section {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto 40px;
-    padding: 0 48px;
+    padding: 0 160px;
     background-color: var(--grey-1);
   }
 

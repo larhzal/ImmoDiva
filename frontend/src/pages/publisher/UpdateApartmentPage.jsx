@@ -266,7 +266,7 @@ function UpdateAppartement() {
 
             <div className="add-appartement">
                 {/* Title changed for update context */}
-                <h1>Modifier l'Appartement</h1>
+                <h1><b>Modifier l'Appartement</b></h1>
 
                 {/* ── Informations sur le bien ── */}
                 <section>

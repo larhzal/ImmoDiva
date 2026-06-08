@@ -25,9 +25,16 @@ const AdminUsersPage = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const USERS_PER_PAGE = 6;
 
+  // Stats globales (tous les utilisateurs, pas seulement la page courante)
+  const [allUsers, setAllUsers] = useState([]);
+
   useEffect(() => {
     fetchUsers(page);
   }, [page]);
+
+  useEffect(() => {
+    fetchAllUsers().then(setAllUsers);
+  }, []);
 
   const fetchUsers = async (currentPage) => {
     try {
@@ -66,10 +73,48 @@ const AdminUsersPage = () => {
     }
   };
 
-  const totalLocataires = users.filter(
+  const fetchAllUsers = async () => {
+    try {
+      const token = getToken();
+      let allFetched = [];
+      let currentPage = 1;
+      let total = Infinity;
+
+      while (allFetched.length < total) {
+        const res = await fetch(
+          `${API_URL}?page=${currentPage}&limit=${USERS_PER_PAGE}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        const json = await res.json();
+
+        if (json && json.data && Array.isArray(json.data)) {
+          if (total === Infinity && json.count !== undefined) {
+            total = json.count;
+          }
+          allFetched = [...allFetched, ...json.data];
+          if (json.data.length < USERS_PER_PAGE) break;
+        } else if (Array.isArray(json)) {
+          allFetched = [...allFetched, ...json];
+          break;
+        } else {
+          break;
+        }
+
+        currentPage++;
+      }
+
+      return allFetched;
+    } catch (err) {
+      console.error('[Frontend Error] Échec du fetchAllUsers:', err.message);
+      return [];
+    }
+  };
+
+  // Counts basés sur TOUS les utilisateurs (toutes pages)
+  const totalLocataires = allUsers.filter(
     (u) => u.role?.toLowerCase() === 'client',
   ).length;
-  const totalPublicateurs = users.filter(
+  const totalPublicateurs = allUsers.filter(
     (u) => u.role?.toLowerCase() === 'publisher',
   ).length;
 
