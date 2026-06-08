@@ -1,6 +1,9 @@
 import { FaTrophy, FaLock, FaGlobe, FaChartLine, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock } from "react-icons/fa";
 import "../../styles/pages/About.css";
 import Navbar from "../../components/layout/Navbar";
+import AdminNavbar from '../../components/layout/AdminNavbar'
+import LandingNavbar from "../../components/layout/LandingNavbar";
+import { useAuth } from '../../hooks/useAuth';
 
 export default function About() {
   const team = [
@@ -33,9 +36,23 @@ export default function About() {
     width: "100%"
   };
 
+  const {user, LoadingUser} = useAuth()
+  // Vérifier si utilisateur connecté
+  const token =
+    localStorage.getItem("immodiva_token");
+
+  const isAuthenticated = !!token;
+
   return (
     <>
-      <Navbar/>
+      {
+        !isAuthenticated
+          ? <LandingNavbar />
+          : (user?.role === 'Client' || user?.role === 'Publisher')
+              ? <Navbar />
+              : <AdminNavbar />
+      }
+            
       <div className="about-page">
 
         <section className="about-hero">

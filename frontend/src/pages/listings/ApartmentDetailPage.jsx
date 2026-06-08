@@ -28,6 +28,7 @@ import {
 import FeedbackList from '../../components/feedback/FeedbackList';
 import '../../styles/pages/ApartmentDetails.css'
 import Navbar from '../../components/layout/Navbar';
+import LandingNavbar from '../../components/layout/LandingNavbar';
 import { useAuth } from '../../hooks/useAuth';
 import AdminNavbar from '../../components/layout/AdminNavbar'
 import Loader from '../../components/ui/loader';
@@ -45,6 +46,7 @@ const ApartmentDetailPage = () => {
   const fetchApartmentDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
       const response = await fetch(`http://localhost:5000/api/annonces/${id}`);
       if (!response.ok) {
@@ -76,6 +78,12 @@ const ApartmentDetailPage = () => {
     if (val === null || val === undefined || val === '') return null;
     return String(val) === 'true' || val === true;
   };
+
+  // Vérifier si utilisateur connecté
+  const token =
+    localStorage.getItem("immodiva_token");
+
+  const isAuthenticated = !!token;
 
   
   const amenities = apartment ? [
@@ -132,7 +140,13 @@ const ApartmentDetailPage = () => {
 
   return (
     <>
-      {user?.role === 'Client' || user?.role === 'Publisher' ? <Navbar/> : <AdminNavbar/>}
+      {
+  !isAuthenticated
+    ? <LandingNavbar />
+    : (user?.role === 'Client' || user?.role === 'Publisher')
+        ? <Navbar />
+        : <AdminNavbar />
+}
       
       <div className="adp-page">
         {/* Top bar */}
@@ -322,16 +336,35 @@ const ApartmentDetailPage = () => {
               </div>
 
               <div className="adp-cta-group">
-                {user?.role === 'Client' && (
-                  <>
-                    <button className="adp-btn-primary" onClick={() => navigate(`/feedback/${id}`)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <FaPen size={12} /> Donner un feedback
-                    </button>
-                    <button className="adp-btn-secondary" onClick={() => navigate(`/demande/${id}`)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                      <FaPhoneAlt size={12} /> Contacter le propriétaire
-                    </button>
-                  </>
-                )}
+               {(!isAuthenticated || user?.role === 'Client') && (
+                <>
+                  <button
+                    className="adp-btn-primary"
+                    onClick={() => navigate(`/feedback/${id}`)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <FaPen size={12} /> Donner un feedback
+                  </button>
+
+                  <button
+                    className="adp-btn-secondary"
+                    onClick={() => navigate(`/demande/${id}`)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <FaPhoneAlt size={12} /> Contacter le propriétaire
+                  </button>
+                </>
+              )}
               </div>
             </div>
 

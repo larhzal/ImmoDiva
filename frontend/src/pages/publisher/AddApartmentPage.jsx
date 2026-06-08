@@ -226,7 +226,7 @@ function AddAppartement() {
                 </div>
             )}
             <div className="add-appartement">
-                <h1>Ajouter une Appartement</h1>
+                <h1><b>Ajouter un Appartement</b></h1>
 
                 {/* ── Informations sur le bien ── */}
                 <section>

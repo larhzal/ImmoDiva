@@ -94,14 +94,16 @@ export default function Navbar() {
           </a>
         )
       )}
+
+       {isAuthenticated && (
+        user?.role === 'Publisher' && (
+          <a href="/tarifs" className="nav-link">
+            Tarifs
+          </a>
+        )
+        )
+      }
           
-
-        {user?.role==='Publisher' &&
-        <a href="/tarifs" className="nav-link">
-          Tarifs
-        </a>
-        }
-
           <a href="/about" className="nav-link">
             À propos
           </a>
